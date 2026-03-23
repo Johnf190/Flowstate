@@ -205,3 +205,9 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Flowstate specific
+twelvedata_cache.json
+flow_data_latest.json
+flow_data_history.json
+data/flow_data.csv
