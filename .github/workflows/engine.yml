@@ -3,8 +3,6 @@ name: Flowstate Engine
 on:
   schedule:
     - cron: '0 6,12,18,22 * * *'
-  push:
-    branches: [ main ]
   workflow_dispatch:
 
 jobs:
