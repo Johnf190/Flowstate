@@ -1,6 +1,6 @@
 {
   "date": "2026-03-24",
-  "time": "10:54 UTC",
+  "time": "11:46 UTC",
   "scan_number": 1,
   "system_state": "CRITICAL",
   "score": 5,
@@ -80,8 +80,8 @@
     "simultaneous_selloff": false,
     "interbank_stress": false
   },
-  "assessment": "CRITICAL (5/6):\n\n\nFive of six structural conditions are active. Brent crude at z+3.26 transmits energy shock through inflation environment at ceiling (CPI normalized 10.0) into Federal Reserve with elasticity exhausted (balance sheet z-0.73). Bond market has repriced globally (TLT z-1.07). Equity markets have not yet converged (SPY z+0.95).",
-  "what_to_watch": "- STLFSI4 at -0.299 \u2014 threshold 0.0.\n  Crossing above zero completes CASCADE configuration.\n- Copper at z+1.22 \u2014 threshold z+0.0.\n  Positive reading confirms stagflation trap holding.\n- TLT selling accelerating \u2014 z-1.07 pushes deeper.\n  Capital rotating away from duration risk.",
+  "assessment": "CRITICAL (5/6):\n\n\nFive of six structural conditions are active.\nBrent crude at z+3.26 transmits energy shock\nthrough inflation ceiling (CPI norm 10.0) into\nFederal Reserve with depleted elastic capacity\n(balance sheet z-0.73). Bond market repriced\n(TLT z-1.07). Equity markets have not converged.",
+  "what_to_watch": "- STLFSI4 at -0.299 \u2014 threshold 0.0.\n  Crossing completes CASCADE configuration.\n- Copper at z+1.22 \u2014 threshold z+0.0.\n  Confirms stagflation trap is active.\n- VIX at z+1.84 \u2014 threshold z+2.0.\n  Acceleration signals equity repricing imminent.",
   "meta": {
     "next_scan": "2026-03-24T12:00:00Z",
     "series_fetched": 31,
