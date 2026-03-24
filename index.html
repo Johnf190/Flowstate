@@ -18,9 +18,9 @@
 }
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.6}
 .mono{font-family:'DM Mono',monospace}
-.container{max-width:1200px;margin:0 auto;padding:0 24px}
+.container{max-width:1200px;margin:0 auto;padding:0 24px 60px}
 
-/* Header */
+/* ── Header ─────────────────────────── */
 .header{border-bottom:1px solid #111b27;padding:20px 0}
 .header-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
 .header-left{display:flex;align-items:center;gap:12px}
@@ -33,7 +33,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .badge-live{background:rgba(45,122,61,.2);color:var(--green)}
 .badge-cached{background:rgba(61,80,104,.2);color:var(--muted)}
 
-/* State block */
+/* ── State block ────────────────────── */
 .state-block{margin:24px 0;padding:20px 24px;background:var(--card);border:1px solid var(--border);border-radius:6px;position:relative}
 .state-block::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:6px 0 0 6px}
 .state-block.stable::before{background:var(--stable)}
@@ -48,10 +48,17 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .state-verdict{font-size:32px;font-weight:600;margin:8px 0 4px}
 .state-sub{font-size:13px;color:var(--text2);margin-bottom:12px}
 .state-divider{border:none;border-top:1px solid var(--border);margin:12px 0}
-.state-assessment{font-size:13px;color:var(--text2);line-height:1.7}
+.state-assessment{font-size:13px;color:var(--text2);line-height:1.8;white-space:pre-wrap;font-family:'DM Mono',monospace}
+.state-watch{margin-top:16px}
+.state-watch-label{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:8px}
+.watch-item{padding:6px 0 6px 18px;position:relative;font-size:13px;color:var(--text2);line-height:1.7;border-bottom:1px solid var(--border)}
+.watch-item:last-child{border-bottom:none}
+.watch-item::before{content:'';position:absolute;left:0;top:13px;width:6px;height:6px;border-radius:50%;background:var(--amber)}
 
-/* Conditions grid */
-.section-label{font-size:11px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin:32px 0 12px;font-family:'DM Mono',monospace}
+/* ── Section labels ─────────────────── */
+.section-label{font-size:11px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin:36px 0 12px;font-family:'DM Mono',monospace}
+
+/* ── Conditions grid ────────────────── */
 .cond-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 @media(max-width:768px){.cond-grid{grid-template-columns:repeat(2,1fr)}}
 .cond-card{padding:14px 16px;background:var(--card);border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;gap:10px}
@@ -62,7 +69,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .cond-name{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:1px}
 .cond-value{font-family:'DM Mono',monospace;font-size:14px;margin-top:2px}
 
-/* Metric cards */
+/* ── Metric cards ───────────────────── */
 .metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 @media(max-width:768px){.metric-grid{grid-template-columns:repeat(2,1fr)}}
 .metric-card{padding:16px;background:var(--card);border:1px solid var(--border);border-radius:6px}
@@ -70,19 +77,24 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .metric-value{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;margin:6px 0 4px}
 .metric-zscore{font-family:'DM Mono',monospace;font-size:11px}
 
-/* Two columns */
+/* ── Two columns ────────────────────── */
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px}
 @media(max-width:768px){.two-col{grid-template-columns:1fr}}
 .col-card{padding:16px;background:var(--card);border:1px solid var(--border);border-radius:6px}
 .col-title{font-size:12px;font-weight:600;letter-spacing:1px;margin-bottom:12px;text-transform:uppercase}
 .trigger-item{font-family:'DM Mono',monospace;font-size:12px;color:var(--text2);padding:6px 0;border-bottom:1px solid var(--border)}
 .trigger-item:last-child{border-bottom:none}
-.detector-item{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12px}
-.det-dot{width:6px;height:6px;border-radius:50%}
+.detector-item{display:flex;align-items:center;gap:8px;padding:8px 0;font-size:12px;border-bottom:1px solid var(--border)}
+.detector-item:last-child{border-bottom:none}
+.det-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.det-label{color:var(--text2)}
+.det-active{color:var(--text);font-weight:500}
+.det-status{font-family:'DM Mono',monospace;font-size:10px;margin-left:auto;letter-spacing:1px}
 
-/* Charts */
+/* ── Charts ─────────────────────────── */
 .chart-controls{display:flex;gap:6px;margin:12px 0}
-.chart-btn{background:var(--card);border:1px solid var(--border);color:var(--text2);padding:4px 12px;border-radius:4px;font-family:'DM Mono',monospace;font-size:11px;cursor:pointer}
+.chart-btn{background:var(--card);border:1px solid var(--border);color:var(--text2);padding:4px 12px;border-radius:4px;font-family:'DM Mono',monospace;font-size:11px;cursor:pointer;transition:all .15s}
+.chart-btn:hover{border-color:var(--text2)}
 .chart-btn.active{background:rgba(138,154,176,.1);color:var(--text);border-color:var(--text2)}
 .chart-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 @media(max-width:900px){.chart-grid{grid-template-columns:repeat(2,1fr)}}
@@ -90,23 +102,62 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .chart-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:14px}
 .chart-title{font-size:11px;color:var(--text2);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}
 .chart-wrap{position:relative;height:200px}
+.chart-legend{display:flex;gap:14px;margin-top:8px}
+.chart-legend-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--muted);font-family:'DM Mono',monospace}
+.chart-legend-swatch{width:10px;height:3px;border-radius:1px;flex-shrink:0}
 
-/* Table */
-.scan-table{width:100%;border-collapse:collapse;font-family:'DM Mono',monospace;font-size:11px;margin-top:12px}
-.scan-table th{text-align:left;padding:8px 10px;color:var(--muted);font-weight:400;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:1px}
-.scan-table td{padding:6px 10px;border-bottom:1px solid var(--border);color:var(--text2)}
+/* ── Table ──────────────────────────── */
+.table-wrap{max-height:420px;overflow-y:auto;margin-top:12px;border:1px solid var(--border);border-radius:6px}
+.table-wrap::-webkit-scrollbar{width:6px}
+.table-wrap::-webkit-scrollbar-track{background:var(--card)}
+.table-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.scan-table{width:100%;border-collapse:collapse;font-family:'DM Mono',monospace;font-size:11px}
+.scan-table thead{position:sticky;top:0;z-index:1}
+.scan-table th{text-align:left;padding:10px;color:var(--muted);font-weight:400;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:1px;background:var(--card)}
+.scan-table td{padding:7px 10px;border-bottom:1px solid var(--border);color:var(--text2)}
+.scan-table tr:hover td{background:rgba(138,154,176,.03)}
 .state-badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:500;letter-spacing:1px}
-.cond-dots{display:flex;gap:3px}
+.cond-dots{display:flex;gap:3px;align-items:center}
 .cond-dots span{width:6px;height:6px;border-radius:50%;display:inline-block}
 
-/* API */
-.api-block{margin-top:12px}
-.api-endpoint{font-family:'DM Mono',monospace;font-size:12px;background:var(--card);border:1px solid var(--border);padding:10px 14px;border-radius:4px;margin-bottom:6px;color:var(--text2)}
-.api-note{font-size:12px;color:var(--muted);margin-top:8px}
+/* ── API ────────────────────────────── */
+.api-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:20px;margin-top:12px}
+.api-title{font-size:14px;font-weight:600;letter-spacing:1px;margin-bottom:4px}
+.api-subtitle{font-size:12px;color:var(--muted);margin-bottom:16px}
+.api-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.api-url{flex:1;font-family:'DM Mono',monospace;font-size:12px;background:var(--bg);border:1px solid var(--border);padding:10px 14px;border-radius:4px;color:var(--text);word-break:break-all}
+.api-url .method{color:var(--green);margin-right:8px}
+.api-copy{background:var(--border);border:1px solid var(--border);color:var(--text2);padding:8px 12px;border-radius:4px;font-family:'DM Mono',monospace;font-size:11px;cursor:pointer;transition:all .15s;white-space:nowrap}
+.api-copy:hover{background:var(--muted);color:var(--text)}
+.api-copy.copied{background:var(--green);color:var(--text);border-color:var(--green)}
+.api-desc{font-size:11px;color:var(--muted);margin:0 0 12px 0;padding-left:4px}
 
-/* Footer */
-.footer{border-top:1px solid #111b27;padding:20px 0;margin-top:40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--muted)}
-.footer a{color:var(--text2);text-decoration:none}
+/* ── Methodology ────────────────────── */
+.method-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:28px;margin-top:12px}
+.method-intro{font-size:14px;color:var(--text2);line-height:1.8;margin-bottom:28px;max-width:640px}
+.method-section-title{font-size:13px;font-weight:600;color:var(--text);letter-spacing:2px;text-transform:uppercase;margin:28px 0 16px;padding-top:20px;border-top:1px solid var(--border)}
+.method-section-title:first-of-type{border-top:none;padding-top:0;margin-top:0}
+.method-var{margin-bottom:20px}
+.method-var-name{font-size:13px;font-weight:600;color:var(--text);font-family:'DM Mono',monospace;margin-bottom:4px}
+.method-var-text{font-size:13px;color:var(--text2);line-height:1.7;max-width:600px}
+.method-cond{margin-bottom:16px;padding-left:16px;border-left:2px solid var(--border)}
+.method-cond-name{font-size:12px;font-weight:600;color:var(--text);font-family:'DM Mono',monospace;margin-bottom:4px}
+.method-cond-text{font-size:13px;color:var(--text2);line-height:1.7}
+.method-state{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
+.method-state-badge{flex-shrink:0;padding:2px 10px;border-radius:3px;font-size:11px;font-weight:500;font-family:'DM Mono',monospace;letter-spacing:1px}
+.method-state-text{font-size:13px;color:var(--text2);line-height:1.7}
+.method-recovery{font-size:13px;color:var(--text2);line-height:1.8;max-width:600px;margin-bottom:12px}
+.method-source{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.method-source:last-child{border-bottom:none}
+.method-source-name{font-size:12px;font-weight:500;color:var(--text);min-width:120px}
+.method-source-desc{font-size:12px;color:var(--muted)}
+.method-source-url{font-size:11px;color:var(--text2);font-family:'DM Mono',monospace}
+.method-open{font-size:13px;color:var(--text2);margin-top:16px;line-height:1.7}
+
+/* ── Footer ─────────────────────────── */
+.footer{border-top:1px solid #111b27;padding:20px 0;margin-top:48px}
+.footer-top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--muted)}
+.footer-bottom{font-size:10px;color:var(--muted);margin-top:8px;opacity:.6}
 
 .loading{text-align:center;padding:60px 0;color:var(--muted);font-family:'DM Mono',monospace;font-size:13px}
 </style>
@@ -114,7 +165,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 <body>
 <div class="container">
 
-<!-- HEADER -->
+<!-- ═══ 1. HEADER ═══ -->
 <div class="header">
   <div class="header-inner">
     <div class="header-left">
@@ -125,30 +176,31 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
       </div>
     </div>
     <div class="header-right">
-      <div>Last scan: <span id="lastScan" class="mono">—</span><span id="liveBadge"></span></div>
-      <div>Next scan: <span id="nextScan" class="mono">—</span></div>
+      <div>Last scan: <span id="lastScan" class="mono">&mdash;</span><span id="liveBadge"></span></div>
+      <div>Next scan: <span id="nextScan" class="mono">&mdash;</span></div>
     </div>
   </div>
 </div>
 
-<!-- STATE BLOCK -->
+<!-- ═══ 2. STATE BLOCK ═══ -->
 <div class="state-block" id="stateBlock">
   <div class="state-eyebrow" id="stateEyebrow">System State</div>
-  <div class="state-verdict" id="stateVerdict">—</div>
+  <div class="state-verdict" id="stateVerdict">&mdash;</div>
   <div class="state-sub" id="stateSub">Loading...</div>
   <hr class="state-divider">
   <div class="state-assessment" id="stateAssessment"></div>
+  <div class="state-watch" id="stateWatch"></div>
 </div>
 
-<!-- CONDITIONS -->
+<!-- ═══ 3. SIX CONDITIONS ═══ -->
 <div class="section-label">Six Conditions</div>
 <div class="cond-grid" id="condGrid"></div>
 
-<!-- KEY METRICS -->
+<!-- ═══ 4. KEY METRICS ═══ -->
 <div class="section-label">Key Metrics</div>
 <div class="metric-grid" id="metricGrid"></div>
 
-<!-- TWO COLUMNS -->
+<!-- ═══ 5. TWO COLUMNS ═══ -->
 <div class="section-label">Analysis</div>
 <div class="two-col">
   <div class="col-card">
@@ -161,8 +213,8 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
   </div>
 </div>
 
-<!-- CHARTS -->
-<div class="section-label">Charts — <span id="chartDateRange">building</span></div>
+<!-- ═══ 6. CHARTS ═══ -->
+<div class="section-label">Charts &mdash; <span id="chartDateRange">building</span></div>
 <div class="chart-controls">
   <button class="chart-btn" data-range="7">7D</button>
   <button class="chart-btn" data-range="30">30D</button>
@@ -171,243 +223,580 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
   <button class="chart-btn active" data-range="0">ALL</button>
 </div>
 <div class="chart-grid">
-  <div class="chart-card"><div class="chart-title">System State Timeline</div><div class="chart-wrap"><canvas id="chartState"></canvas></div></div>
-  <div class="chart-card"><div class="chart-title">Anomaly Spotter</div><div class="chart-wrap"><canvas id="chartAnomaly"></canvas></div></div>
-  <div class="chart-card"><div class="chart-title">Capacity vs Pressure</div><div class="chart-wrap"><canvas id="chartCapPres"></canvas></div></div>
-  <div class="chart-card"><div class="chart-title">Energy Inflation Corridor</div><div class="chart-wrap"><canvas id="chartEnergy"></canvas></div></div>
-  <div class="chart-card"><div class="chart-title">Trust Composite</div><div class="chart-wrap"><canvas id="chartTrust"></canvas></div></div>
-  <div class="chart-card"><div class="chart-title">Conditions Heatmap</div><div class="chart-wrap"><canvas id="chartHeatmap"></canvas></div></div>
+  <div class="chart-card">
+    <div class="chart-title">System State Timeline</div>
+    <div class="chart-wrap"><canvas id="chartState"></canvas></div>
+    <div class="chart-legend"><span class="chart-legend-item"><span class="chart-legend-swatch" style="background:#8a9ab0"></span>Score 0&ndash;6</span></div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title">Anomaly Spotter</div>
+    <div class="chart-wrap"><canvas id="chartAnomaly"></canvas></div>
+    <div class="chart-legend"><span class="chart-legend-item"><span class="chart-legend-swatch" style="background:var(--red)"></span>&gt;2</span><span class="chart-legend-item"><span class="chart-legend-swatch" style="background:var(--amber)"></span>&gt;1</span><span class="chart-legend-item"><span class="chart-legend-swatch" style="background:var(--green)"></span>&lt;1</span></div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title">Capacity vs Pressure</div>
+    <div class="chart-wrap"><canvas id="chartCapPres"></canvas></div>
+    <div class="chart-legend"><span class="chart-legend-item"><span class="chart-legend-swatch" style="background:var(--red)"></span>Pressure</span><span class="chart-legend-item"><span class="chart-legend-swatch" style="background:var(--amber)"></span>Capacity gap</span></div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title">Energy Inflation Corridor</div>
+    <div class="chart-wrap"><canvas id="chartEnergy"></canvas></div>
+    <div class="chart-legend"><span class="chart-legend-item"><span class="chart-legend-swatch" style="background:var(--red)"></span>Brent z</span><span class="chart-legend-item"><span class="chart-legend-swatch" style="background:var(--amber)"></span>CPI norm</span></div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title">Trust Composite</div>
+    <div class="chart-wrap"><canvas id="chartTrust"></canvas></div>
+    <div class="chart-legend"><span class="chart-legend-item"><span class="chart-legend-swatch" style="background:#daa520"></span>Gold z</span><span class="chart-legend-item"><span class="chart-legend-swatch" style="background:#4a90d9"></span>TLT z</span></div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title">Conditions Heatmap</div>
+    <div class="chart-wrap"><canvas id="chartHeatmap"></canvas></div>
+    <div class="chart-legend"><span class="chart-legend-item"><span class="chart-legend-swatch" style="background:var(--red)"></span>Active</span><span class="chart-legend-item"><span class="chart-legend-swatch" style="background:#1a1f2e"></span>Inactive</span></div>
+  </div>
 </div>
 
-<!-- SCAN HISTORY -->
-<div class="section-label">Scan Archive — Complete Public Record</div>
-<table class="scan-table" id="scanTable">
-  <thead><tr><th>DateTime</th><th>State</th><th>Score</th><th>Conditions</th><th>Note</th></tr></thead>
-  <tbody id="scanBody"></tbody>
-</table>
-
-<!-- API -->
-<div class="section-label">API Endpoints</div>
-<div class="api-block">
-  <div class="api-endpoint">GET  /v1/latest</div>
-  <div class="api-endpoint">GET  /v1/history?days=30</div>
-  <div class="api-endpoint">GET  /v1/conditions</div>
-  <div class="api-note">No signup required. Rate limited to 60 requests/minute.</div>
+<!-- ═══ 7. SCAN HISTORY TABLE ═══ -->
+<div class="section-label">Scan Archive &mdash; Complete Public Record</div>
+<div class="table-wrap">
+  <table class="scan-table">
+    <thead><tr><th>DateTime</th><th>State</th><th>Score</th><th>Conditions</th><th>Note</th></tr></thead>
+    <tbody id="scanBody"></tbody>
+  </table>
 </div>
 
-<!-- FOOTER -->
+<!-- ═══ 8. API ═══ -->
+<div class="section-label">Free Public API</div>
+<div class="api-card">
+  <div class="api-title">Endpoints</div>
+  <div class="api-subtitle">No signup. No API key. Free to use.</div>
+
+  <div class="api-row">
+    <div class="api-url"><span class="method">GET</span>https://flowstate-io.netlify.app/flow_data_latest.json</div>
+    <button class="api-copy" onclick="copyUrl(this,'https://flowstate-io.netlify.app/flow_data_latest.json')">Copy</button>
+  </div>
+  <div class="api-desc">Current scan. System state, conditions, key readings, assessment.</div>
+
+  <div class="api-row">
+    <div class="api-url"><span class="method">GET</span>https://flowstate-io.netlify.app/flow_data_history.json</div>
+    <button class="api-copy" onclick="copyUrl(this,'https://flowstate-io.netlify.app/flow_data_history.json')">Copy</button>
+  </div>
+  <div class="api-desc">Last 90 scans. Full archive for charting and analysis.</div>
+
+  <div class="api-row">
+    <div class="api-url"><span class="method">GET</span>https://flowstate-io.netlify.app/flow_data_latest.json</div>
+    <button class="api-copy" onclick="copyUrl(this,'https://flowstate-io.netlify.app/flow_data_latest.json')">Copy</button>
+  </div>
+  <div class="api-desc">Returns conditions object with active/value/label per condition.</div>
+</div>
+
+<!-- ═══ 9. METHODOLOGY ═══ -->
+<div class="section-label">Methodology</div>
+<div class="method-card">
+
+  <div class="method-intro">
+    Flowstate monitors five structural variables in the global financial system, updated four times daily. These variables combine into a single daily verdict &mdash; Stable, Stressed, Critical, or Cascade.
+  </div>
+
+  <div class="method-section-title">The Five Variables</div>
+
+  <div class="method-var">
+    <div class="method-var-name">FLOW</div>
+    <div class="method-var-text">Where is capital actually moving? Not price &mdash; direction. Toward hard assets, toward sovereign debt, out of institutional structures, into digital rails. Flow tells you where money is going before the price reflects it.</div>
+  </div>
+  <div class="method-var">
+    <div class="method-var-name">CAPACITY</div>
+    <div class="method-var-text">How much stress can the system actually absorb? Not the headline number &mdash; the effective capacity after accounting for how much of the buffer has already been consumed. A system can look healthy on the surface while its real shock absorption is nearly exhausted.</div>
+  </div>
+  <div class="method-var">
+    <div class="method-var-name">PRESSURE</div>
+    <div class="method-var-text">What forces are pushing the system toward instability? Energy shocks. Inflation entrenchment. Monetary policy constraints. Fiscal deterioration. When multiple pressure channels activate simultaneously the risk of cascade increases non-linearly.</div>
+  </div>
+  <div class="method-var">
+    <div class="method-var-name">DRIFT</div>
+    <div class="method-var-text">What direction is the system actually moving? Not what happened today &mdash; what is the system becoming. Daily price moves are noise. Drift is the structural direction that only becomes visible when you look at the pattern across multiple readings over time.</div>
+  </div>
+  <div class="method-var">
+    <div class="method-var-name">TRUST</div>
+    <div class="method-var-text">The master variable. When institutional trust in the monetary system, sovereign debt, or policy credibility degrades &mdash; effective capacity collapses. Trust erodes faster than it heals. Once it falls below a critical threshold the system loses its primary shock absorber.</div>
+  </div>
+
+  <div class="method-section-title">The Six Conditions</div>
+
+  <div class="method-cond">
+    <div class="method-cond-name">A. Energy Shock</div>
+    <div class="method-cond-text">Brent crude more than 1.5 standard deviations above its two-year mean. Energy shocks transmit through producer prices to consumer prices within 60&ndash;90 days. They also constrain monetary policy &mdash; the Fed cannot cut rates to support growth while energy-driven inflation is entrenched.</div>
+  </div>
+  <div class="method-cond">
+    <div class="method-cond-name">B. Fear Elevated</div>
+    <div class="method-cond-text">The VIX more than 1.5 standard deviations above its two-year mean. Equity markets are pricing elevated uncertainty. Historically the VIX activates after the bond market has already begun repricing &mdash; meaning when this condition triggers the stress is already structurally present.</div>
+  </div>
+  <div class="method-cond">
+    <div class="method-cond-name">C. Inflation Ceiling</div>
+    <div class="method-cond-text">Core CPI at the top of its two-year range. No room left above. The Fed is trapped &mdash; it cannot deploy its primary tool without feeding the problem it is trying to solve.</div>
+  </div>
+  <div class="method-cond">
+    <div class="method-cond-name">D. Buffer Thin</div>
+    <div class="method-cond-text">The Federal Reserve balance sheet below its two-year mean. Two years of quantitative tightening have depleted the elastic capacity that absorbed previous shocks. When this condition is active the system has limited ability to expand its balance sheet without consequences.</div>
+  </div>
+  <div class="method-cond">
+    <div class="method-cond-name">E. Bonds Selling</div>
+    <div class="method-cond-text">Long-duration Treasury bonds under sustained selling pressure. Investors are demanding higher yields to compensate for inflation risk. When bonds sell alongside equities the safe haven architecture has failed.</div>
+  </div>
+  <div class="method-cond">
+    <div class="method-cond-name">F. Banks Stressed</div>
+    <div class="method-cond-text">The St. Louis Fed Financial Stress Index above its baseline. The formal banking system is showing stress in its internal plumbing. This is the last active firewall. When this condition activates all six conditions are met and the system is in CASCADE.</div>
+  </div>
+
+  <div class="method-section-title">The Four States</div>
+
+  <div class="method-state">
+    <span class="method-state-badge" style="background:rgba(45,122,61,.15);color:var(--stable)">STABLE</span>
+    <span class="method-state-text">0 to 1 conditions active. All structural variables within normal parameters. The system has meaningful capacity to absorb shocks.</span>
+  </div>
+  <div class="method-state">
+    <span class="method-state-badge" style="background:rgba(192,120,40,.15);color:var(--stressed)">STRESSED</span>
+    <span class="method-state-text">2 to 3 conditions active. Multiple pressure channels elevated simultaneously. The system is absorbing stress but buffer consumption is noted.</span>
+  </div>
+  <div class="method-state">
+    <span class="method-state-badge" style="background:rgba(192,57,43,.15);color:var(--critical)">CRITICAL</span>
+    <span class="method-state-text">4 to 5 conditions active. Pre-cascade configuration present. Effective capacity significantly degraded. The system is one to two conditions from maximum stress.</span>
+  </div>
+  <div class="method-state">
+    <span class="method-state-badge" style="background:rgba(255,32,32,.15);color:var(--cascade)">CASCADE</span>
+    <span class="method-state-text">6 conditions active. All structural conditions simultaneously active. Maximum stress configuration. The elastic buffer is exhausted.</span>
+  </div>
+
+  <div class="method-section-title">The Engine Reads In Both Directions</div>
+
+  <div class="method-recovery">
+    The same conditions that detect structural stress also detect structural recovery.<br><br>
+    When conditions deactivate one by one &mdash; when the score moves from Critical back toward Stable over consecutive readings &mdash; that trajectory is the recovery signal.<br><br>
+    Key recovery indicators:<br>
+    &bull; Energy shock deactivating as supply normalizes.<br>
+    &bull; Fed balance sheet expanding as elastic capacity rebuilds.<br>
+    &bull; VIX returning below threshold as fear subsides.<br>
+    &bull; Copper z-score rising as growth expectations improve.<br>
+    &bull; Bond market stabilizing as inflation expectations anchor.<br><br>
+    The Drift variable captures directional change over time. A consistent downward trend in score across multiple scans signals genuine structural improvement &mdash; not a one-day bounce but a real change in the system configuration.<br><br>
+    Flowstate does not only measure when things are breaking. It measures when they are healing.
+  </div>
+
+  <div class="method-section-title">Data Sources</div>
+
+  <div class="method-source">
+    <div class="method-source-name">FRED</div>
+    <div>
+      <div class="method-source-desc">Federal Reserve Economic Data &mdash; Federal Reserve Bank of St. Louis</div>
+      <div class="method-source-url">fred.stlouisfed.org</div>
+    </div>
+  </div>
+  <div class="method-source">
+    <div class="method-source-name">Twelve Data</div>
+    <div>
+      <div class="method-source-desc">Market data &mdash; equities, commodities, ETFs</div>
+      <div class="method-source-url">twelvedata.com</div>
+    </div>
+  </div>
+
+  <div class="method-open">
+    All data sources are public and free. The complete methodology is open. The archive is public. The API is free.
+  </div>
+
+</div>
+
+<!-- ═══ 10. FOOTER ═══ -->
 <div class="footer">
-  <div>Engine running since <span id="engineSince">—</span></div>
-  <div>Capital flows. This measures where. Not financial advice.</div>
+  <div class="footer-top">
+    <div>Flowstate &mdash; engine running since 2026-03-22</div>
+    <div>Capital flows. This measures where.</div>
+  </div>
+  <div class="footer-bottom">Not financial advice. Data updates four times daily.</div>
 </div>
 
-</div>
+</div><!-- /container -->
 
 <script>
+/* ────────────────────────────────────────────
+   Constants
+   ──────────────────────────────────────────── */
 const STATE_COLORS = {STABLE:'#2d7a3d',STRESSED:'#c07828',CRITICAL:'#c0392b',CASCADE:'#ff2020'};
+const COND_KEYS = ['energy_shock','fear_elevated','inflation_ceiling','buffer_thin','bonds_selling','banks_stressed'];
 const COND_NAMES = {energy_shock:'Energy Shock',fear_elevated:'Fear Elevated',inflation_ceiling:'Inflation Ceiling',buffer_thin:'Buffer Thin',bonds_selling:'Bonds Selling',banks_stressed:'Banks Stressed'};
-const DET_NAMES = {energy_shock:'Energy Shock',stagflation:'Stagflation',inflationary_boom:'Inflationary Boom',simultaneous_selloff:'Simultaneous Selloff',interbank_stress:'Interbank Stress'};
+const COND_THRESHOLDS = {energy_shock:'Brent z > 1.5',fear_elevated:'VIX z > 1.5',inflation_ceiling:'CPI norm > 8.0',buffer_thin:'Fed BS z < -0.5',bonds_selling:'TLT z < -1.0',banks_stressed:'STLFSI4 > 0.5'};
+const DET_KEYS = ['energy_shock','stagflation','inflationary_boom','simultaneous_selloff','interbank_stress'];
+const DET_NAMES = {energy_shock:'Energy Shock',stagflation:'Stagflation Signature',inflationary_boom:'Inflationary Boom',simultaneous_selloff:'Simultaneous Selloff',interbank_stress:'Interbank Stress'};
 
 let latestData = null;
 let historyData = [];
 let chartInstances = {};
 let currentRange = 0;
 
-function stateColor(s){return STATE_COLORS[s]||'#3d5068'}
-function zColor(z){const a=Math.abs(z);return a>2?'#c0392b':a>1?'#c07828':'#2d7a3d'}
-function fmt(v,d=2){return v!=null?Number(v).toFixed(d):'—'}
+/* ────────────────────────────────────────────
+   Helpers
+   ──────────────────────────────────────────── */
+function stateColor(s) { return STATE_COLORS[s] || '#3d5068'; }
+function zColor(z) { const a = Math.abs(z); return a > 2 ? '#c0392b' : a > 1 ? '#c07828' : '#2d7a3d'; }
+function fmt(v, d) { if (v == null || v === '' || isNaN(v)) return '\u2014'; return Number(v).toFixed(d != null ? d : 2); }
+function esc(s) { if (!s) return ''; const el = document.createElement('span'); el.textContent = s; return el.innerHTML; }
 
-async function loadData(){
-  try{
-    const [lr,hr]=await Promise.all([fetch('flow_data_latest.json'),fetch('flow_data_history.json')]);
-    if(lr.ok) latestData=await lr.json();
-    if(hr.ok) historyData=await hr.json();
-  }catch(e){console.error('Fetch error:',e)}
-  if(latestData) render();
-  else document.getElementById('stateBlock').innerHTML='<div class="loading">Waiting for first scan data...</div>';
+/* Read condition from either format:
+   Latest:  { active: true, value: 3.26, label: "..." }
+   History: true / false                                */
+function condIsActive(conds, key) {
+  const v = conds[key];
+  if (v == null) return false;
+  if (typeof v === 'boolean') return v;
+  if (typeof v === 'object') return !!v.active;
+  return false;
+}
+function condVal(conds, key) {
+  const v = conds[key];
+  if (v && typeof v === 'object') return v.value;
+  return null;
+}
+function condLbl(conds, key) {
+  const v = conds[key];
+  if (v && typeof v === 'object' && v.label) return v.label;
+  return COND_THRESHOLDS[key] || '';
 }
 
-function render(){
-  const d=latestData;
-  const sc=stateColor(d.system_state);
+/* Read z-score from either format:
+   Latest:  { key_readings: { brent: { zscore: 3.26 } } }
+   History: { brent_zscore: 3.26 }                        */
+function getZ(entry, field) {
+  const kr = entry.key_readings;
+  if (kr) {
+    const map = {brent:'brent',vix:'vix',gold:'gold',copper:'copper',cpi:'cpi',cpi_norm:'cpi',fed_bs:'fed_bs',tlt:'tlt',uso:'uso',stlfsi4:'stlfsi4'};
+    const obj = kr[map[field] || field];
+    if (!obj) return 0;
+    if (field === 'cpi_norm') return obj.norm || 0;
+    if (field === 'stlfsi4') return obj.raw || 0;
+    return obj.zscore || 0;
+  }
+  const flat = {brent:'brent_zscore',vix:'vix_zscore',gold:'gold_zscore',copper:'copper_zscore',cpi:'cpi_zscore',cpi_norm:'cpi_norm',fed_bs:'fed_bs_zscore',tlt:'tlt_zscore',uso:'uso_zscore',stlfsi4:'stlfsi4_raw'};
+  return entry[flat[field] || field] || 0;
+}
 
-  // Header
-  document.getElementById('headerDot').style.background=sc;
-  document.getElementById('lastScan').textContent=`${d.date} ${d.time}`;
-  document.getElementById('nextScan').textContent=d.meta?.next_scan||'—';
+/* ────────────────────────────────────────────
+   Data loading
+   ──────────────────────────────────────────── */
+async function loadData() {
+  try {
+    const [lr, hr] = await Promise.all([
+      fetch('flow_data_latest.json'),
+      fetch('flow_data_history.json')
+    ]);
+    if (lr.ok) latestData = await lr.json();
+    if (hr.ok) historyData = await hr.json();
+  } catch (e) { console.error('Fetch error:', e); }
 
-  const scanAge=(Date.now()-new Date(d.date+'T'+(d.time||'').replace(' UTC','')+'Z').getTime())/36e5;
-  const lb=document.getElementById('liveBadge');
-  if(scanAge<6) lb.innerHTML='<span class="badge badge-live">LIVE</span>';
-  else lb.innerHTML='<span class="badge badge-cached">CACHED</span>';
+  if (latestData) render();
+  else document.getElementById('stateBlock').innerHTML = '<div class="loading">Waiting for first scan data&hellip;</div>';
+}
 
-  // State block
-  const sb=document.getElementById('stateBlock');
-  sb.className='state-block '+(d.system_state||'stable').toLowerCase();
-  document.getElementById('stateEyebrow').textContent=`System State — ${d.date} ${d.time}`;
-  const sv=document.getElementById('stateVerdict');
-  sv.textContent=d.system_state;
-  sv.style.color=sc;
-  document.getElementById('stateSub').textContent=`${d.score} of ${d.max_score} conditions active`;
-  document.getElementById('stateAssessment').textContent=d.assessment||'';
+/* ────────────────────────────────────────────
+   Render
+   ──────────────────────────────────────────── */
+function render() {
+  const d = latestData;
+  const sc = stateColor(d.system_state);
 
-  // Conditions
-  const cg=document.getElementById('condGrid');
-  cg.innerHTML='';
-  if(d.conditions){
-    for(const[k,v]of Object.entries(d.conditions)){
-      const active=v.active;
-      cg.innerHTML+=`<div class="cond-card ${active?'active':''}"><div class="cond-dot ${active?'on':'off'}"></div><div><div class="cond-name">${COND_NAMES[k]||k}</div><div class="cond-value">${fmt(v.value,2)} <span style="color:var(--muted);font-size:10px">${v.label||''}</span></div></div></div>`;
+  /* Header */
+  document.getElementById('headerDot').style.background = sc;
+  document.getElementById('lastScan').textContent = d.date + ' ' + (d.time || '');
+  document.getElementById('nextScan').textContent = d.meta?.next_scan || '\u2014';
+
+  const timeStr = (d.time || '').replace(' UTC', '');
+  const scanTs = new Date(d.date + 'T' + (timeStr || '00:00') + 'Z');
+  const scanAge = (Date.now() - scanTs.getTime()) / 36e5;
+  document.getElementById('liveBadge').innerHTML = scanAge < 6
+    ? '<span class="badge badge-live">LIVE</span>'
+    : '<span class="badge badge-cached">CACHED</span>';
+
+  /* State block */
+  document.getElementById('stateBlock').className = 'state-block ' + (d.system_state || 'stable').toLowerCase();
+  document.getElementById('stateEyebrow').textContent = 'System State \u2014 ' + d.date + ' ' + (d.time || '');
+  const sv = document.getElementById('stateVerdict');
+  sv.textContent = d.system_state;
+  sv.style.color = sc;
+  document.getElementById('stateSub').textContent = d.score + ' of ' + d.max_score + ' conditions active';
+
+  /* Assessment — preserve newlines */
+  document.getElementById('stateAssessment').textContent = d.assessment || '';
+
+  /* What to watch — parse bullets */
+  const watchEl = document.getElementById('stateWatch');
+  const watchText = d.what_to_watch || '';
+  if (watchText.trim()) {
+    let html = '<div class="state-watch-label">Watch</div>';
+    const raw = watchText.replace(/^\s*WATCH:\s*/i, '');
+    const bullets = raw.split(/\n\s*-\s*/).filter(s => s.trim());
+    if (bullets.length <= 1) {
+      raw.split('-').map(s => s.trim()).filter(Boolean).forEach(b => {
+        html += '<div class="watch-item">' + esc(b) + '</div>';
+      });
+    } else {
+      bullets.forEach(b => { html += '<div class="watch-item">' + esc(b.trim()) + '</div>'; });
     }
+    watchEl.innerHTML = html;
+  } else {
+    watchEl.innerHTML = '';
   }
 
-  // Metrics
-  const mg=document.getElementById('metricGrid');
-  mg.innerHTML='';
-  const kr=d.key_readings||{};
-  const metrics=[
-    {label:'Brent Crude',val:kr.brent?.raw,z:kr.brent?.zscore},
-    {label:'VIX',val:kr.vix?.raw,z:kr.vix?.zscore},
-    {label:'Core CPI',val:kr.cpi?.norm,z:kr.cpi?.zscore,suffix:' norm'},
-    {label:'USO Anomaly',val:kr.uso?.zscore,z:kr.uso?.zscore,suffix:' z'},
+  /* Conditions */
+  const cg = document.getElementById('condGrid');
+  const conds = d.conditions || {};
+  let condHtml = '';
+  COND_KEYS.forEach(k => {
+    const active = condIsActive(conds, k);
+    const val = condVal(conds, k);
+    const lbl = condLbl(conds, k);
+    condHtml += '<div class="cond-card ' + (active ? 'active' : '') + '">'
+      + '<div class="cond-dot ' + (active ? 'on' : 'off') + '"></div>'
+      + '<div><div class="cond-name">' + (COND_NAMES[k] || k) + '</div>'
+      + '<div class="cond-value">' + fmt(val) + ' <span style="color:var(--muted);font-size:10px">' + esc(lbl) + '</span></div>'
+      + '</div></div>';
+  });
+  cg.innerHTML = condHtml;
+
+  /* Metrics */
+  const kr = d.key_readings || {};
+  const metrics = [
+    { label: 'Brent Crude', val: kr.brent?.raw, z: kr.brent?.zscore },
+    { label: 'VIX', val: kr.vix?.raw, z: kr.vix?.zscore },
+    { label: 'Core CPI', val: kr.cpi?.norm, z: kr.cpi?.zscore },
+    { label: 'USO Anomaly', val: kr.uso?.zscore, z: kr.uso?.zscore },
   ];
-  for(const m of metrics){
-    const zc=zColor(m.z||0);
-    mg.innerHTML+=`<div class="metric-card"><div class="metric-label">${m.label}</div><div class="metric-value" style="color:${zc}">${fmt(m.val)}</div><div class="metric-zscore" style="color:${zc}">z: ${fmt(m.z)}</div></div>`;
+  let metricHtml = '';
+  metrics.forEach(m => {
+    const zc = zColor(m.z || 0);
+    metricHtml += '<div class="metric-card"><div class="metric-label">' + m.label + '</div>'
+      + '<div class="metric-value" style="color:' + zc + '">' + fmt(m.val) + '</div>'
+      + '<div class="metric-zscore" style="color:' + zc + '">z: ' + fmt(m.z) + '</div></div>';
+  });
+  document.getElementById('metricGrid').innerHTML = metricHtml;
+
+  /* Triggers */
+  let trigHtml = '', ti = 0;
+  COND_KEYS.forEach(k => {
+    if (condIsActive(conds, k)) {
+      ti++;
+      trigHtml += '<div class="trigger-item">' + ti + '. ' + (COND_NAMES[k] || k) + ' \u2014 ' + fmt(condVal(conds, k)) + ' (' + esc(condLbl(conds, k)) + ')</div>';
+    }
+  });
+  document.getElementById('triggerList').innerHTML = ti === 0
+    ? '<div class="trigger-item" style="color:var(--green)">No triggers active</div>'
+    : trigHtml;
+
+  /* Detectors */
+  const dets = d.detectors || {};
+  let detHtml = '';
+  DET_KEYS.forEach(k => {
+    const on = !!dets[k];
+    detHtml += '<div class="detector-item">'
+      + '<span class="det-dot" style="background:' + (on ? 'var(--red)' : 'var(--muted)') + '"></span>'
+      + '<span class="' + (on ? 'det-active' : 'det-label') + '">' + (DET_NAMES[k] || k) + '</span>'
+      + '<span class="det-status" style="color:' + (on ? 'var(--red)' : 'var(--muted)') + '">' + (on ? 'ACTIVE' : 'CLEAR') + '</span>'
+      + '</div>';
+  });
+  document.getElementById('detectorList').innerHTML = detHtml;
+
+  /* Charts date range */
+  if (historyData.length) {
+    const dates = historyData.map(h => h.date);
+    document.getElementById('chartDateRange').textContent = 'building from ' + (dates[dates.length - 1] || dates[0] || '\u2014');
   }
 
-  // Triggers
-  const tl=document.getElementById('triggerList');
-  tl.innerHTML='';
-  const conds=d.conditions||{};
-  let ti=1;
-  for(const[k,v]of Object.entries(conds)){
-    if(v.active) tl.innerHTML+=`<div class="trigger-item">${ti++}. ${COND_NAMES[k]||k} — ${fmt(v.value)} (${v.label})</div>`;
-  }
-  if(ti===1) tl.innerHTML='<div class="trigger-item" style="color:var(--green)">No triggers active</div>';
-
-  // Detectors
-  const dl=document.getElementById('detectorList');
-  dl.innerHTML='';
-  const dets=d.detectors||{};
-  for(const[k,v]of Object.entries(dets)){
-    const c=v?'var(--red)':'var(--muted)';
-    dl.innerHTML+=`<div class="detector-item"><span class="det-dot" style="background:${c}"></span><span style="color:${v?'var(--text)':'var(--text2)'}">${DET_NAMES[k]||k}</span></div>`;
-  }
-
-  // History table
   renderTable();
-
-  // Charts
-  if(historyData.length>0){
-    const dates=historyData.map(h=>h.date).reverse();
-    document.getElementById('chartDateRange').textContent=`building from ${dates[0]||'—'}`;
-    document.getElementById('engineSince').textContent=dates[0]||'—';
-  }
   renderCharts();
 }
 
-function renderTable(){
-  const tb=document.getElementById('scanBody');
-  tb.innerHTML='';
-  const data=historyData.length?historyData:(latestData?[latestData]:[]);
-  for(const s of data){
-    const sc=stateColor(s.system_state);
-    const conds=s.conditions||{};
-    let dots='<div class="cond-dots">';
-    for(const k of['energy_shock','fear_elevated','inflation_ceiling','buffer_thin','bonds_selling','banks_stressed']){
-      const on=typeof conds[k]==='boolean'?conds[k]:(conds[k]?.active||false);
-      dots+=`<span style="background:${on?'var(--red)':'var(--muted)'}"></span>`;
-    }
-    dots+='</div>';
-    const dt=s.time?`${s.date} ${s.time}`:s.date;
-    const note=s.score>=4?'Pre-cascade':'';
-    tb.innerHTML+=`<tr><td>${dt}</td><td><span class="state-badge" style="background:${sc}22;color:${sc}">${s.system_state}</span></td><td>${s.score||0}/6</td><td>${dots}</td><td style="color:var(--muted)">${note}</td></tr>`;
-  }
-}
-
-function filterHistory(range){
-  if(!range||!historyData.length) return historyData;
-  const cutoff=new Date();
-  cutoff.setDate(cutoff.getDate()-range);
-  return historyData.filter(h=>new Date(h.date)>=cutoff);
-}
-
-function renderCharts(){
-  const data=currentRange?filterHistory(currentRange):historyData;
-  if(!data.length) return;
-  const rev=[...data].reverse();
-  const labels=rev.map(d=>d.date);
-
-  // Destroy existing
-  Object.values(chartInstances).forEach(c=>{try{c.destroy()}catch(e){}});
-  chartInstances={};
-
-  const base={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#2e3d4e',font:{family:'DM Mono',size:9},maxTicksLimit:6},grid:{color:'#0e1520'}},y:{ticks:{color:'#2e3d4e',font:{family:'DM Mono',size:9}},grid:{color:'#0e1520'}}}};
-
-  // Chart 1: State Timeline
-  const scores=rev.map(d=>d.score||0);
-  const pointColors=rev.map(d=>stateColor(d.system_state));
-  chartInstances.state=new Chart(document.getElementById('chartState'),{type:'line',data:{labels,datasets:[{data:scores,borderColor:'#8a9ab0',borderWidth:1.5,pointBackgroundColor:pointColors,pointRadius:3,tension:.3,fill:false}]},options:{...base,scales:{...base.scales,y:{...base.scales.y,min:0,max:6}},plugins:{...base.plugins,annotation:undefined}}});
-
-  // Chart 2: Anomaly Spotter (horizontal bar, today only)
-  if(latestData?.key_readings){
-    const kr=latestData.key_readings;
-    const items=[
-      {l:'Brent',v:kr.brent?.zscore||0},{l:'VIX',v:kr.vix?.zscore||0},
-      {l:'Gold',v:kr.gold?.zscore||0},{l:'Copper',v:kr.copper?.zscore||0},
-      {l:'CPI',v:kr.cpi?.zscore||0},{l:'Fed BS',v:kr.fed_bs?.zscore||0},
-      {l:'TLT',v:kr.tlt?.zscore||0},{l:'USO',v:kr.uso?.zscore||0},
-    ];
-    chartInstances.anomaly=new Chart(document.getElementById('chartAnomaly'),{type:'bar',data:{labels:items.map(i=>i.l),datasets:[{data:items.map(i=>i.v),backgroundColor:items.map(i=>zColor(i.v)),borderWidth:0}]},options:{...base,indexAxis:'y'}});
-  }
-
-  // Chart 3: Capacity vs Pressure
-  const pressure=rev.map(d=>{const kr=d.key_readings||d;return((kr.brent?.zscore||kr.brent_zscore||0)+(kr.vix?.zscore||kr.vix_zscore||0))/2});
-  const capacity=rev.map(d=>{const kr=d.key_readings||d;return-1*(kr.fed_bs?.zscore||kr.fed_bs_zscore||0)});
-  chartInstances.capPres=new Chart(document.getElementById('chartCapPres'),{type:'line',data:{labels,datasets:[{label:'Pressure',data:pressure,borderColor:'#c0392b',borderWidth:1.5,pointRadius:0,tension:.3},{label:'Capacity Gap',data:capacity,borderColor:'#c07828',borderWidth:1.5,pointRadius:0,tension:.3}]},options:base});
-
-  // Chart 4: Energy Inflation Corridor
-  const brentZ=rev.map(d=>{const kr=d.key_readings||d;return kr.brent?.zscore||kr.brent_zscore||0});
-  const cpiN=rev.map(d=>{const kr=d.key_readings||d;return kr.cpi?.norm||kr.cpi_norm||0});
-  chartInstances.energy=new Chart(document.getElementById('chartEnergy'),{type:'line',data:{labels,datasets:[{label:'Brent z',data:brentZ,borderColor:'#c0392b',borderWidth:1.5,pointRadius:0,tension:.3},{label:'CPI norm',data:cpiN,borderColor:'#c07828',borderWidth:1.5,pointRadius:0,tension:.3}]},options:base});
-
-  // Chart 5: Trust Composite
-  const goldZ=rev.map(d=>{const kr=d.key_readings||d;return kr.gold?.zscore||kr.gold_zscore||0});
-  const tltZ=rev.map(d=>{const kr=d.key_readings||d;return kr.tlt?.zscore||kr.tlt_zscore||0});
-  chartInstances.trust=new Chart(document.getElementById('chartTrust'),{type:'line',data:{labels,datasets:[{label:'Gold z',data:goldZ,borderColor:'#daa520',borderWidth:1.5,pointRadius:0,tension:.3},{label:'TLT z',data:tltZ,borderColor:'#4a90d9',borderWidth:1.5,pointRadius:0,tension:.3}]},options:base});
-
-  // Chart 6: Conditions Heatmap (grouped bars, last 7)
-  const last7=data.slice(0,7).reverse();
-  const condKeys=['energy_shock','fear_elevated','inflation_ceiling','buffer_thin','bonds_selling','banks_stressed'];
-  const condLabels=['Energy','Fear','Inflation','Buffer','Bonds','Banks'];
-  const datasets7=last7.map((s,i)=>{
-    const conds=s.conditions||{};
-    return{label:s.date,data:condLabels.map((_,ci)=>{
-      const k=condKeys[ci];
-      const on=typeof conds[k]==='boolean'?conds[k]:(conds[k]?.active||false);
-      return on?1:0.1;
-    }),backgroundColor:last7.map(()=>{
-      const sc=stateColor(s.system_state);
-      return i===last7.length-1?sc:sc+'44';
-    }),borderWidth:0};
+/* ────────────────────────────────────────────
+   History table
+   ──────────────────────────────────────────── */
+function renderTable() {
+  const data = historyData.length ? historyData : (latestData ? [latestData] : []);
+  let html = '';
+  data.forEach(s => {
+    const sc = stateColor(s.system_state);
+    const conds = s.conditions || {};
+    let dots = '<div class="cond-dots">';
+    COND_KEYS.forEach(k => {
+      dots += '<span style="background:' + (condIsActive(conds, k) ? 'var(--red)' : 'var(--muted)') + '"></span>';
+    });
+    dots += '</div>';
+    const dt = s.time ? s.date + ' ' + s.time : s.date;
+    const score = s.score || 0;
+    const note = score >= 5 ? 'Pre-cascade' : score >= 4 ? 'Elevated' : '';
+    html += '<tr><td>' + dt + '</td>'
+      + '<td><span class="state-badge" style="background:' + sc + '22;color:' + sc + '">' + (s.system_state || '') + '</span></td>'
+      + '<td>' + score + '/6</td>'
+      + '<td>' + dots + '</td>'
+      + '<td style="color:var(--muted)">' + note + '</td></tr>';
   });
-  chartInstances.heatmap=new Chart(document.getElementById('chartHeatmap'),{type:'bar',data:{labels:condLabels,datasets:datasets7},options:{...base,scales:{...base.scales,y:{...base.scales.y,min:0,max:1.2,ticks:{display:false}}}}});
+  document.getElementById('scanBody').innerHTML = html;
 }
 
-// Range buttons
-document.querySelectorAll('.chart-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.chart-btn').forEach(b=>b.classList.remove('active'));
+/* ────────────────────────────────────────────
+   Chart time range filter
+   ──────────────────────────────────────────── */
+function filterByRange(range) {
+  if (!range || !historyData.length) return historyData;
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - range);
+  return historyData.filter(h => new Date(h.date) >= cutoff);
+}
+
+/* ────────────────────────────────────────────
+   Charts
+   ──────────────────────────────────────────── */
+function renderCharts() {
+  /* Get data for current range (history is newest-first) */
+  const filtered = currentRange ? filterByRange(currentRange) : historyData;
+  /* If no history at all, use latest as single-point */
+  const data = filtered.length ? filtered : (latestData ? [latestData] : []);
+  if (!data.length) return;
+
+  /* Chronological order for charts */
+  const rev = [...data].reverse();
+  const labels = rev.map(d => d.date + (d.time ? ' ' + d.time.replace(' UTC', '') : ''));
+
+  /* Destroy previous */
+  Object.values(chartInstances).forEach(c => { try { c.destroy(); } catch (e) {} });
+  chartInstances = {};
+
+  const baseOpts = {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: { duration: 300 },
+    plugins: {
+      legend: { display: false },
+      tooltip: { backgroundColor: '#0c1018', borderColor: '#12181f', borderWidth: 1, titleFont: { family: 'DM Mono', size: 10 }, bodyFont: { family: 'DM Mono', size: 10 }, padding: 8 }
+    },
+    scales: {
+      x: { ticks: { color: '#2e3d4e', font: { family: 'DM Mono', size: 9 }, maxTicksLimit: 6, maxRotation: 0 }, grid: { color: '#0e1520' }, border: { color: '#12181f' } },
+      y: { ticks: { color: '#2e3d4e', font: { family: 'DM Mono', size: 9 } }, grid: { color: '#0e1520' }, border: { color: '#12181f' } }
+    }
+  };
+
+  /* 1. State Timeline */
+  chartInstances.state = new Chart(document.getElementById('chartState'), {
+    type: 'line',
+    data: { labels, datasets: [{
+      data: rev.map(d => d.score || 0),
+      borderColor: '#8a9ab0', borderWidth: 1.5,
+      pointBackgroundColor: rev.map(d => stateColor(d.system_state)),
+      pointRadius: rev.length < 30 ? 3 : 1, pointHoverRadius: 5,
+      tension: .3, fill: false
+    }] },
+    options: { ...baseOpts, scales: { ...baseOpts.scales, y: { ...baseOpts.scales.y, min: 0, max: 6, ticks: { ...baseOpts.scales.y.ticks, stepSize: 1 } } } }
+  });
+
+  /* 2. Anomaly Spotter — always uses latestData */
+  const anomalyFields = [
+    { l: 'Brent', f: 'brent' }, { l: 'VIX', f: 'vix' }, { l: 'Gold', f: 'gold' },
+    { l: 'Copper', f: 'copper' }, { l: 'CPI', f: 'cpi' }, { l: 'Fed BS', f: 'fed_bs' },
+    { l: 'TLT', f: 'tlt' }, { l: 'USO', f: 'uso' }
+  ];
+  const src = latestData || rev[rev.length - 1];
+  chartInstances.anomaly = new Chart(document.getElementById('chartAnomaly'), {
+    type: 'bar',
+    data: {
+      labels: anomalyFields.map(i => i.l),
+      datasets: [{ data: anomalyFields.map(i => getZ(src, i.f)), backgroundColor: anomalyFields.map(i => zColor(getZ(src, i.f))), borderWidth: 0, borderRadius: 2 }]
+    },
+    options: { ...baseOpts, indexAxis: 'y' }
+  });
+
+  /* 3. Capacity vs Pressure */
+  chartInstances.capPres = new Chart(document.getElementById('chartCapPres'), {
+    type: 'line',
+    data: { labels, datasets: [
+      { data: rev.map(d => (getZ(d, 'brent') + getZ(d, 'vix')) / 2), borderColor: '#c0392b', borderWidth: 1.5, pointRadius: 0, tension: .3, fill: false },
+      { data: rev.map(d => -1 * getZ(d, 'fed_bs')), borderColor: '#c07828', borderWidth: 1.5, pointRadius: 0, tension: .3, fill: false }
+    ] },
+    options: baseOpts
+  });
+
+  /* 4. Energy Inflation Corridor */
+  chartInstances.energy = new Chart(document.getElementById('chartEnergy'), {
+    type: 'line',
+    data: { labels, datasets: [
+      { data: rev.map(d => getZ(d, 'brent')), borderColor: '#c0392b', borderWidth: 1.5, pointRadius: 0, tension: .3, fill: false },
+      { data: rev.map(d => getZ(d, 'cpi_norm')), borderColor: '#c07828', borderWidth: 1.5, pointRadius: 0, tension: .3, fill: false }
+    ] },
+    options: baseOpts
+  });
+
+  /* 5. Trust Composite */
+  chartInstances.trust = new Chart(document.getElementById('chartTrust'), {
+    type: 'line',
+    data: { labels, datasets: [
+      { data: rev.map(d => getZ(d, 'gold')), borderColor: '#daa520', borderWidth: 1.5, pointRadius: 0, tension: .3, fill: false },
+      { data: rev.map(d => getZ(d, 'tlt')), borderColor: '#4a90d9', borderWidth: 1.5, pointRadius: 0, tension: .3, fill: false }
+    ] },
+    options: baseOpts
+  });
+
+  /* 6. Conditions Heatmap — last 7 scans */
+  const last7 = data.slice(0, 7).reverse();
+  const condLabels = ['Energy', 'Fear', 'Inflation', 'Buffer', 'Bonds', 'Banks'];
+  const heatDatasets = last7.map((s, i) => {
+    const conds = s.conditions || {};
+    const sc = stateColor(s.system_state);
+    const alpha = i === last7.length - 1 ? '' : '66';
+    return {
+      label: s.date || ('Scan ' + (i + 1)),
+      data: COND_KEYS.map(k => condIsActive(conds, k) ? 1 : 0.06),
+      backgroundColor: COND_KEYS.map(k => condIsActive(conds, k) ? (sc + alpha) : '#1a1f2e'),
+      borderWidth: 0, borderRadius: 1
+    };
+  });
+  chartInstances.heatmap = new Chart(document.getElementById('chartHeatmap'), {
+    type: 'bar',
+    data: { labels: condLabels, datasets: heatDatasets },
+    options: { ...baseOpts, scales: { ...baseOpts.scales, y: { ...baseOpts.scales.y, min: 0, max: 1.2, ticks: { display: false }, grid: { display: false } } } }
+  });
+}
+
+/* ────────────────────────────────────────────
+   Range buttons
+   ──────────────────────────────────────────── */
+document.querySelectorAll('.chart-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.chart-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    currentRange=parseInt(btn.dataset.range);
+    currentRange = parseInt(btn.dataset.range);
     renderCharts();
   });
 });
 
-// Init
+/* ────────────────────────────────────────────
+   Copy URL button
+   ──────────────────────────────────────────── */
+function copyUrl(btn, url) {
+  navigator.clipboard.writeText(url).then(() => {
+    btn.textContent = 'Copied';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
+  }).catch(() => {
+    /* Fallback for non-HTTPS */
+    const ta = document.createElement('textarea');
+    ta.value = url; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.textContent = 'Copied';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
+  });
+}
+
+/* ────────────────────────────────────────────
+   Init + auto-refresh
+   ──────────────────────────────────────────── */
 loadData();
-setInterval(loadData,300000);
+setInterval(loadData, 300000);
 </script>
 </body>
 </html>
