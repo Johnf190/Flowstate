@@ -48,7 +48,19 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .state-verdict{font-size:32px;font-weight:600;margin:8px 0 4px}
 .state-sub{font-size:13px;color:var(--text2);margin-bottom:12px}
 .state-divider{border:none;border-top:1px solid var(--border);margin:12px 0}
-.state-assessment{font-size:13px;color:var(--text2);line-height:1.8;white-space:pre-wrap;font-family:'DM Mono',monospace}
+.state-assessment{font-size:13px;color:var(--text2);line-height:1.8;white-space:pre-line;font-family:'DM Mono',monospace}
+
+/* ── Chart modal ────────────────────── */
+.chart-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1000;display:flex;align-items:center;justify-content:center;padding:24px;cursor:pointer;opacity:0;transition:opacity .2s}
+.chart-modal-overlay.visible{opacity:1}
+.chart-modal{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:20px;width:90vw;max-width:900px;height:70vh;cursor:default;position:relative}
+.chart-modal-title{font-size:12px;color:var(--text2);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;font-family:'DM Mono',monospace}
+.chart-modal-close{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;font-family:'DM Mono',monospace}
+.chart-modal-close:hover{color:var(--text)}
+.chart-modal-wrap{height:calc(100% - 36px)}
+.chart-card{cursor:pointer;transition:border-color .15s}
+.chart-card:hover{border-color:var(--text2)}
+.chart-note{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:12px;font-style:italic}
 .state-watch{margin-top:16px}
 .state-watch-label{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:8px}
 .watch-item{padding:6px 0 6px 18px;position:relative;font-size:13px;color:var(--text2);line-height:1.7;border-bottom:1px solid var(--border)}
@@ -252,6 +264,17 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
     <div class="chart-title">Conditions Heatmap</div>
     <div class="chart-wrap"><canvas id="chartHeatmap"></canvas></div>
     <div class="chart-legend"><span class="chart-legend-item"><span class="chart-legend-swatch" style="background:var(--red)"></span>Active</span><span class="chart-legend-item"><span class="chart-legend-swatch" style="background:#1a1f2e"></span>Inactive</span></div>
+  </div>
+</div>
+
+<div class="chart-note" id="chartNote"></div>
+
+<!-- Chart fullscreen modal -->
+<div class="chart-modal-overlay" id="chartModal" style="display:none">
+  <div class="chart-modal">
+    <div class="chart-modal-title" id="chartModalTitle"></div>
+    <button class="chart-modal-close" id="chartModalClose">&times;</button>
+    <div class="chart-modal-wrap"><canvas id="chartModalCanvas"></canvas></div>
   </div>
 </div>
 
@@ -638,13 +661,15 @@ function renderTable() {
 }
 
 /* ────────────────────────────────────────────
-   Chart time range filter
+   Chart time range filter (by scan count)
+   historyData is newest-first
    ──────────────────────────────────────────── */
 function filterByRange(range) {
   if (!range || !historyData.length) return historyData;
-  const cutoff = new Date();
-  cutoff.setDate(cutoff.getDate() - range);
-  return historyData.filter(h => new Date(h.date) >= cutoff);
+  /* Map button values to scan counts */
+  const countMap = { 7: 7, 30: 30, 90: 90, 365: 365 };
+  const n = countMap[range] || historyData.length;
+  return historyData.slice(0, Math.min(n, historyData.length));
 }
 
 /* ────────────────────────────────────────────
@@ -757,6 +782,8 @@ function renderCharts() {
     data: { labels: condLabels, datasets: heatDatasets },
     options: { ...baseOpts, scales: { ...baseOpts.scales, y: { ...baseOpts.scales.y, min: 0, max: 1.2, ticks: { display: false }, grid: { display: false } } } }
   });
+
+  updateChartNote();
 }
 
 /* ────────────────────────────────────────────
@@ -767,9 +794,116 @@ document.querySelectorAll('.chart-btn').forEach(btn => {
     document.querySelectorAll('.chart-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     currentRange = parseInt(btn.dataset.range);
+    /* Destroy all charts, rebuild with new range */
+    Object.values(chartInstances).forEach(c => { try { c.destroy(); } catch (e) {} });
+    chartInstances = {};
     renderCharts();
   });
 });
+
+/* ────────────────────────────────────────────
+   Archive building note
+   ──────────────────────────────────────────── */
+function updateChartNote() {
+  const el = document.getElementById('chartNote');
+  const n = historyData.length;
+  if (n < 8) {
+    el.textContent = 'Archive building \u2014 ' + n + ' scan' + (n !== 1 ? 's' : '') + ' recorded since 2026-03-22. Charts will fill automatically as data accumulates.';
+  } else {
+    el.textContent = '';
+  }
+}
+
+/* ────────────────────────────────────────────
+   Chart fullscreen modal
+   ──────────────────────────────────────────── */
+let modalChart = null;
+
+function openChartModal(title, buildFn) {
+  const overlay = document.getElementById('chartModal');
+  const canvas = document.getElementById('chartModalCanvas');
+  document.getElementById('chartModalTitle').textContent = title;
+
+  /* Reset canvas */
+  if (modalChart) { try { modalChart.destroy(); } catch (e) {} modalChart = null; }
+  const parent = canvas.parentNode;
+  parent.removeChild(canvas);
+  const newCanvas = document.createElement('canvas');
+  newCanvas.id = 'chartModalCanvas';
+  parent.appendChild(newCanvas);
+
+  overlay.style.display = 'flex';
+  requestAnimationFrame(() => overlay.classList.add('visible'));
+
+  /* Build the chart at modal size */
+  modalChart = buildFn(newCanvas);
+}
+
+function closeChartModal() {
+  const overlay = document.getElementById('chartModal');
+  overlay.classList.remove('visible');
+  setTimeout(() => { overlay.style.display = 'none'; }, 200);
+  if (modalChart) { try { modalChart.destroy(); } catch (e) {} modalChart = null; }
+}
+
+document.getElementById('chartModal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeChartModal();
+});
+document.getElementById('chartModalClose').addEventListener('click', closeChartModal);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeChartModal(); });
+
+/* Attach click handlers to chart cards */
+function attachChartClicks() {
+  const cards = document.querySelectorAll('.chart-card');
+  const titles = ['System State Timeline','Anomaly Spotter','Capacity vs Pressure','Energy Inflation Corridor','Trust Composite','Conditions Heatmap'];
+  const builders = [
+    /* Each builder creates the chart on a given canvas */
+    function(cvs) {
+      const filtered = currentRange ? filterByRange(currentRange) : historyData;
+      const data = filtered.length ? filtered : (latestData ? [latestData] : []);
+      const rev = [...data].reverse();
+      const labels = rev.map(d => d.date);
+      return new Chart(cvs, { type:'line', data:{ labels, datasets:[{ data:rev.map(d=>d.score||0), borderColor:'#8a9ab0', borderWidth:2, pointBackgroundColor:rev.map(d=>stateColor(d.system_state)), pointRadius:3, pointHoverRadius:6, tension:.3, fill:false }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ x:{ticks:{color:'#2e3d4e',font:{family:'DM Mono',size:10}},grid:{color:'#0e1520'}}, y:{min:0,max:6,ticks:{color:'#2e3d4e',font:{family:'DM Mono',size:10},stepSize:1},grid:{color:'#0e1520'}} } } });
+    },
+    function(cvs) {
+      const src = latestData || historyData[0];
+      const fields = [{l:'Brent',f:'brent'},{l:'VIX',f:'vix'},{l:'Gold',f:'gold'},{l:'Copper',f:'copper'},{l:'CPI',f:'cpi'},{l:'Fed BS',f:'fed_bs'},{l:'TLT',f:'tlt'},{l:'USO',f:'uso'}];
+      return new Chart(cvs, { type:'bar', data:{ labels:fields.map(i=>i.l), datasets:[{data:fields.map(i=>getZ(src,i.f)), backgroundColor:fields.map(i=>zColor(getZ(src,i.f))), borderWidth:0, borderRadius:3}] }, options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{legend:{display:false}}, scales:{ x:{ticks:{color:'#2e3d4e',font:{family:'DM Mono',size:10}},grid:{color:'#0e1520'}}, y:{ticks:{color:'#2e3d4e',font:{family:'DM Mono',size:10}},grid:{color:'#0e1520'}} } } });
+    },
+    function(cvs) {
+      const filtered = currentRange ? filterByRange(currentRange) : historyData;
+      const data = filtered.length ? filtered : (latestData ? [latestData] : []);
+      const rev = [...data].reverse(); const labels = rev.map(d=>d.date);
+      return new Chart(cvs, { type:'line', data:{ labels, datasets:[ {data:rev.map(d=>(getZ(d,'brent')+getZ(d,'vix'))/2),borderColor:'#c0392b',borderWidth:2,pointRadius:0,tension:.3,fill:false}, {data:rev.map(d=>-1*getZ(d,'fed_bs')),borderColor:'#c07828',borderWidth:2,pointRadius:0,tension:.3,fill:false} ] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ x:{ticks:{color:'#2e3d4e',font:{family:'DM Mono',size:10}},grid:{color:'#0e1520'}}, y:{ticks:{color:'#2e3d4e',font:{family:'DM Mono',size:10}},grid:{color:'#0e1520'}} } } });
+    },
+    function(cvs) {
+      const filtered = currentRange ? filterByRange(currentRange) : historyData;
+      const data = filtered.length ? filtered : (latestData ? [latestData] : []);
+      const rev = [...data].reverse(); const labels = rev.map(d=>d.date);
+      return new Chart(cvs, { type:'line', data:{ labels, datasets:[ {data:rev.map(d=>getZ(d,'brent')),borderColor:'#c0392b',borderWidth:2,pointRadius:0,tension:.3,fill:false}, {data:rev.map(d=>getZ(d,'cpi_norm')),borderColor:'#c07828',borderWidth:2,pointRadius:0,tension:.3,fill:false} ] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ x:{ticks:{color:'#2e3d4e',font:{family:'DM Mono',size:10}},grid:{color:'#0e1520'}}, y:{ticks:{color:'#2e3d4e',font:{family:'DM Mono',size:10}},grid:{color:'#0e1520'}} } } });
+    },
+    function(cvs) {
+      const filtered = currentRange ? filterByRange(currentRange) : historyData;
+      const data = filtered.length ? filtered : (latestData ? [latestData] : []);
+      const rev = [...data].reverse(); const labels = rev.map(d=>d.date);
+      return new Chart(cvs, { type:'line', data:{ labels, datasets:[ {data:rev.map(d=>getZ(d,'gold')),borderColor:'#daa520',borderWidth:2,pointRadius:0,tension:.3,fill:false}, {data:rev.map(d=>getZ(d,'tlt')),borderColor:'#4a90d9',borderWidth:2,pointRadius:0,tension:.3,fill:false} ] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ x:{ticks:{color:'#2e3d4e',font:{family:'DM Mono',size:10}},grid:{color:'#0e1520'}}, y:{ticks:{color:'#2e3d4e',font:{family:'DM Mono',size:10}},grid:{color:'#0e1520'}} } } });
+    },
+    function(cvs) {
+      const filtered = currentRange ? filterByRange(currentRange) : historyData;
+      const data = filtered.length ? filtered : (latestData ? [latestData] : []);
+      const last7 = data.slice(0,7).reverse();
+      const condLabels = ['Energy','Fear','Inflation','Buffer','Bonds','Banks'];
+      const ds = last7.map((s,i) => { const conds=s.conditions||{}; const sc=stateColor(s.system_state); const alpha=i===last7.length-1?'':'66'; return { label:s.date, data:COND_KEYS.map(k=>condIsActive(conds,k)?1:0.06), backgroundColor:COND_KEYS.map(k=>condIsActive(conds,k)?(sc+alpha):'#1a1f2e'), borderWidth:0, borderRadius:2 }; });
+      return new Chart(cvs, { type:'bar', data:{ labels:condLabels, datasets:ds }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ x:{ticks:{color:'#2e3d4e',font:{family:'DM Mono',size:10}},grid:{color:'#0e1520'}}, y:{min:0,max:1.2,ticks:{display:false},grid:{display:false}} } } });
+    }
+  ];
+
+  cards.forEach((card, i) => {
+    card.addEventListener('click', () => {
+      if (builders[i]) openChartModal(titles[i], builders[i]);
+    });
+  });
+}
 
 /* ────────────────────────────────────────────
    Copy URL button
@@ -780,7 +914,6 @@ function copyUrl(btn, url) {
     btn.classList.add('copied');
     setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
   }).catch(() => {
-    /* Fallback for non-HTTPS */
     const ta = document.createElement('textarea');
     ta.value = url; ta.style.position = 'fixed'; ta.style.opacity = '0';
     document.body.appendChild(ta); ta.select();
@@ -795,7 +928,7 @@ function copyUrl(btn, url) {
 /* ────────────────────────────────────────────
    Init + auto-refresh
    ──────────────────────────────────────────── */
-loadData();
+loadData().then(() => { attachChartClicks(); updateChartNote(); });
 setInterval(loadData, 300000);
 </script>
 </body>
