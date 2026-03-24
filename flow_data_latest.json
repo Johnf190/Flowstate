@@ -1,6 +1,6 @@
 {
   "date": "2026-03-24",
-  "time": "12:08 UTC",
+  "time": "12:39 UTC",
   "scan_number": 2,
   "system_state": "CRITICAL",
   "score": 5,
@@ -80,8 +80,8 @@
     "simultaneous_selloff": false,
     "interbank_stress": false
   },
-  "assessment": "CRITICAL (5/6):\n\n\nFive of six structural conditions active. Brent crude at z+3.26 transmitting energy shock into inflation ceiling at 10.0 normalized. Federal Reserve elastic capacity collapsed to z-0.73. Bond market repriced globally at TLT z-1.07. Equity markets have not converged\u2014SPY at z+0.95 signals pending correction vector.",
-  "what_to_watch": "- Fed balance sheet at z-0.73 \u2014 threshold z-0.50.\n  Elastic capacity below functional margin. Shock absorption compromised.\n- TLT at z-1.07 \u2014 threshold z-1.0.\n  Bond selling sustained. Capital structure reassessment ongoing.\n- Copper at z+1.22 \u2014 threshold z+1.5.\n  Stagflation detector active. Hard asset pricing reflects demand destruction risk.",
+  "assessment": "CRITICAL (5/6)\n\n\nFive of six structural conditions are active.\nBrent crude at z+3.26 transmits energy shock\nthrough inflation ceiling at 10.0 normalized into\nFederal Reserve with elastic capacity at z-0.73.\nBond market repricing complete. Equity markets\nhave not converged.",
+  "what_to_watch": "- STLFSI4 at -0.299 \u2014 threshold 0.0.\n  Crossing into positive territory activates CASCADE.\n- TLT at z-1.07 \u2014 threshold z-1.0.\n  Bond selling pressure sustained across duration.\n- VIX at z+1.84 \u2014 threshold z+2.0.\n  Equity volatility acceleration would signal convergence\n  to bond repricing.",
   "meta": {
     "next_scan": "2026-03-24T18:00:00Z",
     "series_fetched": 31,
