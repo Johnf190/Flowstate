@@ -208,6 +208,3 @@ __marimo__/
 
 # Flowstate specific
 twelvedata_cache.json
-flow_data_latest.json
-flow_data_history.json
-data/flow_data.csv
