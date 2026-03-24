@@ -1,0 +1,107 @@
+{
+  "date": "2026-03-24",
+  "time": "00:20 UTC",
+  "scan_number": 1,
+  "system_state": "CRITICAL",
+  "score": 5,
+  "max_score": 6,
+  "conditions": {
+    "energy_shock": {
+      "active": true,
+      "value": 3.26,
+      "label": "Brent z-score"
+    },
+    "fear_elevated": {
+      "active": true,
+      "value": 1.84,
+      "label": "VIX z-score"
+    },
+    "inflation_ceiling": {
+      "active": true,
+      "value": 10.0,
+      "label": "CPI normalized"
+    },
+    "buffer_thin": {
+      "active": true,
+      "value": -0.73,
+      "label": "Fed BS z-score"
+    },
+    "bonds_selling": {
+      "active": true,
+      "value": -1.0746,
+      "label": "TLT z-score"
+    },
+    "banks_stressed": {
+      "active": false,
+      "value": -0.299,
+      "label": "STLFSI4 raw"
+    }
+  },
+  "key_readings": {
+    "brent": {
+      "raw": 101.04,
+      "zscore": 3.26,
+      "norm": 0.0
+    },
+    "vix": {
+      "raw": 26.78,
+      "zscore": 1.84,
+      "norm": 0.0
+    },
+    "gold": {
+      "raw": 4400.01,
+      "zscore": 1.41,
+      "norm": 0.0
+    },
+    "copper": {
+      "zscore": 1.22
+    },
+    "cpi": {
+      "norm": 10.0,
+      "zscore": 1.66
+    },
+    "fed_bs": {
+      "zscore": -0.73
+    },
+    "tlt": {
+      "zscore": -1.0746
+    },
+    "uso": {
+      "zscore": 4.5981
+    },
+    "stlfsi4": {
+      "raw": -0.299
+    }
+  },
+  "detectors": {
+    "energy_shock": true,
+    "stagflation": true,
+    "inflationary_boom": true,
+    "simultaneous_selloff": false,
+    "interbank_stress": false
+  },
+  "assessment": "CRITICAL (5/6)\n\n\nFive of six structural conditions active. Brent crude z+3.26 transmitting energy shock through inflation environment at two-year ceiling (CPI normalized 10.0) into Federal Reserve with compromised elastic capacity (Fed BS z-0.73). Bond market repriced globally (TLT z-1.07). Equity markets have not converged.",
+  "what_to_watch": "- STLFSI4 at -0.299 \u2014 threshold 0.0.\n  Crossing completes CASCADE configuration.\n- Copper at z+1.22 \u2014 threshold z+1.5.\n  Acceleration would confirm stagflation trap closure.\n- VIX at z+1.84 \u2014 threshold z+2.0.\n  Breach signals equity market convergence to bond repricing.",
+  "meta": {
+    "next_scan": "2026-03-24T06:00:00Z",
+    "series_fetched": 31,
+    "stale_series": [
+      "consumer_conf",
+      "inflation_exp",
+      "m2",
+      "m2_velocity",
+      "foreign_treas",
+      "cpi_headline",
+      "core_cpi",
+      "michigan_infl",
+      "brent_fred",
+      "wti_fred",
+      "natgas_fred"
+    ],
+    "missing_series": [],
+    "cache_used": false,
+    "framework": "Flow Theory v1.0",
+    "voice_version": "FLOWSTATE_VOICE v1.0",
+    "api_endpoint": "https://api.flowstate.io/v1"
+  }
+}
