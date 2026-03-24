@@ -1,7 +1,7 @@
 [
   {
     "date": "2026-03-24",
-    "time": "15:47 UTC",
+    "time": "20:01 UTC",
     "scan_number": 1,
     "system_state": "CRITICAL",
     "score": 5,
@@ -81,10 +81,10 @@
       "simultaneous_selloff": false,
       "interbank_stress": false
     },
-    "assessment": "CRITICAL (5/6):\n\n\nFive of six structural conditions are active. Brent crude at z+3.26 transmits energy shock into inflation ceiling at normalized 10.0. Fed balance sheet at z-0.73 has crossed elastic capacity threshold. Bond market repricing (TLT z-1.07) confirms loss of monetary accommodation signal. Equity markets have not yet converged to underlying conditions.",
-    "what_to_watch": "- STLFSI4 at -0.299 \u2014 threshold 0.0. Single basis point crossing completes CASCADE configuration and confirms interbank stress activation.\n- Copper at z+1.22 \u2014 threshold 0.0. Positive reading masks stagflation trap; watch for reversal confirmation.\n- SPY at z+0.95 \u2014 threshold z+1.5. Equity lag behind structural repricing creates convergence pressure.",
+    "assessment": "CRITICAL (5/6)\n\n\nFive of six structural conditions are active. Brent crude at z+3.26 transmits through inflation normalized at 10.0 into a Federal Reserve with elastic capacity at z-0.73\u2014below the 0.50 threshold where intervention capacity begins structural collapse. Bond markets have repriced. Equity markets have not converged.",
+    "what_to_watch": "- STLFSI4 at -0.299 \u2014 threshold 0.0. Crossing into positive territory completes CASCADE configuration.\n- TLT at z-1.07 \u2014 threshold z-1.0. Bond selling is confirmed and sustained.\n- Copper at z+1.22 \u2014 threshold z+0.0. Stagflation detector active; hard asset demand persists amid constraint.",
     "meta": {
-      "next_scan": "2026-03-24T18:00:00Z",
+      "next_scan": "2026-03-24T22:00:00Z",
       "series_fetched": 31,
       "stale_series": [
         "consumer_conf",
