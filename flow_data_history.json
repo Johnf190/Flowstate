@@ -1,7 +1,7 @@
 [
   {
     "date": "2026-03-24",
-    "time": "11:46 UTC",
+    "time": "11:54 UTC",
     "scan_number": 1,
     "system_state": "CRITICAL",
     "score": 5,
@@ -81,8 +81,8 @@
       "simultaneous_selloff": false,
       "interbank_stress": false
     },
-    "assessment": "CRITICAL (5/6):\n\n\nFive of six structural conditions are active.\nBrent crude at z+3.26 transmits energy shock\nthrough inflation ceiling (CPI norm 10.0) into\nFederal Reserve with depleted elastic capacity\n(balance sheet z-0.73). Bond market repriced\n(TLT z-1.07). Equity markets have not converged.",
-    "what_to_watch": "- STLFSI4 at -0.299 \u2014 threshold 0.0.\n  Crossing completes CASCADE configuration.\n- Copper at z+1.22 \u2014 threshold z+0.0.\n  Confirms stagflation trap is active.\n- VIX at z+1.84 \u2014 threshold z+2.0.\n  Acceleration signals equity repricing imminent.",
+    "assessment": "CRITICAL (5/6):\n\n\nFive of six structural conditions are active.\nBrent crude at z+3.26 transmits energy shock\nthrough inflation environment at two-year ceiling\ninto Federal Reserve with elastic capacity at\nz-0.73. Bond market repriced globally at z-1.07.\nEquity markets have not converged. Stagflation\ndetector active. System in pre-cascade configuration.",
+    "what_to_watch": "- STLFSI4 at -0.299 \u2014 threshold 0.0.\n  Crossing activates sixth condition. CASCADE.\n- TLT at z-1.07 \u2014 threshold z-1.0.\n  Bond selling confirmed. Capital flow away\n  from duration exposure.\n- Copper at z+1.22 \u2014 threshold z+2.0.\n  Stagflation signal. Demand destruction phase\n  not yet arrived.",
     "meta": {
       "next_scan": "2026-03-24T12:00:00Z",
       "series_fetched": 31,
@@ -104,6 +104,31 @@
       "framework": "Flow Theory v1.0",
       "voice_version": "FLOWSTATE_VOICE v1.0",
       "api_endpoint": "https://api.flowstate.io/v1"
+    }
+  },
+  {
+    "date": "2026-03-23",
+    "scan_number": 1,
+    "brent_zscore": 3.2649,
+    "vix_zscore": 1.8364,
+    "cpi_norm": 10.0,
+    "fed_bs_zscore": -0.7309,
+    "tlt_zscore": 0.0,
+    "stlfsi4_raw": -0.299,
+    "copper_zscore": 1.2181,
+    "spy_zscore": 0.0,
+    "gold_zscore": 1.4069,
+    "uso_zscore": 4.5981,
+    "system_state": "CRITICAL",
+    "score": 4,
+    "max_score": 6,
+    "conditions": {
+      "energy_shock": true,
+      "fear_elevated": true,
+      "inflation_ceiling": true,
+      "buffer_thin": true,
+      "bonds_selling": false,
+      "banks_stressed": false
     }
   },
   {
