@@ -1,0 +1,46 @@
+CREATE TABLE scans (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at timestamptz DEFAULT now(),
+  scan_date date NOT NULL,
+  scan_time time NOT NULL,
+  scan_number integer NOT NULL,
+  system_state text NOT NULL,
+  score integer NOT NULL,
+  cond_energy boolean,
+  cond_fear boolean,
+  cond_inflation boolean,
+  cond_buffer boolean,
+  cond_bonds boolean,
+  cond_banks boolean,
+  brent_raw numeric,
+  brent_zscore numeric,
+  vix_raw numeric,
+  vix_zscore numeric,
+  gold_raw numeric,
+  gold_zscore numeric,
+  copper_zscore numeric,
+  cpi_norm numeric,
+  cpi_zscore numeric,
+  fed_bs_zscore numeric,
+  tlt_zscore numeric,
+  uso_zscore numeric,
+  stlfsi4_raw numeric,
+  sofr_ff_gap numeric,
+  hy_ig_gap numeric,
+  yield_curve numeric,
+  det_energy_shock boolean,
+  det_stagflation boolean,
+  det_inflationary_boom boolean,
+  det_simultaneous_selloff boolean,
+  det_interbank_stress boolean,
+  assessment text,
+  what_to_watch text,
+  full_data jsonb,
+  data_quality jsonb,
+  UNIQUE(scan_date, scan_number)
+);
+
+CREATE INDEX idx_scan_date
+  ON scans(scan_date DESC);
+CREATE INDEX idx_created_at
+  ON scans(created_at DESC);

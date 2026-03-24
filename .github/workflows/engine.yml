@@ -1,0 +1,57 @@
+name: Flowstate Engine
+
+on:
+  schedule:
+    - cron: '0 6,12,18,22 * * *'
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  run-engine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Cache pip
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ hashFiles('requirements.txt') }}
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run engine
+        env:
+          TWELVEDATA_API_KEY: ${{ secrets.TWELVEDATA_API_KEY }}
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          NOTIFY_EMAIL: ${{ secrets.NOTIFY_EMAIL }}
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: python flow_engine.py
+
+      - name: Commit data
+        run: |
+          git config user.name "Flowstate Engine"
+          git config user.email "engine@flowstate.io"
+          git add data/flow_data.csv
+          git add flow_data_latest.json
+          git add flow_data_history.json
+          git diff --staged --quiet || git commit -m \
+            "scan: $(date -u +%Y-%m-%dT%H:%M)UTC"
+          git push
