@@ -485,7 +485,19 @@ def append_csv(date_str, scan_number, df, norm_df, z_df):
     # Ensure data directory exists
     CSV_FILE.parent.mkdir(parents=True, exist_ok=True)
 
-    header_needed = not CSV_FILE.exists()
+    # Dedup: check if this date+scan_number already exists in CSV
+    if CSV_FILE.exists():
+        try:
+            existing = pd.read_csv(CSV_FILE)
+            mask = (existing['date'] == date_str) & (existing['scan_number'] == scan_number)
+            if mask.any():
+                # Drop old row(s) for this date+scan, rewrite
+                existing = existing[~mask]
+                existing.to_csv(CSV_FILE, index=False)
+        except Exception:
+            pass
+
+    header_needed = not CSV_FILE.exists() or CSV_FILE.stat().st_size == 0
     cols = list(row.keys())
     with open(CSV_FILE, "a") as f:
         if header_needed:
@@ -726,6 +738,16 @@ def write_json_files(scan_number, system_state, score,
 
         # Prepend current scan
         history.insert(0, latest_obj)
+
+        # Dedup by date + scan_number, keep first (newest) occurrence
+        seen = set()
+        deduped = []
+        for entry in history:
+            key = (entry.get("date", ""), entry.get("scan_number", 1))
+            if key not in seen:
+                seen.add(key)
+                deduped.append(entry)
+        history = deduped
 
         with open(JSON_HISTORY, "w") as f:
             json.dump(history, f, indent=2)
