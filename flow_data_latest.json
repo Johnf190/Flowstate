@@ -1,6 +1,6 @@
 {
   "date": "2026-03-24",
-  "time": "00:42 UTC",
+  "time": "08:08 UTC",
   "scan_number": 1,
   "system_state": "CRITICAL",
   "score": 5,
@@ -28,7 +28,7 @@
     },
     "bonds_selling": {
       "active": true,
-      "value": -1.0746,
+      "value": -1.0732,
       "label": "TLT z-score"
     },
     "banks_stressed": {
@@ -64,7 +64,7 @@
       "zscore": -0.73
     },
     "tlt": {
-      "zscore": -1.0746
+      "zscore": -1.0732
     },
     "uso": {
       "zscore": 4.5981
@@ -80,10 +80,10 @@
     "simultaneous_selloff": false,
     "interbank_stress": false
   },
-  "assessment": "CRITICAL (5/6)\n\n\nFive of six structural conditions active. Brent crude at z+3.26 transmitting through inflation environment at two-year ceiling (CPI normalized 10.0) into Federal Reserve with elastic capacity eroded (Fed balance sheet z-0.73). Bond market repriced globally (TLT z-1.07). Equity markets have not yet converged to underlying pressure state.",
-  "what_to_watch": "- STLFSI4 at -0.299 \u2014 threshold 0.0.\n  Crossing into positive territory completes CASCADE configuration.\n- Copper at z+1.22 \u2014 threshold z+1.5.\n  Stagflation detector active. Further advance confirms entrenchment.\n- SPY at z+0.95 \u2014 threshold z+2.0.\n  Equity disconnect from bond and commodity pressure. Convergence vector critical.",
+  "assessment": "CRITICAL (5/6):\n\n\nFive of six structural conditions active. Brent crude at z+3.26 transmitting through inflation environment locked at ceiling (10.0 normalized) into Federal Reserve with elastic capacity eroded to z-0.73. Bond market repriced globally at z-1.07. Equity markets have not yet converged to condition severity.",
+  "what_to_watch": "- STLFSI4 at -0.299 \u2014 threshold 0.0.\n  Crossing into positive territory completes CASCADE configuration.\n- Fed balance sheet at z-0.73 \u2014 threshold -0.50.\n  Elastic capacity now below safety margin. Shock absorption degraded.\n- TLT at z-1.07 \u2014 threshold -1.0.\n  Bond selling structural. Refinancing costs rising into fiscal deterioration.",
   "meta": {
-    "next_scan": "2026-03-24T06:00:00Z",
+    "next_scan": "2026-03-24T12:00:00Z",
     "series_fetched": 31,
     "stale_series": [
       "consumer_conf",
