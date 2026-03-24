@@ -659,8 +659,8 @@ def write_json_files(scan_number, system_state, score,
         history = []
         if CSV_FILE.exists():
             csv_df = pd.read_csv(CSV_FILE)
-            # Take last 90 rows, newest first
-            csv_df = csv_df.tail(90).iloc[::-1]
+            # All rows, newest first
+            csv_df = csv_df.iloc[::-1]
             for _, row in csv_df.iterrows():
                 entry = {
                     "date": str(row.get("date", "")),
@@ -726,9 +726,6 @@ def write_json_files(scan_number, system_state, score,
 
         # Prepend current scan
         history.insert(0, latest_obj)
-
-        # Cap at 90
-        history = history[:90]
 
         with open(JSON_HISTORY, "w") as f:
             json.dump(history, f, indent=2)
