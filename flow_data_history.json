@@ -1,7 +1,7 @@
 [
   {
     "date": "2026-03-25",
-    "time": "15:50 UTC",
+    "time": "19:58 UTC",
     "scan_number": 1,
     "system_state": "CRITICAL",
     "score": 5,
@@ -40,7 +40,7 @@
     },
     "key_readings": {
       "brent": {
-        "raw": 101.04,
+        "raw": 103.79,
         "zscore": 3.26,
         "norm": 0.0
       },
@@ -81,10 +81,10 @@
       "simultaneous_selloff": false,
       "interbank_stress": false
     },
-    "assessment": "CRITICAL (5/6)\n\n\nFive of six structural conditions active. Brent crude at z+3.26 transmitting energy shock into inflation environment at two-year ceiling (CPI normalized 10.0). Federal Reserve elastic capacity collapsed (balance sheet z-0.73, below -0.5 threshold). Bond market repricing confirmed (TLT z-1.18). Equity markets have not converged to underlying stress.",
-    "what_to_watch": "- Fed balance sheet at z-0.73 \u2014 threshold -0.5.\n  Elastic capacity component functionally absent. System dependent on viscous and rigid buffers only.\n\n- TLT at z-1.18 \u2014 threshold -1.0.\n  Long-duration repricing underway. Capital flow direction shifting away from duration assets.\n\n- SPY at z+0.91 \u2014 threshold z+1.5.\n  Equity pricing has not yet registered cascade configuration. Convergence vector active.",
+    "assessment": "CRITICAL (5/6):\n\n\nFive of six structural conditions are active.\nBrent crude at z+3.26 transmits energy shock\nthrough inflation ceiling (CPI normalized 10.0)\ninto Federal Reserve with elastic capacity\ncompromised (Fed BS z-0.73). Bond market\nrepriced globally (TLT z-1.18). Equity markets\nhave not yet converged to systemic pressure.",
+    "what_to_watch": "- Fed balance sheet at z-0.73 \u2014 threshold z-0.5.\n  Elastic capacity operating below safe margin.\n- STLFSI4 at -0.37 \u2014 threshold 0.5.\n  Bank stress detector inactive. Only buffer remains.\n- Copper at z+1.16 \u2014 threshold z+0.0.\n  Stagflation signal confirmed. Real demand under pressure.",
     "meta": {
-      "next_scan": "2026-03-25T18:00:00Z",
+      "next_scan": "2026-03-25T22:00:00Z",
       "series_fetched": 31,
       "stale_series": [
         "consumer_conf",
@@ -95,10 +95,7 @@
         "foreign_treas",
         "cpi_headline",
         "core_cpi",
-        "michigan_infl",
-        "brent_fred",
-        "wti_fred",
-        "natgas_fred"
+        "michigan_infl"
       ],
       "missing_series": [],
       "cache_used": false,
@@ -110,7 +107,7 @@
   {
     "date": "2026-03-24",
     "scan_number": 1,
-    "brent_zscore": 3.2649,
+    "brent_zscore": 3.259,
     "vix_zscore": 1.8666,
     "cpi_norm": 10.0,
     "fed_bs_zscore": -0.7309,
