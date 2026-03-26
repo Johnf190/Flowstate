@@ -1,107 +1,52 @@
 {
-  "date": "2026-03-24",
-  "time": "12:08 UTC",
-  "scan_number": 2,
-  "system_state": "CRITICAL",
-  "score": 5,
-  "max_score": 6,
-  "conditions": {
-    "energy_shock": {
-      "active": true,
-      "value": 3.26,
-      "label": "Brent z-score"
+  "generated": "2026-03-26T00:44:08Z",
+  "overall": {
+    "cfi": 0.5128,
+    "state": "RESILIENT",
+    "sdi": 0.1541,
+    "origin_channel": null,
+    "origin_confidence": "NONE"
+  },
+  "channels": {
+    "equity": {
+      "name": "Equity (VIX)",
+      "sigma_ratio": 0.0,
+      "suppression_pct": 0,
+      "duration_months": 0,
+      "state": "NORMAL",
+      "var_current": 0.006759,
+      "var_baseline": 0.006512
     },
-    "fear_elevated": {
-      "active": true,
-      "value": 1.84,
-      "label": "VIX z-score"
+    "credit": {
+      "name": "Credit (HY OAS)",
+      "sigma_ratio": 0.0306,
+      "suppression_pct": 25,
+      "duration_months": 3,
+      "state": "NORMAL",
+      "var_current": 0.000355,
+      "var_baseline": 0.000471
     },
-    "inflation_ceiling": {
-      "active": true,
-      "value": 10.0,
-      "label": "CPI normalized"
+    "rates": {
+      "name": "Rates (10Y Treasury)",
+      "sigma_ratio": 0.2157,
+      "suppression_pct": 58,
+      "duration_months": 9,
+      "state": "WATCH",
+      "var_current": 9.2e-05,
+      "var_baseline": 0.000217
     },
-    "buffer_thin": {
-      "active": true,
-      "value": -0.73,
-      "label": "Fed BS z-score"
-    },
-    "bonds_selling": {
-      "active": true,
-      "value": -1.0732,
-      "label": "TLT z-score"
-    },
-    "banks_stressed": {
-      "active": false,
-      "value": -0.299,
-      "label": "STLFSI4 raw"
+    "banks": {
+      "name": "Banks (KRE)",
+      "sigma_ratio": 0.1541,
+      "suppression_pct": 41,
+      "duration_months": 9,
+      "state": "WATCH",
+      "var_current": 0.000237,
+      "var_baseline": 0.000402
     }
   },
-  "key_readings": {
-    "brent": {
-      "raw": 101.04,
-      "zscore": 3.26,
-      "norm": 0.0
-    },
-    "vix": {
-      "raw": 26.78,
-      "zscore": 1.84,
-      "norm": 0.0
-    },
-    "gold": {
-      "raw": 4400.01,
-      "zscore": 1.41,
-      "norm": 0.0
-    },
-    "copper": {
-      "zscore": 1.22
-    },
-    "cpi": {
-      "norm": 10.0,
-      "zscore": 1.66
-    },
-    "fed_bs": {
-      "zscore": -0.73
-    },
-    "tlt": {
-      "zscore": -1.0732
-    },
-    "uso": {
-      "zscore": 4.5981
-    },
-    "stlfsi4": {
-      "raw": -0.299
-    }
-  },
-  "detectors": {
-    "energy_shock": true,
-    "stagflation": true,
-    "inflationary_boom": true,
-    "simultaneous_selloff": false,
-    "interbank_stress": false
-  },
-  "assessment": "CRITICAL (5/6):\n\n\nFive of six structural conditions active. Brent crude at z+3.26 transmitting energy shock into inflation ceiling at 10.0 normalized. Federal Reserve elastic capacity collapsed to z-0.73. Bond market repriced globally at TLT z-1.07. Equity markets have not converged\u2014SPY at z+0.95 signals pending correction vector.",
-  "what_to_watch": "- Fed balance sheet at z-0.73 \u2014 threshold z-0.50.\n  Elastic capacity below functional margin. Shock absorption compromised.\n- TLT at z-1.07 \u2014 threshold z-1.0.\n  Bond selling sustained. Capital structure reassessment ongoing.\n- Copper at z+1.22 \u2014 threshold z+1.5.\n  Stagflation detector active. Hard asset pricing reflects demand destruction risk.",
-  "meta": {
-    "next_scan": "2026-03-24T18:00:00Z",
-    "series_fetched": 31,
-    "stale_series": [
-      "consumer_conf",
-      "inflation_exp",
-      "m2",
-      "m2_velocity",
-      "foreign_treas",
-      "cpi_headline",
-      "core_cpi",
-      "michigan_infl",
-      "brent_fred",
-      "wti_fred",
-      "natgas_fred"
-    ],
-    "missing_series": [],
-    "cache_used": false,
-    "framework": "Flow Theory v1.0",
-    "voice_version": "FLOWSTATE_VOICE v1.0",
-    "api_endpoint": "https://api.flowstate.io/v1"
+  "historical_context": {
+    "last_silence_event": "2007-2008 GFC",
+    "pattern_match": "No divergence detected"
   }
 }

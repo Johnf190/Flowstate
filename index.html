@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Flowstate</title>
+<title>Silence Horizon</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -12,15 +12,14 @@
 :root{
   --bg:#08090c;--card:#0c1018;--border:#12181f;
   --text:#dde3ec;--text2:#8a9ab0;--muted:#3d5068;
-  --red:#c0392b;--amber:#c07828;--green:#2d7a3d;
-  --stable:#2d7a3d;--stressed:#c07828;--critical:#c0392b;--cascade:#ff2020;
+  --green:#2d7a3d;--yellow:#c07828;--orange:#d35400;--red:#c0392b;
   --grid:#0e1520;
 }
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.6}
 .mono{font-family:'DM Mono',monospace}
 .container{max-width:1200px;margin:0 auto;padding:0 24px 60px}
 
-/* ── Header ─────────────────────────── */
+/* Header */
 .header{border-bottom:1px solid #111b27;padding:20px 0}
 .header-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
 .header-left{display:flex;align-items:center;gap:12px}
@@ -29,112 +28,77 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .header-title{font-size:20px;font-weight:600;letter-spacing:2px}
 .header-sub{color:var(--text2);font-size:12px}
 .header-right{text-align:right;font-family:'DM Mono',monospace;font-size:11px;color:var(--text2)}
-.badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:500;letter-spacing:1px;margin-left:8px}
-.badge-live{background:rgba(45,122,61,.2);color:var(--green)}
-.badge-cached{background:rgba(61,80,104,.2);color:var(--muted)}
 
-/* ── State block ────────────────────── */
-.state-block{margin:24px 0;padding:20px 24px;background:var(--card);border:1px solid var(--border);border-radius:6px;position:relative}
-.state-block::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:6px 0 0 6px}
-.state-block.stable::before{background:var(--stable)}
-.state-block.stressed::before{background:var(--stressed)}
-.state-block.critical::before{background:var(--critical)}
-.state-block.cascade::before{background:var(--cascade)}
-.state-block.stable{background:rgba(45,122,61,.03)}
-.state-block.stressed{background:rgba(192,120,40,.03)}
-.state-block.critical{background:rgba(192,57,43,.03)}
-.state-block.cascade{background:rgba(255,32,32,.05)}
-.state-eyebrow{font-size:11px;color:var(--text2);letter-spacing:1px;text-transform:uppercase;font-family:'DM Mono',monospace}
-.state-verdict{font-size:32px;font-weight:600;margin:8px 0 4px}
-.state-sub{font-size:13px;color:var(--text2);margin-bottom:12px}
-.state-divider{border:none;border-top:1px solid var(--border);margin:12px 0}
-.state-assessment{font-size:13px;color:var(--text2);line-height:1.8;white-space:pre-line;font-family:'DM Mono',monospace}
+/* Overall panel */
+.overall{margin:24px 0;padding:24px;background:var(--card);border:1px solid var(--border);border-radius:6px;position:relative}
+.overall::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:6px 0 0 6px}
+.overall.resilient::before{background:var(--green)}
+.overall.strained::before{background:var(--yellow)}
+.overall.critical::before{background:var(--orange)}
+.overall.catastrophic::before{background:var(--red)}
+.overall.resilient{background:rgba(45,122,61,.03)}
+.overall.strained{background:rgba(192,120,40,.03)}
+.overall.critical{background:rgba(211,84,0,.03)}
+.overall.catastrophic{background:rgba(192,57,43,.05)}
+.overall-top{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.cfi-value{font-family:'DM Mono',monospace;font-size:36px;font-weight:500}
+.state-badge{padding:4px 12px;border-radius:4px;font-size:12px;font-weight:600;letter-spacing:1px;font-family:'DM Mono',monospace}
+.badge-resilient{background:rgba(45,122,61,.15);color:var(--green)}
+.badge-strained{background:rgba(192,120,40,.15);color:var(--yellow)}
+.badge-critical{background:rgba(211,84,0,.15);color:var(--orange)}
+.badge-catastrophic{background:rgba(192,57,43,.15);color:var(--red)}
+.overall-meta{margin-top:12px;font-family:'DM Mono',monospace;font-size:12px;color:var(--text2)}
+.overall-meta span{margin-right:20px}
+.overall-interp{margin-top:12px;font-size:14px;color:var(--text2);border-top:1px solid var(--border);padding-top:12px}
+.origin-tag{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-family:'DM Mono',monospace;background:rgba(192,120,40,.12);color:var(--yellow);margin-left:4px}
 
-/* ── Chart modal ────────────────────── */
-.chart-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1000;display:flex;align-items:center;justify-content:center;padding:24px;cursor:pointer;opacity:0;transition:opacity .2s}
-.chart-modal-overlay.visible{opacity:1}
-.chart-modal{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:20px;width:90vw;max-width:900px;height:70vh;cursor:default;position:relative}
-.chart-modal-title{font-size:12px;color:var(--text2);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;font-family:'DM Mono',monospace}
-.chart-modal-close{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;font-family:'DM Mono',monospace}
-.chart-modal-close:hover{color:var(--text)}
-.chart-modal-wrap{height:calc(100% - 36px)}
-.chart-card{position:relative}
-.chart-card:hover{border-color:var(--text2)}
-.chart-click-zone{position:absolute;inset:0;z-index:10;cursor:pointer;background:transparent}
-.chart-expand{display:none}
-.chart-note{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:12px;font-style:italic}
-.state-watch{margin-top:16px}
-.state-watch-label{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:8px}
-.watch-item{padding:6px 0 6px 18px;position:relative;font-size:13px;color:var(--text2);line-height:1.7;border-bottom:1px solid var(--border)}
-.watch-item:last-child{border-bottom:none}
-.watch-item::before{content:'';position:absolute;left:0;top:13px;width:6px;height:6px;border-radius:50%;background:var(--amber)}
-
-/* ── Section labels ─────────────────── */
+/* Channel cards */
 .section-label{font-size:11px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin:36px 0 12px;font-family:'DM Mono',monospace}
+.channel-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(max-width:700px){.channel-grid{grid-template-columns:1fr}}
+.ch-card{padding:18px;background:var(--card);border:1px solid var(--border);border-radius:6px}
+.ch-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.ch-name{font-size:13px;font-weight:500}
+.ch-badge{padding:2px 8px;border-radius:3px;font-size:10px;font-weight:500;letter-spacing:1px;font-family:'DM Mono',monospace}
+.ch-badge-normal{background:rgba(45,122,61,.12);color:var(--green)}
+.ch-badge-watch{background:rgba(192,120,40,.12);color:var(--yellow)}
+.ch-badge-silence{background:rgba(192,57,43,.12);color:var(--red)}
+.ch-badge-deep{background:rgba(192,57,43,.2);color:#ff4444}
+.ch-bar-wrap{height:6px;background:#111820;border-radius:3px;margin:8px 0;overflow:hidden}
+.ch-bar{height:100%;border-radius:3px;transition:width .4s}
+.ch-sigma{font-family:'DM Mono',monospace;font-size:18px;font-weight:500;margin-bottom:4px}
+.ch-details{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)}
+.ch-details span{margin-right:14px}
 
-/* ── Conditions grid ────────────────── */
-.cond-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-@media(max-width:768px){.cond-grid{grid-template-columns:repeat(2,1fr)}}
-.cond-card{padding:14px 16px;background:var(--card);border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;gap:10px}
-.cond-card.active{background:rgba(192,57,43,.06);border-color:rgba(192,57,43,.2)}
-.cond-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.cond-dot.on{background:var(--red)}
-.cond-dot.off{background:var(--muted)}
-.cond-name{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:1px}
-.cond-value{font-family:'DM Mono',monospace;font-size:14px;margin-top:2px}
-
-/* ── Metric cards ───────────────────── */
-.metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-@media(max-width:768px){.metric-grid{grid-template-columns:repeat(2,1fr)}}
-.metric-card{padding:16px;background:var(--card);border:1px solid var(--border);border-radius:6px}
-.metric-label{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:1px}
-.metric-value{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;margin:6px 0 4px}
-.metric-zscore{font-family:'DM Mono',monospace;font-size:11px}
-
-/* ── Two columns ────────────────────── */
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px}
-@media(max-width:768px){.two-col{grid-template-columns:1fr}}
-.col-card{padding:16px;background:var(--card);border:1px solid var(--border);border-radius:6px}
-.col-title{font-size:12px;font-weight:600;letter-spacing:1px;margin-bottom:12px;text-transform:uppercase}
-.trigger-item{font-family:'DM Mono',monospace;font-size:12px;color:var(--text2);padding:6px 0;border-bottom:1px solid var(--border)}
-.trigger-item:last-child{border-bottom:none}
-.detector-item{display:flex;align-items:center;gap:8px;padding:8px 0;font-size:12px;border-bottom:1px solid var(--border)}
-.detector-item:last-child{border-bottom:none}
-.det-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.det-label{color:var(--text2)}
-.det-active{color:var(--text);font-weight:500}
-.det-status{font-family:'DM Mono',monospace;font-size:10px;margin-left:auto;letter-spacing:1px}
-
-/* ── Charts ─────────────────────────── */
+/* Chart */
 .chart-controls{display:flex;gap:6px;margin:12px 0}
-.chart-btn{background:var(--card);border:1px solid var(--border);color:var(--text2);padding:4px 12px;border-radius:4px;font-family:'DM Mono',monospace;font-size:11px;cursor:pointer;transition:all .15s}
+.chart-btn{background:var(--card);border:1px solid var(--border);color:var(--text2);padding:4px 14px;border-radius:4px;font-family:'DM Mono',monospace;font-size:11px;cursor:pointer;transition:all .15s}
 .chart-btn:hover{border-color:var(--text2)}
 .chart-btn.active{background:rgba(138,154,176,.1);color:var(--text);border-color:var(--text2)}
-.chart-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-@media(max-width:900px){.chart-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:600px){.chart-grid{grid-template-columns:1fr}}
-.chart-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:14px}
-.chart-title{font-size:11px;color:var(--text2);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}
-.chart-wrap{position:relative;height:200px}
-.chart-legend{display:flex;gap:14px;margin-top:8px}
-.chart-legend-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--muted);font-family:'DM Mono',monospace}
-.chart-legend-swatch{width:10px;height:3px;border-radius:1px;flex-shrink:0}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:18px;position:relative;cursor:pointer}
+.chart-card:hover{border-color:var(--text2)}
+.chart-wrap{height:280px;position:relative}
+.chart-legend{display:flex;gap:16px;margin-top:10px;font-size:10px;color:var(--muted);font-family:'DM Mono',monospace}
+.chart-legend-item{display:flex;align-items:center;gap:4px}
+.chart-swatch{width:10px;height:3px;border-radius:1px}
 
-/* ── Table ──────────────────────────── */
-.table-wrap{max-height:420px;overflow-y:auto;margin-top:12px;border:1px solid var(--border);border-radius:6px}
-.table-wrap::-webkit-scrollbar{width:6px}
-.table-wrap::-webkit-scrollbar-track{background:var(--card)}
-.table-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
-.scan-table{width:100%;border-collapse:collapse;font-family:'DM Mono',monospace;font-size:11px}
-.scan-table thead{position:sticky;top:0;z-index:1}
-.scan-table th{text-align:left;padding:10px;color:var(--muted);font-weight:400;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:1px;background:var(--card)}
-.scan-table td{padding:7px 10px;border-bottom:1px solid var(--border);color:var(--text2)}
-.scan-table tr:hover td{background:rgba(138,154,176,.03)}
-.state-badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:500;letter-spacing:1px}
-.cond-dots{display:flex;gap:3px;align-items:center}
-.cond-dots span{width:6px;height:6px;border-radius:50%;display:inline-block}
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1000;display:none;align-items:center;justify-content:center;padding:24px}
+.modal-overlay.visible{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:20px;width:90vw;max-width:1000px;height:70vh;position:relative}
+.modal-close{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;font-family:'DM Mono',monospace}
+.modal-close:hover{color:var(--text)}
+.modal-title{font-size:12px;color:var(--text2);letter-spacing:1px;text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:12px}
+.modal-chart-wrap{height:calc(100% - 36px)}
 
-/* ── API ────────────────────────────── */
+/* History table */
+.events-table{width:100%;border-collapse:collapse;font-family:'DM Mono',monospace;font-size:11px;margin-top:12px}
+.events-table th{text-align:left;padding:10px;color:var(--muted);font-weight:400;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:1px}
+.events-table td{padding:8px 10px;border-bottom:1px solid var(--border);color:var(--text2)}
+.events-table tr:hover td{background:rgba(138,154,176,.03)}
+.events-caption{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.6}
+
+/* API */
 .api-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:20px;margin-top:12px}
 .api-title{font-size:14px;font-weight:600;letter-spacing:1px;margin-bottom:4px}
 .api-subtitle{font-size:12px;color:var(--muted);margin-bottom:16px}
@@ -144,31 +108,9 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .api-copy{background:var(--border);border:1px solid var(--border);color:var(--text2);padding:8px 12px;border-radius:4px;font-family:'DM Mono',monospace;font-size:11px;cursor:pointer;transition:all .15s;white-space:nowrap}
 .api-copy:hover{background:var(--muted);color:var(--text)}
 .api-copy.copied{background:var(--green);color:var(--text);border-color:var(--green)}
-.api-desc{font-size:11px;color:var(--muted);margin:0 0 12px 0;padding-left:4px}
+.api-desc{font-size:11px;color:var(--muted);margin:0 0 12px;padding-left:4px}
 
-/* ── Methodology ────────────────────── */
-.method-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:28px;margin-top:12px}
-.method-intro{font-size:14px;color:var(--text2);line-height:1.8;margin-bottom:28px;max-width:640px}
-.method-section-title{font-size:13px;font-weight:600;color:var(--text);letter-spacing:2px;text-transform:uppercase;margin:28px 0 16px;padding-top:20px;border-top:1px solid var(--border)}
-.method-section-title:first-of-type{border-top:none;padding-top:0;margin-top:0}
-.method-var{margin-bottom:20px}
-.method-var-name{font-size:13px;font-weight:600;color:var(--text);font-family:'DM Mono',monospace;margin-bottom:4px}
-.method-var-text{font-size:13px;color:var(--text2);line-height:1.7;max-width:600px}
-.method-cond{margin-bottom:16px;padding-left:16px;border-left:2px solid var(--border)}
-.method-cond-name{font-size:12px;font-weight:600;color:var(--text);font-family:'DM Mono',monospace;margin-bottom:4px}
-.method-cond-text{font-size:13px;color:var(--text2);line-height:1.7}
-.method-state{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
-.method-state-badge{flex-shrink:0;padding:2px 10px;border-radius:3px;font-size:11px;font-weight:500;font-family:'DM Mono',monospace;letter-spacing:1px}
-.method-state-text{font-size:13px;color:var(--text2);line-height:1.7}
-.method-recovery{font-size:13px;color:var(--text2);line-height:1.8;max-width:600px;margin-bottom:12px}
-.method-source{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
-.method-source:last-child{border-bottom:none}
-.method-source-name{font-size:12px;font-weight:500;color:var(--text);min-width:120px}
-.method-source-desc{font-size:12px;color:var(--muted)}
-.method-source-url{font-size:11px;color:var(--text2);font-family:'DM Mono',monospace}
-.method-open{font-size:13px;color:var(--text2);margin-top:16px;line-height:1.7}
-
-/* ── Footer ─────────────────────────── */
+/* Footer */
 .footer{border-top:1px solid #111b27;padding:20px 0;margin-top:48px}
 .footer-top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--muted)}
 .footer-bottom{font-size:10px;color:var(--muted);margin-top:8px;opacity:.6}
@@ -179,786 +121,326 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 <body>
 <div class="container">
 
-<!-- ═══ 1. HEADER ═══ -->
+<!-- HEADER -->
 <div class="header">
   <div class="header-inner">
     <div class="header-left">
       <div class="pulse-dot" id="headerDot"></div>
       <div>
-        <div class="header-title">FLOWSTATE</div>
-        <div class="header-sub">Structural condition monitor</div>
+        <div class="header-title">SILENCE HORIZON</div>
+        <div class="header-sub">Variance suppression monitor</div>
       </div>
     </div>
     <div class="header-right">
-      <div>Last scan: <span id="lastScan" class="mono">&mdash;</span><span id="liveBadge"></span></div>
-      <div>Next scan: <span id="nextScan" class="mono">&mdash;</span></div>
+      <div>Last scan: <span id="lastScan" class="mono">&mdash;</span></div>
+      <div>Updated daily</div>
     </div>
   </div>
 </div>
 
-<!-- ═══ 2. STATE BLOCK ═══ -->
-<div class="state-block" id="stateBlock">
-  <div class="state-eyebrow" id="stateEyebrow">System State</div>
-  <div class="state-verdict" id="stateVerdict">&mdash;</div>
-  <div class="state-sub" id="stateSub">Loading...</div>
-  <hr class="state-divider">
-  <div class="state-assessment" id="stateAssessment"></div>
-  <div class="state-watch" id="stateWatch"></div>
+<!-- OVERALL PANEL -->
+<div class="overall" id="overallPanel">
+  <div class="overall-top">
+    <div class="cfi-value" id="cfiValue">&mdash;</div>
+    <span class="state-badge" id="stateBadge">&mdash;</span>
+  </div>
+  <div class="overall-meta">
+    <span>SDI: <strong id="sdiValue">&mdash;</strong></span>
+    <span id="originTag"></span>
+  </div>
+  <div class="overall-interp" id="interpText">Loading...</div>
 </div>
 
-<!-- ═══ 3. SIX CONDITIONS ═══ -->
-<div class="section-label">Six Conditions</div>
-<div class="cond-grid" id="condGrid"></div>
+<!-- CHANNEL CARDS -->
+<div class="section-label">Channel Status</div>
+<div class="channel-grid" id="channelGrid"></div>
 
-<!-- ═══ 4. KEY METRICS ═══ -->
-<div class="section-label">Key Metrics</div>
-<div class="metric-grid" id="metricGrid"></div>
-
-<!-- ═══ 5. TWO COLUMNS ═══ -->
-<div class="section-label">Analysis</div>
-<div class="two-col">
-  <div class="col-card">
-    <div class="col-title">Threshold Triggers</div>
-    <div id="triggerList"></div>
-  </div>
-  <div class="col-card">
-    <div class="col-title">Structural Detectors</div>
-    <div id="detectorList"></div>
-  </div>
-</div>
-
-<!-- ═══ 6. CHARTS ═══ -->
-<div class="section-label">Charts &mdash; <span id="chartDateRange">building</span></div>
+<!-- CFI HISTORY CHART -->
+<div class="section-label">CFI History</div>
 <div class="chart-controls">
-  <button class="chart-btn" data-range="7">7D</button>
-  <button class="chart-btn" data-range="30">30D</button>
   <button class="chart-btn" data-range="90">90D</button>
-  <button class="chart-btn" data-range="365">1Y</button>
-  <button class="chart-btn active" data-range="0">ALL</button>
+  <button class="chart-btn active" data-range="730">2Y</button>
+  <button class="chart-btn" data-range="0">ALL</button>
 </div>
-<div class="chart-grid">
-  <div class="chart-card" data-chart-idx>
-    <button class="chart-expand" title="Expand">&#x26F6;</button>
-    <div class="chart-title">System State Timeline</div>
-    <div class="chart-wrap"><canvas id="chartState"></canvas></div>
-    <div class="chart-legend"><span class="chart-legend-item"><span class="chart-legend-swatch" style="background:#8a9ab0"></span>Score 0&ndash;6</span></div>
-  </div>
-  <div class="chart-card" data-chart-idx>
-    <button class="chart-expand" title="Expand">&#x26F6;</button>
-    <div class="chart-title">Anomaly Spotter</div>
-    <div class="chart-wrap"><canvas id="chartAnomaly"></canvas></div>
-    <div class="chart-legend"><span class="chart-legend-item"><span class="chart-legend-swatch" style="background:var(--red)"></span>&gt;2</span><span class="chart-legend-item"><span class="chart-legend-swatch" style="background:var(--amber)"></span>&gt;1</span><span class="chart-legend-item"><span class="chart-legend-swatch" style="background:var(--green)"></span>&lt;1</span></div>
-  </div>
-  <div class="chart-card" data-chart-idx>
-    <button class="chart-expand" title="Expand">&#x26F6;</button>
-    <div class="chart-title">Capacity vs Pressure</div>
-    <div class="chart-wrap"><canvas id="chartCapPres"></canvas></div>
-    <div class="chart-legend"><span class="chart-legend-item"><span class="chart-legend-swatch" style="background:var(--red)"></span>Pressure</span><span class="chart-legend-item"><span class="chart-legend-swatch" style="background:var(--amber)"></span>Capacity gap</span></div>
-  </div>
-  <div class="chart-card" data-chart-idx>
-    <button class="chart-expand" title="Expand">&#x26F6;</button>
-    <div class="chart-title">Energy Inflation Corridor</div>
-    <div class="chart-wrap"><canvas id="chartEnergy"></canvas></div>
-    <div class="chart-legend"><span class="chart-legend-item"><span class="chart-legend-swatch" style="background:var(--red)"></span>Brent z</span><span class="chart-legend-item"><span class="chart-legend-swatch" style="background:var(--amber)"></span>CPI norm</span></div>
-  </div>
-  <div class="chart-card" data-chart-idx>
-    <button class="chart-expand" title="Expand">&#x26F6;</button>
-    <div class="chart-title">Trust Composite</div>
-    <div class="chart-wrap"><canvas id="chartTrust"></canvas></div>
-    <div class="chart-legend"><span class="chart-legend-item"><span class="chart-legend-swatch" style="background:#daa520"></span>Gold z</span><span class="chart-legend-item"><span class="chart-legend-swatch" style="background:#4a90d9"></span>TLT z</span></div>
-  </div>
-  <div class="chart-card" data-chart-idx>
-    <button class="chart-expand" title="Expand">&#x26F6;</button>
-    <div class="chart-title">Conditions Heatmap</div>
-    <div class="chart-wrap"><canvas id="chartHeatmap"></canvas></div>
-    <div class="chart-legend"><span class="chart-legend-item"><span class="chart-legend-swatch" style="background:var(--red)"></span>Active</span><span class="chart-legend-item"><span class="chart-legend-swatch" style="background:#1a1f2e"></span>Inactive</span></div>
+<div class="chart-card" id="cfiChartCard">
+  <div class="chart-wrap"><canvas id="cfiChart"></canvas></div>
+  <div class="chart-legend">
+    <span class="chart-legend-item"><span class="chart-swatch" style="background:#8a9ab0"></span>CFI</span>
+    <span class="chart-legend-item"><span class="chart-swatch" style="background:rgba(192,120,40,.4);border-top:1px dashed var(--yellow)"></span>Strain threshold (0.05)</span>
   </div>
 </div>
 
-<div class="chart-note" id="chartNote"></div>
-
-<!-- Chart fullscreen modal -->
-<div class="chart-modal-overlay" id="chartModal" style="display:none">
-  <div class="chart-modal">
-    <div class="chart-modal-title" id="chartModalTitle"></div>
-    <button class="chart-modal-close" id="chartModalClose">&times;</button>
-    <div class="chart-modal-wrap"><canvas id="chartModalCanvas"></canvas></div>
+<!-- MODAL -->
+<div class="modal-overlay" id="chartModal">
+  <div class="modal">
+    <div class="modal-title">CFI History</div>
+    <button class="modal-close" id="modalClose">&times;</button>
+    <div class="modal-chart-wrap"><canvas id="modalChart"></canvas></div>
   </div>
 </div>
 
-<!-- ═══ 7. SCAN HISTORY TABLE ═══ -->
-<div class="section-label">Scan Archive &mdash; Complete Public Record</div>
-<div class="table-wrap">
-  <table class="scan-table">
-    <thead><tr><th>DateTime</th><th>State</th><th>Score</th><th>Conditions</th><th>Note</th></tr></thead>
-    <tbody id="scanBody"></tbody>
-  </table>
+<!-- KNOWN SILENCE EVENTS -->
+<div class="section-label">Known Silence Horizon Events</div>
+<table class="events-table">
+<thead><tr><th>Event</th><th>Year</th><th>&Sigma;/&Sigma;* at peak</th><th>Origin</th><th>Outcome</th></tr></thead>
+<tbody>
+<tr><td>2008 GFC</td><td>2007&ndash;08</td><td style="font-family:'DM Mono',monospace">0.60</td><td>Credit</td><td style="color:var(--red)">Catastrophic</td></tr>
+<tr><td>1997 Asian Crisis</td><td>1997</td><td style="font-family:'DM Mono',monospace">1.05</td><td>FX</td><td style="color:var(--red)">Catastrophic</td></tr>
+<tr><td>1929 Crash</td><td>1928&ndash;29</td><td style="font-family:'DM Mono',monospace">0.50</td><td>Equity</td><td style="color:var(--red)">Catastrophic</td></tr>
+<tr><td>Challenger disaster</td><td>1985&ndash;86</td><td style="font-family:'DM Mono',monospace">1.05</td><td>Schedule</td><td style="color:var(--red)">Catastrophic</td></tr>
+<tr><td>Boeing 737 MAX</td><td>2017&ndash;18</td><td style="font-family:'DM Mono',monospace">0.60</td><td>Safety</td><td style="color:var(--red)">Catastrophic</td></tr>
+<tr><td>Enron collapse</td><td>2000&ndash;01</td><td style="font-family:'DM Mono',monospace">1.05</td><td>Audit</td><td style="color:var(--red)">Catastrophic</td></tr>
+<tr><td>Chernobyl</td><td>1985&ndash;86</td><td style="font-family:'DM Mono',monospace">4.50</td><td>Regulatory</td><td style="color:var(--red)">Catastrophic</td></tr>
+<tr><td>SARS 2003</td><td>2002&ndash;03</td><td style="font-family:'DM Mono',monospace">0.20</td><td>Surveillance</td><td style="color:var(--green)">Contained</td></tr>
+<tr><td>SVB 2023</td><td>2022&ndash;23</td><td style="font-family:'DM Mono',monospace">0.25</td><td>Credit</td><td style="color:var(--green)">Contained (FDIC)</td></tr>
+</tbody>
+</table>
+<div class="events-caption">
+  Current readings above 0.30 in any channel warrant monitoring.
+  Readings above 0.60 have historically preceded systemic failure.
 </div>
 
-<!-- ═══ 8. API ═══ -->
+<!-- API -->
 <div class="section-label">Free Public API</div>
 <div class="api-card">
   <div class="api-title">Endpoints</div>
   <div class="api-subtitle">No signup. No API key. Free to use.</div>
-
   <div class="api-row">
     <div class="api-url"><span class="method">GET</span>https://flowstate-io.netlify.app/flow_data_latest.json</div>
     <button class="api-copy" onclick="copyUrl(this,'https://flowstate-io.netlify.app/flow_data_latest.json')">Copy</button>
   </div>
-  <div class="api-desc">Current scan. System state, conditions, key readings, assessment.</div>
-
+  <div class="api-desc">Current scan. CFI, channel states, sigma ratios, SDI.</div>
   <div class="api-row">
     <div class="api-url"><span class="method">GET</span>https://flowstate-io.netlify.app/flow_data_history.json</div>
     <button class="api-copy" onclick="copyUrl(this,'https://flowstate-io.netlify.app/flow_data_history.json')">Copy</button>
   </div>
-  <div class="api-desc">Complete scan archive. All readings since engine started. Newest first.</div>
+  <div class="api-desc">Complete archive. Daily, weekly, monthly resolution tiers. Newest first.</div>
 </div>
 
-<!-- ═══ 9. METHODOLOGY ═══ -->
-<div class="section-label">Methodology</div>
-<div class="method-card">
-
-  <div class="method-intro">
-    Flowstate monitors five structural variables in the global financial system, updated four times daily. These variables combine into a single daily verdict &mdash; Stable, Stressed, Critical, or Cascade.
-  </div>
-
-  <div class="method-section-title">The Five Variables</div>
-
-  <div class="method-var">
-    <div class="method-var-name">FLOW</div>
-    <div class="method-var-text">Where is capital actually moving? Not price &mdash; direction. Toward hard assets, toward sovereign debt, out of institutional structures, into digital rails. Flow tells you where money is going before the price reflects it.</div>
-  </div>
-  <div class="method-var">
-    <div class="method-var-name">CAPACITY</div>
-    <div class="method-var-text">How much stress can the system actually absorb? Not the headline number &mdash; the effective capacity after accounting for how much of the buffer has already been consumed. A system can look healthy on the surface while its real shock absorption is nearly exhausted.</div>
-  </div>
-  <div class="method-var">
-    <div class="method-var-name">PRESSURE</div>
-    <div class="method-var-text">What forces are pushing the system toward instability? Energy shocks. Inflation entrenchment. Monetary policy constraints. Fiscal deterioration. When multiple pressure channels activate simultaneously the risk of cascade increases non-linearly.</div>
-  </div>
-  <div class="method-var">
-    <div class="method-var-name">DRIFT</div>
-    <div class="method-var-text">What direction is the system actually moving? Not what happened today &mdash; what is the system becoming. Daily price moves are noise. Drift is the structural direction that only becomes visible when you look at the pattern across multiple readings over time.</div>
-  </div>
-  <div class="method-var">
-    <div class="method-var-name">TRUST</div>
-    <div class="method-var-text">The master variable. When institutional trust in the monetary system, sovereign debt, or policy credibility degrades &mdash; effective capacity collapses. Trust erodes faster than it heals. Once it falls below a critical threshold the system loses its primary shock absorber.</div>
-  </div>
-
-  <div class="method-section-title">The Six Conditions</div>
-
-  <div class="method-cond">
-    <div class="method-cond-name">A. Energy Shock</div>
-    <div class="method-cond-text">Brent crude more than 1.5 standard deviations above its two-year mean. Energy shocks transmit through producer prices to consumer prices within 60&ndash;90 days. They also constrain monetary policy &mdash; the Fed cannot cut rates to support growth while energy-driven inflation is entrenched.</div>
-  </div>
-  <div class="method-cond">
-    <div class="method-cond-name">B. Fear Elevated</div>
-    <div class="method-cond-text">The VIX more than 1.5 standard deviations above its two-year mean. Equity markets are pricing elevated uncertainty. Historically the VIX activates after the bond market has already begun repricing &mdash; meaning when this condition triggers the stress is already structurally present.</div>
-  </div>
-  <div class="method-cond">
-    <div class="method-cond-name">C. Inflation Ceiling</div>
-    <div class="method-cond-text">Core CPI at the top of its two-year range. No room left above. The Fed is trapped &mdash; it cannot deploy its primary tool without feeding the problem it is trying to solve.</div>
-  </div>
-  <div class="method-cond">
-    <div class="method-cond-name">D. Buffer Thin</div>
-    <div class="method-cond-text">The Federal Reserve balance sheet below its two-year mean. Two years of quantitative tightening have depleted the elastic capacity that absorbed previous shocks. When this condition is active the system has limited ability to expand its balance sheet without consequences.</div>
-  </div>
-  <div class="method-cond">
-    <div class="method-cond-name">E. Bonds Selling</div>
-    <div class="method-cond-text">Long-duration Treasury bonds under sustained selling pressure. Investors are demanding higher yields to compensate for inflation risk. When bonds sell alongside equities the safe haven architecture has failed.</div>
-  </div>
-  <div class="method-cond">
-    <div class="method-cond-name">F. Banks Stressed</div>
-    <div class="method-cond-text">The St. Louis Fed Financial Stress Index above its baseline. The formal banking system is showing stress in its internal plumbing. This is the last active firewall. When this condition activates all six conditions are met and the system is in CASCADE.</div>
-  </div>
-
-  <div class="method-section-title">The Four States</div>
-
-  <div class="method-state">
-    <span class="method-state-badge" style="background:rgba(45,122,61,.15);color:var(--stable)">STABLE</span>
-    <span class="method-state-text">0 to 1 conditions active. All structural variables within normal parameters. The system has meaningful capacity to absorb shocks.</span>
-  </div>
-  <div class="method-state">
-    <span class="method-state-badge" style="background:rgba(192,120,40,.15);color:var(--stressed)">STRESSED</span>
-    <span class="method-state-text">2 to 3 conditions active. Multiple pressure channels elevated simultaneously. The system is absorbing stress but buffer consumption is noted.</span>
-  </div>
-  <div class="method-state">
-    <span class="method-state-badge" style="background:rgba(192,57,43,.15);color:var(--critical)">CRITICAL</span>
-    <span class="method-state-text">4 to 5 conditions active. Pre-cascade configuration present. Effective capacity significantly degraded. The system is one to two conditions from maximum stress.</span>
-  </div>
-  <div class="method-state">
-    <span class="method-state-badge" style="background:rgba(255,32,32,.15);color:var(--cascade)">CASCADE</span>
-    <span class="method-state-text">6 conditions active. All structural conditions simultaneously active. Maximum stress configuration. The elastic buffer is exhausted.</span>
-  </div>
-
-  <div class="method-section-title">The Engine Reads In Both Directions</div>
-
-  <div class="method-recovery">
-    The same conditions that detect structural stress also detect structural recovery.<br><br>
-    When conditions deactivate one by one &mdash; when the score moves from Critical back toward Stable over consecutive readings &mdash; that trajectory is the recovery signal.<br><br>
-    Key recovery indicators:<br>
-    &bull; Energy shock deactivating as supply normalizes.<br>
-    &bull; Fed balance sheet expanding as elastic capacity rebuilds.<br>
-    &bull; VIX returning below threshold as fear subsides.<br>
-    &bull; Copper z-score rising as growth expectations improve.<br>
-    &bull; Bond market stabilizing as inflation expectations anchor.<br><br>
-    The Drift variable captures directional change over time. A consistent downward trend in score across multiple scans signals genuine structural improvement &mdash; not a one-day bounce but a real change in the system configuration.<br><br>
-    Flowstate does not only measure when things are breaking. It measures when they are healing.
-  </div>
-
-  <div class="method-section-title">Data Sources</div>
-
-  <div class="method-source">
-    <div class="method-source-name">FRED</div>
-    <div>
-      <div class="method-source-desc">Federal Reserve Economic Data &mdash; Federal Reserve Bank of St. Louis</div>
-      <div class="method-source-url">fred.stlouisfed.org</div>
-    </div>
-  </div>
-  <div class="method-source">
-    <div class="method-source-name">Twelve Data</div>
-    <div>
-      <div class="method-source-desc">Market data &mdash; equities, commodities, ETFs</div>
-      <div class="method-source-url">twelvedata.com</div>
-    </div>
-  </div>
-
-  <div class="method-open">
-    All data sources are public and free. The complete methodology is open. The archive is public. The API is free.
-  </div>
-
-</div>
-
-<!-- ═══ 10. FOOTER ═══ -->
+<!-- FOOTER -->
 <div class="footer">
   <div class="footer-top">
-    <div>Flowstate &mdash; engine running since 2026-03-22</div>
-    <div>Capital flows. This measures where.</div>
+    <div>Silence Horizon Monitor &mdash; powered by Flow Theory (J.H.F. Festirstein)</div>
+    <div>Updated daily. Data: CBOE, FRED, Yahoo Finance.</div>
   </div>
-  <div class="footer-bottom">Not financial advice. Data updates four times daily.</div>
+  <div class="footer-bottom">Not financial advice. Variance suppression monitoring for research purposes.</div>
 </div>
 
 </div><!-- /container -->
 
 <script>
-/* ────────────────────────────────────────────
-   Constants
-   ──────────────────────────────────────────── */
-const STATE_COLORS = {STABLE:'#2d7a3d',STRESSED:'#c07828',CRITICAL:'#c0392b',CASCADE:'#ff2020'};
-const COND_KEYS = ['energy_shock','fear_elevated','inflation_ceiling','buffer_thin','bonds_selling','banks_stressed'];
-const COND_NAMES = {energy_shock:'Energy Shock',fear_elevated:'Fear Elevated',inflation_ceiling:'Inflation Ceiling',buffer_thin:'Buffer Thin',bonds_selling:'Bonds Selling',banks_stressed:'Banks Stressed'};
-const COND_THRESHOLDS = {energy_shock:'Brent z > 1.5',fear_elevated:'VIX z > 1.5',inflation_ceiling:'CPI norm > 8.0',buffer_thin:'Fed BS z < -0.5',bonds_selling:'TLT z < -1.0',banks_stressed:'STLFSI4 > 0.5'};
-const DET_KEYS = ['energy_shock','stagflation','inflationary_boom','simultaneous_selloff','interbank_stress'];
-const DET_NAMES = {energy_shock:'Energy Shock',stagflation:'Stagflation Signature',inflationary_boom:'Inflationary Boom',simultaneous_selloff:'Simultaneous Selloff',interbank_stress:'Interbank Stress'};
+const STATE_COLORS = {RESILIENT:'#2d7a3d',STRAINED:'#c07828',CRITICAL:'#d35400',CATASTROPHIC:'#c0392b'};
+const CH_BADGE_CLASS = {NORMAL:'ch-badge-normal',WATCH:'ch-badge-watch',SILENCE:'ch-badge-silence','DEEP SILENCE':'ch-badge-deep'};
+const CH_BAR_COLOR = {NORMAL:'#2d7a3d',WATCH:'#c07828',SILENCE:'#c0392b','DEEP SILENCE':'#ff4444'};
+
+const INTERP = {
+  RESILIENT: 'All channels normal. No silence detected.',
+  STRAINED: 'One or more channels entering silence. Monitor for spread widening.',
+  CRITICAL: 'Multiple channels silenced. Historical pattern matches pre-crisis.',
+  CATASTROPHIC: 'Silence Horizon breach. Endogenous failure risk elevated.'
+};
 
 let latestData = null;
 let historyData = [];
-let chartInstances = {};
-let currentRange = 0;
+let cfiChart = null;
+let modalChartInst = null;
+let currentRange = 730;
 
-/* ────────────────────────────────────────────
-   Helpers
-   ──────────────────────────────────────────── */
 function stateColor(s) { return STATE_COLORS[s] || '#3d5068'; }
-function zColor(z) { const a = Math.abs(z); return a > 2 ? '#c0392b' : a > 1 ? '#c07828' : '#2d7a3d'; }
-function fmt(v, d) { if (v == null || v === '' || isNaN(v)) return '\u2014'; return Number(v).toFixed(d != null ? d : 2); }
-function esc(s) { if (!s) return ''; const el = document.createElement('span'); el.textContent = s; return el.innerHTML; }
+function fmt(v, d) { if (v == null || isNaN(v)) return '\u2014'; return Number(v).toFixed(d != null ? d : 4); }
 
-/* Read condition from either format:
-   Latest:  { active: true, value: 3.26, label: "..." }
-   History: true / false                                */
-function condIsActive(conds, key) {
-  const v = conds[key];
-  if (v == null) return false;
-  if (typeof v === 'boolean') return v;
-  if (typeof v === 'object') return !!v.active;
-  return false;
-}
-function condVal(conds, key) {
-  const v = conds[key];
-  if (v && typeof v === 'object') return v.value;
-  return null;
-}
-function condLbl(conds, key) {
-  const v = conds[key];
-  if (v && typeof v === 'object' && v.label) return v.label;
-  return COND_THRESHOLDS[key] || '';
-}
-
-/* Read z-score from either format:
-   Latest:  { key_readings: { brent: { zscore: 3.26 } } }
-   History: { brent_zscore: 3.26 }                        */
-function getZ(entry, field) {
-  const kr = entry.key_readings;
-  if (kr) {
-    const map = {brent:'brent',vix:'vix',gold:'gold',copper:'copper',cpi:'cpi',cpi_norm:'cpi',fed_bs:'fed_bs',tlt:'tlt',uso:'uso',stlfsi4:'stlfsi4'};
-    const obj = kr[map[field] || field];
-    if (!obj) return 0;
-    if (field === 'cpi_norm') return obj.norm || 0;
-    if (field === 'stlfsi4') return obj.raw || 0;
-    return obj.zscore || 0;
-  }
-  const flat = {brent:'brent_zscore',vix:'vix_zscore',gold:'gold_zscore',copper:'copper_zscore',cpi:'cpi_zscore',cpi_norm:'cpi_norm',fed_bs:'fed_bs_zscore',tlt:'tlt_zscore',uso:'uso_zscore',stlfsi4:'stlfsi4_raw'};
-  return entry[flat[field] || field] || 0;
-}
-
-/* ────────────────────────────────────────────
-   Data loading
-   ──────────────────────────────────────────── */
 async function loadData() {
   try {
-    const [lr, hr] = await Promise.all([
-      fetch('flow_data_latest.json'),
-      fetch('flow_data_history.json')
-    ]);
+    const [lr, hr] = await Promise.all([fetch('flow_data_latest.json'), fetch('flow_data_history.json')]);
     if (lr.ok) latestData = await lr.json();
     if (hr.ok) historyData = await hr.json();
-  } catch (e) { console.error('Fetch error:', e); }
-
+  } catch (e) { console.error('Fetch:', e); }
   if (latestData) render();
-  else document.getElementById('stateBlock').innerHTML = '<div class="loading">Waiting for first scan data&hellip;</div>';
+  else document.getElementById('overallPanel').innerHTML = '<div class="loading">Waiting for first scan&hellip;</div>';
 }
 
-/* ────────────────────────────────────────────
-   Render
-   ──────────────────────────────────────────── */
 function render() {
   const d = latestData;
-  const sc = stateColor(d.system_state);
+  const ov = d.overall;
+  const sc = stateColor(ov.state);
+  const stLower = ov.state.toLowerCase();
 
-  /* Header */
+  // Header dot
   document.getElementById('headerDot').style.background = sc;
-  document.getElementById('lastScan').textContent = d.date + ' ' + (d.time || '');
-  document.getElementById('nextScan').textContent = d.meta?.next_scan || '\u2014';
+  document.getElementById('lastScan').textContent = d.generated || '\u2014';
 
-  const timeStr = (d.time || '').replace(' UTC', '');
-  const scanTs = new Date(d.date + 'T' + (timeStr || '00:00') + 'Z');
-  const scanAge = (Date.now() - scanTs.getTime()) / 36e5;
-  document.getElementById('liveBadge').innerHTML = scanAge < 6
-    ? '<span class="badge badge-live">LIVE</span>'
-    : '<span class="badge badge-cached">CACHED</span>';
+  // Overall panel
+  const panel = document.getElementById('overallPanel');
+  panel.className = 'overall ' + stLower;
+  document.getElementById('cfiValue').textContent = fmt(ov.cfi);
+  document.getElementById('cfiValue').style.color = sc;
+  const badge = document.getElementById('stateBadge');
+  badge.textContent = ov.state;
+  badge.className = 'state-badge badge-' + stLower;
+  document.getElementById('sdiValue').textContent = fmt(ov.sdi);
 
-  /* State block */
-  document.getElementById('stateBlock').className = 'state-block ' + (d.system_state || 'stable').toLowerCase();
-  document.getElementById('stateEyebrow').textContent = 'System State \u2014 ' + d.date + ' ' + (d.time || '');
-  const sv = document.getElementById('stateVerdict');
-  sv.textContent = d.system_state;
-  sv.style.color = sc;
-  document.getElementById('stateSub').textContent = d.score + ' of ' + d.max_score + ' conditions active';
-
-  /* Assessment — preserve newlines */
-  document.getElementById('stateAssessment').textContent = d.assessment || '';
-
-  /* What to watch — parse bullets */
-  const watchEl = document.getElementById('stateWatch');
-  const watchText = d.what_to_watch || '';
-  if (watchText.trim()) {
-    let html = '<div class="state-watch-label">Watch</div>';
-    const raw = watchText.replace(/^\s*WATCH:\s*/i, '');
-    const bullets = raw.split(/\n\s*-\s*/).filter(s => s.trim());
-    if (bullets.length <= 1) {
-      raw.split('-').map(s => s.trim()).filter(Boolean).forEach(b => {
-        html += '<div class="watch-item">' + esc(b) + '</div>';
-      });
-    } else {
-      bullets.forEach(b => { html += '<div class="watch-item">' + esc(b.trim()) + '</div>'; });
-    }
-    watchEl.innerHTML = html;
+  // Origin tag
+  const ot = document.getElementById('originTag');
+  if (ov.origin_channel && ov.sdi > 0.20) {
+    ot.innerHTML = 'Origin: <span class="origin-tag">' + ov.origin_channel + ' (' + ov.origin_confidence + ')</span>';
   } else {
-    watchEl.innerHTML = '';
+    ot.textContent = 'No divergence detected';
   }
 
-  /* Conditions */
-  const cg = document.getElementById('condGrid');
-  const conds = d.conditions || {};
-  let condHtml = '';
-  COND_KEYS.forEach(k => {
-    const active = condIsActive(conds, k);
-    const val = condVal(conds, k);
-    const lbl = condLbl(conds, k);
-    condHtml += '<div class="cond-card ' + (active ? 'active' : '') + '">'
-      + '<div class="cond-dot ' + (active ? 'on' : 'off') + '"></div>'
-      + '<div><div class="cond-name">' + (COND_NAMES[k] || k) + '</div>'
-      + '<div class="cond-value">' + fmt(val) + ' <span style="color:var(--muted);font-size:10px">' + esc(lbl) + '</span></div>'
-      + '</div></div>';
-  });
-  cg.innerHTML = condHtml;
-
-  /* Metrics */
-  const kr = d.key_readings || {};
-  const metrics = [
-    { label: 'Brent Crude', val: kr.brent?.raw, z: kr.brent?.zscore },
-    { label: 'VIX', val: kr.vix?.raw, z: kr.vix?.zscore },
-    { label: 'Core CPI', val: kr.cpi?.norm, z: kr.cpi?.zscore },
-    { label: 'USO Anomaly', val: kr.uso?.zscore, z: kr.uso?.zscore },
-  ];
-  let metricHtml = '';
-  metrics.forEach(m => {
-    const zc = zColor(m.z || 0);
-    metricHtml += '<div class="metric-card"><div class="metric-label">' + m.label + '</div>'
-      + '<div class="metric-value" style="color:' + zc + '">' + fmt(m.val) + '</div>'
-      + '<div class="metric-zscore" style="color:' + zc + '">z: ' + fmt(m.z) + '</div></div>';
-  });
-  document.getElementById('metricGrid').innerHTML = metricHtml;
-
-  /* Triggers */
-  let trigHtml = '', ti = 0;
-  COND_KEYS.forEach(k => {
-    if (condIsActive(conds, k)) {
-      ti++;
-      trigHtml += '<div class="trigger-item">' + ti + '. ' + (COND_NAMES[k] || k) + ' \u2014 ' + fmt(condVal(conds, k)) + ' (' + esc(condLbl(conds, k)) + ')</div>';
-    }
-  });
-  document.getElementById('triggerList').innerHTML = ti === 0
-    ? '<div class="trigger-item" style="color:var(--green)">No triggers active</div>'
-    : trigHtml;
-
-  /* Detectors */
-  const dets = d.detectors || {};
-  let detHtml = '';
-  DET_KEYS.forEach(k => {
-    const on = !!dets[k];
-    detHtml += '<div class="detector-item">'
-      + '<span class="det-dot" style="background:' + (on ? 'var(--red)' : 'var(--muted)') + '"></span>'
-      + '<span class="' + (on ? 'det-active' : 'det-label') + '">' + (DET_NAMES[k] || k) + '</span>'
-      + '<span class="det-status" style="color:' + (on ? 'var(--red)' : 'var(--muted)') + '">' + (on ? 'ACTIVE' : 'CLEAR') + '</span>'
-      + '</div>';
-  });
-  document.getElementById('detectorList').innerHTML = detHtml;
-
-  /* Charts date range */
-  if (historyData.length) {
-    const dates = historyData.map(h => h.date);
-    document.getElementById('chartDateRange').textContent = 'building from ' + (dates[dates.length - 1] || dates[0] || '\u2014');
+  // Interpretation
+  let interp = INTERP[ov.state] || '';
+  if (ov.state === 'STRAINED' && ov.origin_channel) {
+    interp = ov.origin_channel.charAt(0) + ov.origin_channel.slice(1).toLowerCase() + ' channel entering silence. Monitor for spread widening.';
   }
+  document.getElementById('interpText').textContent = interp;
 
-  renderTable();
-  renderCharts();
-}
-
-/* ────────────────────────────────────────────
-   History table
-   ──────────────────────────────────────────── */
-function renderTable() {
-  const data = historyData.length ? historyData : (latestData ? [latestData] : []);
+  // Channel cards
+  const cg = document.getElementById('channelGrid');
   let html = '';
-  data.forEach(s => {
-    const sc = stateColor(s.system_state);
-    const conds = s.conditions || {};
-    let dots = '<div class="cond-dots">';
-    COND_KEYS.forEach(k => {
-      dots += '<span style="background:' + (condIsActive(conds, k) ? 'var(--red)' : 'var(--muted)') + '"></span>';
-    });
-    dots += '</div>';
-    const dt = s.time ? s.date + ' ' + s.time : s.date;
-    const score = s.score || 0;
-    const note = score >= 5 ? 'Pre-cascade' : score >= 4 ? 'Elevated' : '';
-    html += '<tr><td>' + dt + '</td>'
-      + '<td><span class="state-badge" style="background:' + sc + '22;color:' + sc + '">' + (s.system_state || '') + '</span></td>'
-      + '<td>' + score + '/6</td>'
-      + '<td>' + dots + '</td>'
-      + '<td style="color:var(--muted)">' + note + '</td></tr>';
-  });
-  document.getElementById('scanBody').innerHTML = html;
+  const channels = d.channels || {};
+  for (const [key, ch] of Object.entries(channels)) {
+    const badgeCls = CH_BADGE_CLASS[ch.state] || 'ch-badge-normal';
+    const barColor = CH_BAR_COLOR[ch.state] || '#2d7a3d';
+    const barWidth = Math.min(ch.sigma_ratio * 100, 100);
+    html += '<div class="ch-card">'
+      + '<div class="ch-top"><span class="ch-name">' + ch.name + '</span>'
+      + '<span class="ch-badge ' + badgeCls + '">' + ch.state + '</span></div>'
+      + '<div class="ch-sigma" style="color:' + barColor + '">\u03C3/\u03C3* = ' + fmt(ch.sigma_ratio) + '</div>'
+      + '<div class="ch-bar-wrap"><div class="ch-bar" style="width:' + barWidth + '%;background:' + barColor + '"></div></div>'
+      + '<div class="ch-details">'
+      + '<span>supp: ' + ch.suppression_pct + '%</span>'
+      + '<span>dur: ' + ch.duration_months + 'mo</span>'
+      + '<span>var: ' + fmt(ch.var_current, 6) + ' / ' + fmt(ch.var_baseline, 6) + '</span>'
+      + '</div></div>';
+  }
+  cg.innerHTML = html;
+
+  renderChart();
 }
 
-/* ────────────────────────────────────────────
-   Chart time range filter (by scan count)
-   historyData is newest-first
-   ──────────────────────────────────────────── */
-function filterByRange(range) {
+function filterHistory(range) {
   if (!range || !historyData.length) return historyData;
-  /* Map button values to scan counts */
-  const countMap = { 7: 7, 30: 30, 90: 90, 365: 365 };
-  const n = countMap[range] || historyData.length;
-  return historyData.slice(0, Math.min(n, historyData.length));
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - range);
+  return historyData.filter(h => new Date(h.date) >= cutoff);
 }
 
-/* ────────────────────────────────────────────
-   Charts
-   ──────────────────────────────────────────── */
-function renderCharts() {
-  /* Get data for current range (history is newest-first) */
-  const filtered = currentRange ? filterByRange(currentRange) : historyData;
-  /* If no history at all, use latest as single-point */
-  const data = filtered.length ? filtered : (latestData ? [latestData] : []);
-  if (!data.length) return;
+function buildChartData(canvas, large) {
+  const filtered = currentRange ? filterHistory(currentRange) : historyData;
+  const data = filtered.length ? filtered : (latestData ? [{ date: latestData.generated?.slice(0, 10), cfi: latestData.overall.cfi }] : []);
+  if (!data.length) return null;
 
-  /* Chronological order for charts */
   const rev = [...data].reverse();
-  const labels = rev.map(d => d.date + (d.time ? ' ' + d.time.replace(' UTC', '') : ''));
+  const labels = rev.map(d => d.date);
+  const values = rev.map(d => d.cfi);
 
-  /* Destroy previous */
-  Object.values(chartInstances).forEach(c => { try { c.destroy(); } catch (e) {} });
-  chartInstances = {};
+  const tipOpts = large ? {
+    enabled: true, backgroundColor: '#0c1018', borderColor: '#12181f', borderWidth: 1,
+    titleFont: { family: 'DM Mono', size: 11 }, bodyFont: { family: 'DM Mono', size: 11 },
+    titleColor: '#dde3ec', bodyColor: '#8a9ab0', padding: 10
+  } : { enabled: false };
 
-  const baseOpts = {
-    responsive: true,
-    maintainAspectRatio: false,
-    animation: { duration: 300 },
-    plugins: {
-      legend: { display: false },
-      tooltip: { enabled: false }
-    },
-    scales: {
-      x: { ticks: { color: '#2e3d4e', font: { family: 'DM Mono', size: 9 }, maxTicksLimit: 6, maxRotation: 0 }, grid: { color: '#0e1520' }, border: { color: '#12181f' } },
-      y: { ticks: { color: '#2e3d4e', font: { family: 'DM Mono', size: 9 } }, grid: { color: '#0e1520' }, border: { color: '#12181f' } }
-    }
-  };
-
-  /* 1. State Timeline */
-  chartInstances.state = new Chart(document.getElementById('chartState'), {
+  return new Chart(canvas, {
     type: 'line',
-    data: { labels, datasets: [{
-      data: rev.map(d => d.score || 0),
-      borderColor: '#8a9ab0', borderWidth: 1.5,
-      pointBackgroundColor: rev.map(d => stateColor(d.system_state)),
-      pointRadius: rev.length < 30 ? 3 : 1, pointHoverRadius: 5,
-      tension: .3, fill: false
-    }] },
-    options: { ...baseOpts, scales: { ...baseOpts.scales, y: { ...baseOpts.scales.y, min: 0, max: 6, ticks: { ...baseOpts.scales.y.ticks, stepSize: 1 } } } }
-  });
-
-  /* 2. Anomaly Spotter — always uses latestData */
-  const anomalyFields = [
-    { l: 'Brent', f: 'brent' }, { l: 'VIX', f: 'vix' }, { l: 'Gold', f: 'gold' },
-    { l: 'Copper', f: 'copper' }, { l: 'CPI', f: 'cpi' }, { l: 'Fed BS', f: 'fed_bs' },
-    { l: 'TLT', f: 'tlt' }, { l: 'USO', f: 'uso' }
-  ];
-  const src = latestData || rev[rev.length - 1];
-  chartInstances.anomaly = new Chart(document.getElementById('chartAnomaly'), {
-    type: 'bar',
     data: {
-      labels: anomalyFields.map(i => i.l),
-      datasets: [{ data: anomalyFields.map(i => getZ(src, i.f)), backgroundColor: anomalyFields.map(i => zColor(getZ(src, i.f))), borderWidth: 0, borderRadius: 2 }]
+      labels,
+      datasets: [{
+        label: 'CFI',
+        data: values,
+        borderColor: '#8a9ab0',
+        borderWidth: large ? 2 : 1.5,
+        pointRadius: large ? 3 : (values.length < 30 ? 2 : 0),
+        pointHoverRadius: large ? 6 : 0,
+        pointBackgroundColor: values.map(v => v <= 0.05 ? '#c0392b' : v <= 0.15 ? '#c07828' : '#2d7a3d'),
+        tension: .3,
+        fill: false
+      }]
     },
-    options: { ...baseOpts, indexAxis: 'y' }
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: tipOpts,
+        annotation: undefined
+      },
+      scales: {
+        x: { ticks: { color: '#2e3d4e', font: { family: 'DM Mono', size: 9 }, maxTicksLimit: 8, maxRotation: 0 }, grid: { color: '#0e1520' }, border: { color: '#12181f' } },
+        y: { ticks: { color: '#2e3d4e', font: { family: 'DM Mono', size: 9 } }, grid: { color: '#0e1520' }, border: { color: '#12181f' }, min: 0 }
+      }
+    },
+    plugins: [{
+      id: 'thresholdLine',
+      afterDraw(chart) {
+        const yAxis = chart.scales.y;
+        const y = yAxis.getPixelForValue(0.05);
+        if (y >= yAxis.top && y <= yAxis.bottom) {
+          const ctx = chart.ctx;
+          ctx.save();
+          ctx.setLineDash([6, 4]);
+          ctx.strokeStyle = 'rgba(192,120,40,0.4)';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(chart.chartArea.left, y);
+          ctx.lineTo(chart.chartArea.right, y);
+          ctx.stroke();
+          ctx.restore();
+        }
+      }
+    }]
   });
-
-  /* 3. Capacity vs Pressure */
-  chartInstances.capPres = new Chart(document.getElementById('chartCapPres'), {
-    type: 'line',
-    data: { labels, datasets: [
-      { data: rev.map(d => (getZ(d, 'brent') + getZ(d, 'vix')) / 2), borderColor: '#c0392b', borderWidth: 1.5, pointRadius: 0, tension: .3, fill: false },
-      { data: rev.map(d => -1 * getZ(d, 'fed_bs')), borderColor: '#c07828', borderWidth: 1.5, pointRadius: 0, tension: .3, fill: false }
-    ] },
-    options: baseOpts
-  });
-
-  /* 4. Energy Inflation Corridor */
-  chartInstances.energy = new Chart(document.getElementById('chartEnergy'), {
-    type: 'line',
-    data: { labels, datasets: [
-      { data: rev.map(d => getZ(d, 'brent')), borderColor: '#c0392b', borderWidth: 1.5, pointRadius: 0, tension: .3, fill: false },
-      { data: rev.map(d => getZ(d, 'cpi_norm')), borderColor: '#c07828', borderWidth: 1.5, pointRadius: 0, tension: .3, fill: false }
-    ] },
-    options: baseOpts
-  });
-
-  /* 5. Trust Composite */
-  chartInstances.trust = new Chart(document.getElementById('chartTrust'), {
-    type: 'line',
-    data: { labels, datasets: [
-      { data: rev.map(d => getZ(d, 'gold')), borderColor: '#daa520', borderWidth: 1.5, pointRadius: 0, tension: .3, fill: false },
-      { data: rev.map(d => getZ(d, 'tlt')), borderColor: '#4a90d9', borderWidth: 1.5, pointRadius: 0, tension: .3, fill: false }
-    ] },
-    options: baseOpts
-  });
-
-  /* 6. Conditions Heatmap — dates on x-axis, one dataset per condition */
-  const last7 = data.slice(0, 7).reverse();
-  const heatDateLabels = last7.map(s => s.date ? s.date.slice(5) : '');
-  const heatCondNames = ['Energy','Fear','Inflation','Buffer','Bonds','Banks'];
-  const heatCondColors = ['#c0392b','#c07828','#e67e22','#3d5068','#4a90d9','#8a9ab0'];
-  const heatDatasets = COND_KEYS.map((k, ci) => ({
-    label: heatCondNames[ci],
-    data: last7.map(s => condIsActive(s.conditions || {}, k) ? 1 : 0.06),
-    backgroundColor: last7.map(s => condIsActive(s.conditions || {}, k) ? heatCondColors[ci] : '#1a1f2e'),
-    borderWidth: 0, borderRadius: 1
-  }));
-  chartInstances.heatmap = new Chart(document.getElementById('chartHeatmap'), {
-    type: 'bar',
-    data: { labels: heatDateLabels, datasets: heatDatasets },
-    options: { ...baseOpts, scales: { ...baseOpts.scales, y: { ...baseOpts.scales.y, min: 0, max: 1.2, ticks: { display: false }, grid: { display: false } } } }
-  });
-
-  updateChartNote();
-  attachChartClicks();
 }
 
-/* ────────────────────────────────────────────
-   Range buttons
-   ──────────────────────────────────────────── */
+function renderChart() {
+  if (cfiChart) { try { cfiChart.destroy(); } catch (e) {} }
+  const canvas = document.getElementById('cfiChart');
+  canvas.style.pointerEvents = 'none';
+  cfiChart = buildChartData(canvas, false);
+}
+
+// Chart expand modal
+document.getElementById('cfiChartCard').addEventListener('click', () => {
+  const overlay = document.getElementById('chartModal');
+  overlay.classList.add('visible');
+  if (modalChartInst) { try { modalChartInst.destroy(); } catch (e) {} }
+  const parent = document.querySelector('.modal-chart-wrap');
+  parent.innerHTML = '<canvas id="modalChart"></canvas>';
+  modalChartInst = buildChartData(document.getElementById('modalChart'), true);
+});
+document.getElementById('chartModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+function closeModal() {
+  document.getElementById('chartModal').classList.remove('visible');
+  if (modalChartInst) { try { modalChartInst.destroy(); } catch (e) {} modalChartInst = null; }
+}
+
+// Range buttons
 document.querySelectorAll('.chart-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.chart-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     currentRange = parseInt(btn.dataset.range);
-    /* Destroy all charts, rebuild with new range */
-    Object.values(chartInstances).forEach(c => { try { c.destroy(); } catch (e) {} });
-    chartInstances = {};
-    renderCharts();
+    renderChart();
   });
 });
 
-/* ────────────────────────────────────────────
-   Archive building note
-   ──────────────────────────────────────────── */
-function updateChartNote() {
-  const el = document.getElementById('chartNote');
-  const n = historyData.length;
-  if (n < 8) {
-    el.textContent = 'Archive building \u2014 ' + n + ' scan' + (n !== 1 ? 's' : '') + ' recorded since 2026-03-22. Charts will fill automatically as data accumulates.';
-  } else {
-    el.textContent = '';
-  }
-}
-
-/* ────────────────────────────────────────────
-   Chart fullscreen modal
-   ──────────────────────────────────────────── */
-let modalChart = null;
-
-function openChartModal(title, buildFn) {
-  console.log('Opening chart modal:', title);
-  const overlay = document.getElementById('chartModal');
-  const canvas = document.getElementById('chartModalCanvas');
-  document.getElementById('chartModalTitle').textContent = title;
-
-  /* Reset canvas */
-  if (modalChart) { try { modalChart.destroy(); } catch (e) {} modalChart = null; }
-  const parent = canvas.parentNode;
-  parent.removeChild(canvas);
-  const newCanvas = document.createElement('canvas');
-  newCanvas.id = 'chartModalCanvas';
-  parent.appendChild(newCanvas);
-
-  overlay.style.display = 'flex';
-  requestAnimationFrame(() => overlay.classList.add('visible'));
-
-  /* Build the chart at modal size */
-  modalChart = buildFn(newCanvas);
-}
-
-function closeChartModal() {
-  const overlay = document.getElementById('chartModal');
-  overlay.classList.remove('visible');
-  setTimeout(() => { overlay.style.display = 'none'; }, 200);
-  if (modalChart) { try { modalChart.destroy(); } catch (e) {} modalChart = null; }
-}
-
-document.getElementById('chartModal').addEventListener('click', e => {
-  if (e.target === e.currentTarget) closeChartModal();
-});
-document.getElementById('chartModalClose').addEventListener('click', closeChartModal);
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeChartModal(); });
-
-/* Attach click handlers to chart cards */
-function attachChartClicks() {
-  const cards = document.querySelectorAll('.chart-card');
-  const titles = ['System State Timeline','Anomaly Spotter','Capacity vs Pressure','Energy Inflation Corridor','Trust Composite','Conditions Heatmap'];
-  const modalTip = {
-    enabled:true, backgroundColor:'#0c1018', borderColor:'#12181f', borderWidth:1,
-    titleFont:{family:'DM Mono',size:11}, bodyFont:{family:'DM Mono',size:11},
-    titleColor:'#dde3ec', bodyColor:'#8a9ab0', padding:10, cornerRadius:4,
-    displayColors:true
-  };
-  const modalScales = {
-    x:{ticks:{color:'#2e3d4e',font:{family:'DM Mono',size:10}},grid:{color:'#0e1520'}},
-    y:{ticks:{color:'#2e3d4e',font:{family:'DM Mono',size:10}},grid:{color:'#0e1520'}}
-  };
-
-  function modalData() {
-    const filtered = currentRange ? filterByRange(currentRange) : historyData;
-    const data = filtered.length ? filtered : (latestData ? [latestData] : []);
-    const rev = [...data].reverse();
-    const labels = rev.map(d => d.date + (d.time ? ' ' + d.time.replace(' UTC','') : ''));
-    return { data, rev, labels };
-  }
-
-  const builders = [
-    /* 1. State Timeline */
-    function(cvs) {
-      const {rev,labels} = modalData();
-      return new Chart(cvs, { type:'line', data:{ labels, datasets:[{ label:'Score', data:rev.map(d=>d.score||0), borderColor:'#8a9ab0', borderWidth:2, pointBackgroundColor:rev.map(d=>stateColor(d.system_state)), pointRadius:3, pointHoverRadius:6, tension:.3, fill:false }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false},tooltip:modalTip}, scales:{...modalScales, y:{...modalScales.y, min:0, max:6, ticks:{...modalScales.y.ticks,stepSize:1}}} } });
-    },
-    /* 2. Anomaly Spotter */
-    function(cvs) {
-      const src = latestData || historyData[0];
-      const fields = [{l:'Brent',f:'brent'},{l:'VIX',f:'vix'},{l:'Gold',f:'gold'},{l:'Copper',f:'copper'},{l:'CPI',f:'cpi'},{l:'Fed BS',f:'fed_bs'},{l:'TLT',f:'tlt'},{l:'USO',f:'uso'}];
-      return new Chart(cvs, { type:'bar', data:{ labels:fields.map(i=>i.l), datasets:[{label:'z-score', data:fields.map(i=>getZ(src,i.f)), backgroundColor:fields.map(i=>zColor(getZ(src,i.f))), borderWidth:0, borderRadius:3}] }, options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{legend:{display:false},tooltip:modalTip}, scales:modalScales } });
-    },
-    /* 3. Capacity vs Pressure */
-    function(cvs) {
-      const {rev,labels} = modalData();
-      return new Chart(cvs, { type:'line', data:{ labels, datasets:[ {label:'Pressure', data:rev.map(d=>(getZ(d,'brent')+getZ(d,'vix'))/2), borderColor:'#c0392b', borderWidth:2, pointRadius:2, pointHoverRadius:5, tension:.3, fill:false}, {label:'Capacity gap', data:rev.map(d=>-1*getZ(d,'fed_bs')), borderColor:'#c07828', borderWidth:2, pointRadius:2, pointHoverRadius:5, tension:.3, fill:false} ] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false},tooltip:modalTip}, scales:modalScales } });
-    },
-    /* 4. Energy Inflation Corridor */
-    function(cvs) {
-      const {rev,labels} = modalData();
-      return new Chart(cvs, { type:'line', data:{ labels, datasets:[ {label:'Brent z', data:rev.map(d=>getZ(d,'brent')), borderColor:'#c0392b', borderWidth:2, pointRadius:2, pointHoverRadius:5, tension:.3, fill:false}, {label:'CPI norm', data:rev.map(d=>getZ(d,'cpi_norm')), borderColor:'#c07828', borderWidth:2, pointRadius:2, pointHoverRadius:5, tension:.3, fill:false} ] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false},tooltip:modalTip}, scales:modalScales } });
-    },
-    /* 5. Trust Composite */
-    function(cvs) {
-      const {rev,labels} = modalData();
-      return new Chart(cvs, { type:'line', data:{ labels, datasets:[ {label:'Gold z', data:rev.map(d=>getZ(d,'gold')), borderColor:'#daa520', borderWidth:2, pointRadius:2, pointHoverRadius:5, tension:.3, fill:false}, {label:'TLT z', data:rev.map(d=>getZ(d,'tlt')), borderColor:'#4a90d9', borderWidth:2, pointRadius:2, pointHoverRadius:5, tension:.3, fill:false} ] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false},tooltip:modalTip}, scales:modalScales } });
-    },
-    /* 6. Conditions Heatmap — dates as labels */
-    function(cvs) {
-      const filtered = currentRange ? filterByRange(currentRange) : historyData;
-      const data = filtered.length ? filtered : (latestData ? [latestData] : []);
-      const last7 = data.slice(0,7).reverse();
-      const dateLabels = last7.map(s => s.date + (s.time ? ' ' + s.time.replace(' UTC','') : ''));
-      /* One dataset per condition, bars grouped by date */
-      const condNames = ['Energy','Fear','Inflation','Buffer','Bonds','Banks'];
-      const condColors = ['#c0392b','#c07828','#e67e22','#3d5068','#4a90d9','#8a9ab0'];
-      const datasets = COND_KEYS.map((k,ci) => ({
-        label: condNames[ci],
-        data: last7.map(s => condIsActive(s.conditions||{}, k) ? 1 : 0.06),
-        backgroundColor: last7.map(s => condIsActive(s.conditions||{}, k) ? condColors[ci] : '#1a1f2e'),
-        borderWidth:0, borderRadius:2
-      }));
-      return new Chart(cvs, { type:'bar', data:{ labels:dateLabels, datasets }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{color:'#8a9ab0',font:{family:'DM Mono',size:10}},display:true},tooltip:modalTip}, scales:{...modalScales, y:{...modalScales.y, min:0, max:1.2, ticks:{display:false}, grid:{display:false}}} } });
-    }
-  ];
-
-  cards.forEach((card, i) => {
-    /* Remove any old click zone */
-    const old = card.querySelector('.chart-click-zone');
-    if (old) old.remove();
-    /* Create fresh click zone div on top of everything */
-    const zone = document.createElement('div');
-    zone.className = 'chart-click-zone';
-    card.appendChild(zone);
-    zone.onclick = function() {
-      if (builders[i]) openChartModal(titles[i], builders[i]);
-    };
-  });
-}
-
-/* ────────────────────────────────────────────
-   Copy URL button
-   ──────────────────────────────────────────── */
+// Copy URL
 function copyUrl(btn, url) {
   navigator.clipboard.writeText(url).then(() => {
-    btn.textContent = 'Copied';
-    btn.classList.add('copied');
+    btn.textContent = 'Copied'; btn.classList.add('copied');
     setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
   }).catch(() => {
     const ta = document.createElement('textarea');
-    ta.value = url; ta.style.position = 'fixed'; ta.style.opacity = '0';
-    document.body.appendChild(ta); ta.select();
-    document.execCommand('copy');
+    ta.value = url; ta.style.cssText = 'position:fixed;opacity:0';
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy');
     document.body.removeChild(ta);
-    btn.textContent = 'Copied';
-    btn.classList.add('copied');
+    btn.textContent = 'Copied'; btn.classList.add('copied');
     setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
   });
 }
 
-/* ────────────────────────────────────────────
-   Init + auto-refresh
-   ──────────────────────────────────────────── */
+// Init
 loadData();
 setInterval(loadData, 300000);
 </script>
