@@ -1,0 +1,75 @@
+name: Capacity Engine
+
+on:
+  schedule:
+    # 6am UTC (1am ET) — overnight, fresh FRED data
+    # 2pm UTC (9am ET) — pre-market
+    # 9pm UTC (4pm ET) — market close
+    # 11pm UTC (6pm ET) — post-close, settled data
+    - cron: '0 6,14,21,23 * * 1-5'
+  workflow_dispatch:
+
+jobs:
+  run-engine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ hashFiles('requirements.txt') }}
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Capacity Engine
+        env:
+          TWELVEDATA_API_KEY: ${{ secrets.TWELVEDATA_API_KEY }}
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          NOTIFY_EMAIL: ${{ secrets.NOTIFY_EMAIL }}
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: python capacity_engine.py
+
+      - name: Rebuild site data
+        run: |
+          python -c "
+          import json
+          latest = json.load(open('flow_data_latest.json'))
+          latest.pop('health_timeseries', None)
+          chart = json.load(open('chart_data.json')) if __import__('os').path.exists('chart_data.json') else []
+          history = json.load(open('flow_data_history.json'))
+          nfci = json.load(open('nfci_comparison.json')) if __import__('os').path.exists('nfci_comparison.json') else []
+          js = f'const LATEST_DATA = {json.dumps(latest, default=str)};\\n'
+          js += f'const CHART_DATA = {json.dumps(chart)};\\n'
+          js += f'const HISTORY_DATA = {json.dumps(history)};\\n'
+          js += f'const NFCI_DATA = {json.dumps(nfci)};\\n'
+          open('data.js','w').write(js)
+          print(f'data.js rebuilt: {len(js)} bytes')
+          "
+
+      - name: Commit data
+        run: |
+          git config user.name "Capacity Engine"
+          git config user.email "engine@capacity.monitor"
+          git add flow_data_latest.json flow_data_history.json data.js
+          git add chart_data.json nfci_comparison.json structural_health.json
+          git add data/flow_data.csv
+          git diff --staged --quiet || git commit -m \
+            "scan: $(date -u +%Y-%m-%dT%H:%M)UTC"
+          git push

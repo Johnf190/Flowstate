@@ -1,0 +1,7 @@
+fredapi==0.5.1
+twelvedata==1.2.8
+pandas==2.1.4
+numpy==1.26.2
+requests==2.31.0
+python-dotenv==1.0.0
+yfinance==0.2.36

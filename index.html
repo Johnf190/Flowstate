@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capacity — Structural Health Monitor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+<script src="data.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#050709;--bg2:#080b11;--card:#0b0f19;--card2:#0e1321;--border:#151d2e;--border2:#1a2540;
+  --text:#e0e6f0;--text2:#8494b0;--muted:#3e536e;
+  --green:#10b981;--green-glow:rgba(16,185,129,.15);
+  --yellow:#f59e0b;--yellow-glow:rgba(245,158,11,.12);
+  --red:#ef4444;--red-glow:rgba(239,68,68,.12);
+  --blue:#3b82f6;--blue-glow:rgba(59,130,246,.1);
+  --purple:#8b5cf6;--purple-glow:rgba(139,92,246,.1);
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.mono{font-family:'DM Mono',monospace}
+
+/* ── TOP BANNER ── */
+.banner{
+  background:linear-gradient(135deg, #080c18 0%, #0c1125 40%, #0f0f25 70%, #0a0c18 100%);
+  border-bottom:1px solid var(--border);
+  padding:40px 0 36px;
+  position:relative;
+  overflow:hidden;
+}
+.banner::before{
+  content:'';position:absolute;top:-50%;left:-20%;width:140%;height:200%;
+  background:radial-gradient(ellipse at 30% 50%, rgba(59,130,246,.04) 0%, transparent 60%),
+             radial-gradient(ellipse at 70% 30%, rgba(139,92,246,.03) 0%, transparent 50%);
+  pointer-events:none;
+}
+.banner-inner{max-width:1280px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+.banner-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:20px}
+.brand{display:flex;align-items:center;gap:16px}
+.logo-icon{
+  width:48px;height:48px;border-radius:12px;
+  background:linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-weight:700;font-size:22px;color:#fff;
+  box-shadow:0 0 24px rgba(59,130,246,.2);
+}
+.brand-name{font-size:32px;font-weight:800;letter-spacing:4px;text-transform:uppercase;
+  background:linear-gradient(135deg, #e0e6f0 0%, #8494b0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.brand-sub{font-size:12px;color:var(--text2);letter-spacing:1.5px;margin-top:2px}
+.banner-right{text-align:right}
+.banner-date{font-family:'DM Mono',monospace;font-size:12px;color:var(--text2)}
+.banner-credit{font-size:10px;color:var(--muted);margin-top:4px;letter-spacing:0.5px}
+
+/* Live status bar */
+.status-bar{
+  display:flex;gap:24px;margin-top:24px;padding:16px 20px;
+  background:rgba(11,15,25,.6);border:1px solid var(--border);border-radius:10px;
+  backdrop-filter:blur(8px);flex-wrap:wrap;
+}
+.status-item{display:flex;align-items:center;gap:8px;font-family:'DM Mono',monospace;font-size:13px}
+.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.status-dot.live{animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 6px currentColor}50%{opacity:.3;box-shadow:none}}
+.status-label{color:var(--text2);font-size:11px}
+.status-value{font-weight:500}
+
+/* ── LAYOUT ── */
+.container{max-width:1280px;margin:0 auto;padding:0 24px 80px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px}
+@media(max-width:900px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}#chart-guide{grid-template-columns:1fr!important}}
+
+/* ── SECTIONS ── */
+.section{margin-top:36px}
+.section-label{font-size:11px;letter-spacing:2.5px;color:var(--muted);text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── CARDS ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;position:relative;transition:border-color .2s}
+.card:hover{border-color:var(--border2)}
+
+/* ── HERO ── */
+.hero{padding:32px;margin-top:28px;border-left:4px solid transparent;display:grid;grid-template-columns:auto 1fr auto;gap:32px;align-items:start}
+@media(max-width:700px){.hero{grid-template-columns:1fr;gap:16px}}
+.hero.s-clear{border-left-color:var(--green);background:var(--green-glow)}
+.hero.s-watch{border-left-color:var(--yellow);background:var(--yellow-glow)}
+.hero.s-danger{border-left-color:var(--red);background:var(--red-glow)}
+.hero-score-block{text-align:center;min-width:100px}
+.hero-score{font-family:'DM Mono',monospace;font-size:64px;font-weight:700;line-height:1}
+.hero-score-max{font-family:'DM Mono',monospace;font-size:18px;color:var(--muted)}
+.hero-score-label{font-size:11px;color:var(--text2);margin-top:6px;letter-spacing:1px;text-transform:uppercase}
+.hero-center{display:flex;flex-direction:column;gap:8px}
+.hero-state{font-size:20px;font-weight:700}
+.hero-regime{font-family:'DM Mono',monospace;font-size:13px;color:var(--text2)}
+.hero-analog{font-size:13px;color:var(--text2);line-height:1.6;margin-top:8px;padding-top:12px;border-top:1px solid var(--border)}
+.hero-right{text-align:right}
+.state-badge{display:inline-block;padding:6px 16px;border-radius:6px;font-size:12px;font-weight:600;letter-spacing:1.5px;font-family:'DM Mono',monospace}
+.badge-clear{background:rgba(16,185,129,.1);color:var(--green);border:1px solid rgba(16,185,129,.2)}
+.badge-watch{background:rgba(245,158,11,.1);color:var(--yellow);border:1px solid rgba(245,158,11,.2)}
+.badge-danger{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+
+/* ── CAPACITY BARS ── */
+.cap-row{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid rgba(21,29,46,.5)}
+.cap-row:last-child{border-bottom:none}
+.cap-icon{font-size:18px;width:28px;text-align:center}
+.cap-label{width:130px;font-size:13px}
+.cap-state{width:150px;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;letter-spacing:0.5px}
+.cap-bar-wrap{flex:1;height:5px;background:#111827;border-radius:3px;overflow:hidden}
+.cap-bar{height:100%;border-radius:3px;transition:width .8s ease}
+.cap-detail{width:160px;text-align:right;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)}
+
+/* ── VELOCITY ── */
+.vel-item{text-align:center;padding:18px 10px}
+.vel-value{font-family:'DM Mono',monospace;font-size:22px;font-weight:600}
+.vel-label{font-size:11px;color:var(--text2);margin-top:6px}
+.vel-sub{font-size:10px;color:var(--muted);margin-top:2px}
+
+/* ── DETECTORS ── */
+.det-item{padding:18px;text-align:center;border-radius:8px;transition:background .2s}
+.det-item.firing{background:var(--red-glow)}
+.det-item.clear{background:rgba(16,185,129,.03)}
+.det-icon{font-size:32px;margin-bottom:6px}
+.det-name{font-size:12px;font-weight:500}
+.det-state{font-family:'DM Mono',monospace;font-size:11px;font-weight:500;margin-top:4px;letter-spacing:1px}
+.det-sub{font-size:10px;color:var(--muted);margin-top:4px}
+
+/* ── POSITION ── */
+.pos-card{text-align:center;padding:28px}
+.pos-alloc{font-family:'DM Mono',monospace;font-size:48px;font-weight:700}
+.pos-label{font-size:13px;color:var(--text2);margin-top:4px;font-family:'DM Mono',monospace;letter-spacing:1.5px}
+.pos-bar{height:10px;background:#111827;border-radius:5px;margin:20px 0 12px;overflow:hidden;display:flex}
+.pos-equity{height:100%;background:linear-gradient(90deg, var(--blue), #60a5fa);transition:width .6s}
+.pos-bond{height:100%;background:linear-gradient(90deg, var(--purple), #a78bfa);transition:width .6s}
+.pos-legend{display:flex;justify-content:center;gap:24px;font-size:12px;color:var(--text2)}
+.pos-legend span{display:flex;align-items:center;gap:6px}
+.pos-dot{width:8px;height:8px;border-radius:2px}
+
+/* ── CHART ── */
+.chart-wrap{height:360px;position:relative;margin-top:8px}
+.chart-range-btn{background:var(--card2);border:1px solid var(--border);color:var(--text2);padding:4px 12px;border-radius:4px;font-family:'DM Mono',monospace;font-size:11px;cursor:pointer;transition:all .15s}
+.chart-range-btn:hover{border-color:var(--text2);color:var(--text)}
+.chart-range-btn.active{background:var(--blue-glow);color:var(--blue);border-color:rgba(59,130,246,.3)}
+
+/* ── LEVELS ── */
+.levels-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(145px, 1fr));gap:10px}
+.level-item{padding:14px;background:var(--card);border:1px solid var(--border);border-radius:8px}
+.level-value{font-family:'DM Mono',monospace;font-size:20px;font-weight:600}
+.level-label{font-size:11px;color:var(--text2);margin-top:3px}
+
+/* ── NAV ── */
+.nav{display:flex;gap:0;margin-top:28px;border-bottom:1px solid var(--border)}
+.nav-item{padding:12px 24px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;letter-spacing:0.5px}
+.nav-item:hover{color:var(--text)}
+.nav-item.active{color:var(--text);border-bottom-color:var(--blue)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* ── TABLE ── */
+table{width:100%;border-collapse:collapse;font-family:'DM Mono',monospace;font-size:12px}
+th{text-align:left;padding:10px 14px;border-bottom:1px solid var(--border);color:var(--muted);font-weight:400;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;position:sticky;top:0;background:var(--card)}
+td{padding:8px 14px;border-bottom:1px solid rgba(14,19,33,.8)}
+tr:hover td{background:rgba(59,130,246,.02)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+
+/* ── REGIME TABLE ── */
+.regime-table tr:nth-child(2){background:var(--red-glow)}
+.regime-highlight{font-weight:600}
+
+/* ── ANALOG CARD ── */
+.analog-card{padding:24px;background:var(--card2);border-radius:10px;border-left:3px solid var(--purple)}
+.analog-text{font-size:14px;line-height:1.8}
+
+/* ── STRESS TEST ── */
+.st-input{margin-bottom:18px}
+.st-row{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px}
+.st-range{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:2px}
+.st-slider{width:100%;height:4px;-webkit-appearance:none;appearance:none;background:#1a2540;border-radius:2px;outline:none;cursor:pointer}
+.st-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:#3b82f6;cursor:pointer;border:2px solid var(--card)}
+.st-slider::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#3b82f6;cursor:pointer;border:2px solid var(--card)}
+.st-preset{background:var(--card2);border:1px solid var(--border);color:var(--text2);padding:6px 14px;border-radius:6px;font-size:11px;cursor:pointer;transition:all .15s;font-family:'DM Mono',monospace}
+.st-preset:hover{border-color:var(--blue);color:var(--text)}
+
+/* ── FOOTER ── */
+.footer{margin-top:60px;padding:24px 0;border-top:1px solid var(--border);font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.5px}
+</style>
+</head>
+<body>
+
+<!-- ════════ TOP BANNER ════════ -->
+<div class="banner">
+  <div class="banner-inner">
+    <div class="banner-top">
+      <div class="brand">
+        <div class="logo-icon" style="background:none;box-shadow:none;width:44px;height:44px">
+          <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Three capacity layers — elastic, viscous, rigid -->
+            <defs>
+              <linearGradient id="lg1" x1="0" y1="0" x2="44" y2="44">
+                <stop offset="0%" stop-color="#3b82f6"/>
+                <stop offset="100%" stop-color="#8b5cf6"/>
+              </linearGradient>
+            </defs>
+            <!-- Outer ring (rigid capacity — always present) -->
+            <circle cx="22" cy="22" r="20" stroke="url(#lg1)" stroke-width="2" fill="none" opacity="0.3"/>
+            <!-- Middle ring (viscous — scheduled) -->
+            <circle cx="22" cy="22" r="14.5" stroke="url(#lg1)" stroke-width="2" fill="none" opacity="0.55"/>
+            <!-- Inner core (elastic — trust-gated, the one that collapses) -->
+            <circle cx="22" cy="22" r="9" fill="url(#lg1)" opacity="0.9"/>
+            <!-- Capacity pulse line -->
+            <path d="M6 22 L14 22 L17 14 L20 28 L23 18 L26 25 L29 22 L38 22" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-name">Capacity</div>
+          <div class="brand-sub">Structural Health Monitor</div>
+        </div>
+      </div>
+      <div class="banner-right">
+        <div class="banner-date" id="banner-date">Loading...</div>
+        <div class="banner-credit">Based on Flow Theory &mdash; J.H.F. Festirstein</div>
+      </div>
+    </div>
+
+    <!-- Live status bar -->
+    <div class="status-bar" id="status-bar">
+      <!-- Filled by JS -->
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- Nav -->
+<nav class="nav">
+  <div class="nav-item active" data-tab="dashboard">Dashboard</div>
+  <div class="nav-item" data-tab="regime">Regime Map</div>
+  <div class="nav-item" data-tab="stresstest">Stress Test</div>
+  <div class="nav-item" data-tab="compare">vs Fed Index</div>
+  <div class="nav-item" data-tab="history">History</div>
+</nav>
+
+<!-- ════════ DASHBOARD ════════ -->
+<div class="tab-content active" id="tab-dashboard">
+
+  <!-- Hero -->
+  <div class="card hero s-watch" id="hero">
+    <div class="hero-score-block">
+      <div class="hero-score" id="health-score">--</div>
+      <div class="hero-score-max">/ 100</div>
+      <div class="hero-score-label">Structural Health</div>
+    </div>
+    <div class="hero-center">
+      <div class="hero-state" id="hero-state">Loading...</div>
+      <div class="hero-regime" id="hero-regime">—</div>
+      <div class="hero-analog" id="hero-analog">—</div>
+    </div>
+    <div class="hero-right">
+      <div class="state-badge badge-watch" id="state-badge">LOADING</div>
+    </div>
+  </div>
+
+  <!-- Capacity Assessment -->
+  <div class="section">
+    <div class="section-label">Capacity Assessment</div>
+    <div class="card" id="capacity-card"></div>
+  </div>
+
+  <!-- Velocities + Position -->
+  <div class="section">
+    <div class="grid-2">
+      <div>
+        <div class="section-label">Velocity Indicators</div>
+        <div class="card">
+          <div class="grid-4" id="velocities"></div>
+          <div style="text-align:center;margin-top:8px;font-size:10px;color:var(--muted)">21-day rate of change &mdash; rising = stress building, falling = stress releasing</div>
+        </div>
+      </div>
+      <div>
+        <div class="section-label">Recommended Position</div>
+        <div class="card pos-card" id="position-card"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detectors -->
+  <div class="section">
+    <div class="section-label">Independent Fragility Detectors</div>
+    <div class="grid-4" id="detectors"></div>
+  </div>
+
+  <!-- Main Chart: Health vs Momentum -->
+  <div class="section">
+    <div class="section-label">Structural Health vs Market Momentum</div>
+    <div class="card" style="padding:24px">
+      <!-- Legend + range buttons -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">
+        <div style="display:flex;gap:20px;font-size:12px">
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:20px;height:2px;background:#3b82f6;display:inline-block"></span><span style="color:var(--text2)">Structure</span></span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:20px;height:0;border-top:1.5px dashed rgba(255,255,255,.45);display:inline-block"></span><span style="color:var(--text2)">Momentum</span></span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:8px;background:rgba(239,68,68,.15);border-radius:2px;display:inline-block"></span><span style="color:var(--text2)">Divergence</span></span>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="chart-range-btn" data-years="3">3Y</button>
+          <button class="chart-range-btn" data-years="5">5Y</button>
+          <button class="chart-range-btn" data-years="10">10Y</button>
+          <button class="chart-range-btn active" data-years="25">ALL</button>
+        </div>
+      </div>
+      <!-- Main chart with zone labels -->
+      <div style="display:flex;position:relative">
+        <div style="width:48px;flex-shrink:0;display:flex;flex-direction:column;justify-content:space-between;padding:8px 0;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.5px">
+          <div style="color:rgba(16,185,129,.5);text-align:right;padding-right:8px">Strong</div>
+          <div style="color:rgba(255,255,255,.2);text-align:right;padding-right:8px">Neutral</div>
+          <div style="color:rgba(239,68,68,.5);text-align:right;padding-right:8px">Weak</div>
+        </div>
+        <div style="flex:1;height:400px;position:relative"><canvas id="health-chart"></canvas></div>
+      </div>
+
+      <!-- Gap indicator -->
+      <div style="margin-top:16px;padding:14px 18px;border-radius:8px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px" id="gap-indicator">
+        <div style="font-size:13px" id="gap-text">Loading...</div>
+        <div style="font-family:'DM Mono',monospace;font-size:24px;font-weight:600" id="gap-value">—</div>
+      </div>
+
+      <!-- Reading guide -->
+      <div style="margin-top:12px;padding:16px;background:var(--card2);border-radius:8px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;font-size:12px" id="chart-guide">
+        <div>
+          <div style="color:var(--red);font-weight:600;margin-bottom:4px">⚠ Lines apart, momentum above</div>
+          <div style="color:var(--muted);font-size:11px;line-height:1.5">Market running ahead of structural health. The gap is unsupported gains. Preceded GFC (2007), COVID (2020), and current period. The wider the gap, the more fragile.</div>
+        </div>
+        <div>
+          <div style="color:var(--green);font-weight:600;margin-bottom:4px">✓ Lines together in neutral zone</div>
+          <div style="color:var(--muted);font-size:11px;line-height:1.5">Health and momentum agree. System in equilibrium. Structure supports the market. This is where you want to be fully invested.</div>
+        </div>
+        <div>
+          <div style="color:var(--blue);font-weight:600;margin-bottom:4px">↗ Health above momentum</div>
+          <div style="color:var(--muted);font-size:11px;line-height:1.5">Structure stronger than market reflects. Typically early recovery — credit healing, vol falling, curve steepening. Market hasn't priced it yet. Opportunity.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Secondary Chart: SPX Price Reference -->
+  <div class="section">
+    <div class="section-label">S&P 500 Price Reference</div>
+    <div class="card" style="padding:16px">
+      <div style="height:140px;position:relative"><canvas id="spx-chart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Levels -->
+  <div class="section">
+    <div class="section-label">Market Levels</div>
+    <div class="levels-grid" id="levels"></div>
+  </div>
+</div>
+
+<!-- ════════ REGIME MAP ════════ -->
+<div class="tab-content" id="tab-regime">
+  <div class="section">
+    <div class="section-label">Forward 12-Month Returns by Regime State</div>
+    <div class="card" style="overflow-x:auto">
+      <table class="regime-table">
+        <thead><tr><th>State</th><th>Mean Return</th><th>Win Rate</th><th>Worst Case</th><th>Occurrences</th></tr></thead>
+        <tbody>
+          <tr><td><span class="dot" style="background:var(--green)"></span>Uptrend + Stress Clear</td><td class="regime-highlight" style="color:var(--green)">+8.9%</td><td>82%</td><td>-20.1%</td><td>187 months</td></tr>
+          <tr><td><span class="dot" style="background:var(--red)"></span>Uptrend + Stress Detected</td><td class="regime-highlight" style="color:var(--red)">-5.4%</td><td style="color:var(--red)">30%</td><td style="color:var(--red)">-38.5%</td><td>10 months</td></tr>
+          <tr><td><span class="dot" style="background:var(--yellow)"></span>Correction + Stress Clear</td><td>-7.3%</td><td>44%</td><td>-42.6%</td><td>34 months</td></tr>
+          <tr><td><span class="dot" style="background:var(--yellow)"></span>Correction + Stress Detected</td><td>+6.9%</td><td>70%</td><td>-42.0%</td><td>23 months</td></tr>
+          <tr><td><span class="dot" style="background:var(--red)"></span>Bear + Stress Clear</td><td class="regime-highlight" style="color:var(--green)">+19.9%</td><td style="color:var(--green)">91%</td><td>+1.5%</td><td>11 months</td></tr>
+          <tr><td><span class="dot" style="background:var(--red)"></span>Bear + Stress Detected</td><td>+16.0%</td><td>76%</td><td>-29.5%</td><td>17 months</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:14px;padding:14px;background:var(--red-glow);border-radius:6px;font-size:12px;color:var(--text2)">
+        <strong style="color:var(--red)">Uptrend + Stress Detected</strong> is the most dangerous state in the dataset. 10 months in 26 years. Average forward 12-month return: -5.4%. Win rate: 30%. This is the state that preceded GFC, COVID, and 2022.
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Current Cycle Position</div>
+    <div class="card analog-card" id="regime-detail"><div class="analog-text">Loading...</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">What Changes This</div>
+    <div class="card" style="font-size:13px;line-height:2;color:var(--text2)">
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:8px 16px">
+        <span style="color:var(--green);font-family:'DM Mono',monospace;font-size:12px">FULL RISK</span>
+        <span>Stress clears (VIX &lt; 18 OR yield curve &gt; 1.0% OR credit velocity stops rising)</span>
+        <span style="color:var(--red);font-family:'DM Mono',monospace;font-size:12px">REDUCE MORE</span>
+        <span>Regime transitions to BEAR (S&P 500 drawdown exceeds 20%)</span>
+        <span style="color:var(--green);font-family:'DM Mono',monospace;font-size:12px">RECOVERY</span>
+        <span>Stress clears AND S&amp;P 500 back above 200-day moving average</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ STRESS TEST ════════ -->
+<div class="tab-content" id="tab-stresstest">
+  <div class="section">
+    <div class="section-label">Scenario Stress Test</div>
+    <div class="card" style="padding:28px">
+      <div style="font-size:13px;color:var(--text2);margin-bottom:20px">
+        Adjust the inputs below to see how structural health and positioning change under different scenarios. Start from current market conditions and drag to explore.
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+        <!-- Input sliders -->
+        <div>
+          <div class="section-label" style="margin-top:0">Adjust Conditions</div>
+
+          <div class="st-input">
+            <div class="st-row"><span>VIX</span><span class="mono" id="st-vix-val">30.6</span></div>
+            <input type="range" id="st-vix" min="9" max="80" step="0.5" value="30.6" class="st-slider">
+            <div class="st-range"><span>9 (calm)</span><span>80 (panic)</span></div>
+          </div>
+
+          <div class="st-input">
+            <div class="st-row"><span>HY OAS Spread</span><span class="mono" id="st-hy-val">3.42%</span></div>
+            <input type="range" id="st-hy" min="2" max="20" step="0.1" value="3.42" class="st-slider">
+            <div class="st-range"><span>2% (tight)</span><span>20% (crisis)</span></div>
+          </div>
+
+          <div class="st-input">
+            <div class="st-row"><span>Yield Curve (10Y - 3M)</span><span class="mono" id="st-yc-val">0.84%</span></div>
+            <input type="range" id="st-yc" min="-2" max="4" step="0.05" value="0.84" class="st-slider">
+            <div class="st-range"><span>-2% (inverted)</span><span>+4% (steep)</span></div>
+          </div>
+
+          <div class="st-input">
+            <div class="st-row"><span>SPX Drawdown from High</span><span class="mono" id="st-dd-val">-9.1%</span></div>
+            <input type="range" id="st-dd" min="-60" max="0" step="0.5" value="-9.1" class="st-slider">
+            <div class="st-range"><span>-60% (crash)</span><span>0% (at highs)</span></div>
+          </div>
+
+          <div class="st-input">
+            <div class="st-row"><span>Credit Velocity</span><span class="mono" id="st-vel-val">+0.27</span></div>
+            <input type="range" id="st-vel" min="-0.15" max="0.30" step="0.01" value="0.27" class="st-slider">
+            <div class="st-range"><span>-0.15 (healing)</span><span>+0.30 (deteriorating)</span></div>
+          </div>
+
+          <!-- Preset scenarios -->
+          <div style="margin-top:20px">
+            <div class="section-label" style="margin-top:0">Quick Scenarios</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px">
+              <button class="st-preset" data-vix="12" data-hy="3.0" data-yc="2.5" data-dd="0" data-vel="-0.03">Healthy Bull</button>
+              <button class="st-preset" data-vix="18" data-hy="4.0" data-yc="0.5" data-dd="-5" data-vel="0.05">Early Warning</button>
+              <button class="st-preset" data-vix="35" data-hy="8.0" data-yc="0.2" data-dd="-20" data-vel="0.15">GFC-like</button>
+              <button class="st-preset" data-vix="65" data-hy="12.0" data-yc="2.0" data-dd="-35" data-vel="0.10">Deep Crisis</button>
+              <button class="st-preset" data-vix="25" data-hy="6.0" data-yc="3.0" data-dd="-15" data-vel="-0.05">Early Recovery</button>
+              <button class="st-preset" data-vix="30.6" data-hy="3.42" data-yc="0.84" data-dd="-9.1" data-vel="0.27">Current</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Output -->
+        <div>
+          <div class="section-label" style="margin-top:0">Result</div>
+
+          <div class="card" style="text-align:center;padding:24px;margin-bottom:16px" id="st-result-card">
+            <div style="font-family:'DM Mono',monospace;font-size:56px;font-weight:700" id="st-health">--</div>
+            <div style="font-size:12px;color:var(--text2);margin-top:4px">STRUCTURAL HEALTH</div>
+            <div style="margin-top:12px;font-family:'DM Mono',monospace;font-size:14px;font-weight:600;letter-spacing:1px" id="st-state">—</div>
+          </div>
+
+          <div class="card" style="padding:16px;margin-bottom:12px">
+            <div style="font-size:12px;color:var(--text2);margin-bottom:8px">Capacity Assessment</div>
+            <div id="st-capacity" style="font-family:'DM Mono',monospace;font-size:12px;line-height:2"></div>
+          </div>
+
+          <div class="card" style="padding:16px;margin-bottom:12px">
+            <div style="font-size:12px;color:var(--text2);margin-bottom:8px">Position Recommendation</div>
+            <div id="st-position" style="font-family:'DM Mono',monospace;font-size:16px;font-weight:600;text-align:center"></div>
+          </div>
+
+          <div class="card" style="padding:16px">
+            <div style="font-size:12px;color:var(--text2);margin-bottom:8px">Historical Context</div>
+            <div id="st-context" style="font-size:12px;color:var(--text2);line-height:1.6"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ NFCI COMPARISON ════════ -->
+<div class="tab-content" id="tab-compare">
+  <div class="section">
+    <div class="section-label">Capacity vs NFCI — Where We See What They Don't</div>
+    <div class="card" style="padding:24px">
+      <div style="display:flex;gap:20px;font-size:12px;margin-bottom:16px">
+        <span style="display:flex;align-items:center;gap:6px"><span style="width:20px;height:2px;background:#3b82f6;display:inline-block"></span><span style="color:var(--text2)">Capacity Health</span></span>
+        <span style="display:flex;align-items:center;gap:6px"><span style="width:20px;height:2px;background:#10b981;display:inline-block"></span><span style="color:var(--text2)">NFCI Health (inverted)</span></span>
+        <span style="display:flex;align-items:center;gap:6px"><span style="width:14px;height:8px;background:rgba(255,170,0,.15);border-radius:2px;display:inline-block"></span><span style="color:var(--text2)">Disagreement zone</span></span>
+      </div>
+      <div style="height:350px;position:relative"><canvas id="nfci-chart"></canvas></div>
+      <div style="text-align:center;margin-top:10px;font-size:11px;color:var(--muted)">When lines diverge — Capacity dropping while NFCI stays high — that's where Capacity sees stress that NFCI misses.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Key Disagreements — When Capacity Was Right</div>
+    <div class="card" style="overflow-x:auto">
+      <table>
+        <thead><tr><th>Period</th><th>Capacity Said</th><th>NFCI Said</th><th>What Happened</th><th>Who Was Right</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Jul 2007</td>
+            <td style="color:var(--red)">Health 33 — stressed</td>
+            <td style="color:var(--green)">-0.29 — loose</td>
+            <td>GFC began Aug 2007. SPX peaked Oct, fell 57%.</td>
+            <td style="color:var(--blue);font-weight:600">Capacity</td>
+          </tr>
+          <tr>
+            <td>Jun-Aug 2019</td>
+            <td style="color:var(--red)">Health 32-36 — stressed</td>
+            <td style="color:var(--green)">-0.53 to -0.58 — loose</td>
+            <td>Repo crisis Sep 2019. SOFR spiked to 5.25%.</td>
+            <td style="color:var(--blue);font-weight:600">Capacity</td>
+          </tr>
+          <tr>
+            <td>Jan 2020</td>
+            <td style="color:var(--yellow)">Health 43 — watch</td>
+            <td style="color:var(--green)">-0.62 — very loose</td>
+            <td>COVID crash Feb 2020. SPX fell 34% in 5 weeks.</td>
+            <td style="color:var(--blue);font-weight:600">Capacity</td>
+          </tr>
+          <tr>
+            <td>Mar 2026 (now)</td>
+            <td style="color:var(--red)">Health 37 — stressed</td>
+            <td style="color:var(--green)">-0.48 — loose</td>
+            <td>SPX in correction. Credit velocity rising.</td>
+            <td style="color:var(--muted)">TBD</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Detection Scorecard</div>
+    <div class="grid-3">
+      <div class="card" style="text-align:center;padding:20px">
+        <div style="font-family:'DM Mono',monospace;font-size:32px;font-weight:700;color:var(--blue)">13/16</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:4px">Capacity accuracy</div>
+      </div>
+      <div class="card" style="text-align:center;padding:20px">
+        <div style="font-family:'DM Mono',monospace;font-size:32px;font-weight:700;color:var(--green)">12/16</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:4px">NFCI accuracy</div>
+      </div>
+      <div class="card" style="text-align:center;padding:20px">
+        <div style="font-family:'DM Mono',monospace;font-size:32px;font-weight:700;color:var(--red)">2</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:4px">Events Capacity caught that NFCI missed</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ HISTORY ════════ -->
+<div class="tab-content" id="tab-history">
+  <div class="section">
+    <div class="section-label">Monthly Record — 25 Years</div>
+    <div class="card" style="overflow-x:auto;max-height:650px;overflow-y:auto">
+      <table>
+        <thead><tr><th>Date</th><th>Regime</th><th>Stress</th><th>Health</th><th>Position</th><th>VIX</th><th>HY OAS</th><th>YC Slope</th><th>Credit Vel.</th></tr></thead>
+        <tbody id="history-table"><tr><td colspan="9" style="color:var(--muted)">Loading...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  Capacity &mdash; Structural Health Monitor &middot; Based on Flow Theory by J.H.F. Festirstein &middot; Validated on 50+ events across 8 domains &middot; Not financial advice
+</footer>
+
+</div>
+
+<script>
+const d = LATEST_DATA;
+const history = HISTORY_DATA;
+
+// Clean internal names from data
+function cleanState(s) {
+  return s?.replace('W4+ ON', 'Stress Detected').replace('W4+ OFF', 'Clear').replace('W4+', 'Capacity') || s;
+}
+d.combined_state = cleanState(d.combined_state);
+d.analog = cleanState(d.analog);
+if (d.capacity?.information) {
+  d.capacity.information.w4_says = d.capacity.information.w4_says === 'STRESS' ? 'STRESS' : 'CLEAR';
+}
+
+// ── STATUS BAR ──
+function renderStatusBar() {
+  const el = document.getElementById('status-bar');
+  const sigColor = d.w4plus ? 'var(--red)' : 'var(--green)';
+  const regColor = d.regime === 'BEAR' ? 'var(--red)' : (d.regime === 'CORRECTION' ? 'var(--yellow)' : 'var(--green)');
+
+  el.innerHTML = `
+    <div class="status-item"><div class="status-dot live" style="color:${sigColor};background:${sigColor}"></div><span class="status-label">Stress</span><span class="status-value" style="color:${sigColor}">${d.w4plus ? 'DETECTED' : 'CLEAR'}</span></div>
+    <div class="status-item"><div class="status-dot" style="background:${regColor}"></div><span class="status-label">Regime</span><span class="status-value" style="color:${regColor}">${d.regime}</span></div>
+    <div class="status-item"><span class="status-label">Health</span><span class="status-value">${d.health_score}/100</span></div>
+    <div class="status-item"><span class="status-label">Position</span><span class="status-value">${d.position.equity_pct}% equity</span></div>
+    <div class="status-item"><span class="status-label">Detectors</span><span class="status-value">${d.detectors.count}/4</span></div>
+    <div class="status-item"><span class="status-label">VIX</span><span class="status-value">${d.levels.vix}</span></div>
+    <div class="status-item"><span class="status-label">SPX</span><span class="status-value">${d.levels.spx?.toLocaleString()}</span></div>
+  `;
+}
+
+// ── HERO ──
+function renderHero() {
+  const hero = document.getElementById('hero');
+  const h = d.health_score;
+  hero.className = 'card hero ' + (h > 60 ? 's-clear' : (h > 30 ? 's-watch' : 's-danger'));
+  document.getElementById('health-score').textContent = h;
+
+  const badge = document.getElementById('state-badge');
+  if (d.w4plus && d.regime === 'UPTREND') { badge.textContent = 'CRITICAL'; badge.className = 'state-badge badge-danger'; }
+  else if (d.w4plus) { badge.textContent = 'DEFENSIVE'; badge.className = 'state-badge badge-watch'; }
+  else if (d.regime === 'BEAR') { badge.textContent = 'BEAR'; badge.className = 'state-badge badge-danger'; }
+  else { badge.textContent = 'CLEAR'; badge.className = 'state-badge badge-clear'; }
+
+  document.getElementById('hero-state').textContent = d.combined_state;
+  document.getElementById('hero-state').style.color = d.w4plus ? 'var(--red)' : (d.regime === 'BEAR' ? 'var(--red)' : 'var(--green)');
+  document.getElementById('hero-regime').textContent = `${d.position.label} — ${d.position.equity_pct}% equity / ${d.position.bond_pct}% bonds`;
+  document.getElementById('hero-analog').textContent = d.analog;
+
+  document.getElementById('banner-date').textContent = `${d.date} ${d.time} UTC`;
+}
+
+// ── CAPACITY ──
+function renderCapacity() {
+  const cap = d.capacity;
+  const el = document.getElementById('capacity-card');
+  const rows = [
+    { icon: '&#9889;', label: 'Elastic (Credit)', state: cap.elastic.state, detail: `HY velocity: ${cap.elastic.hy_velocity > 0 ? '+' : ''}${cap.elastic.hy_velocity.toFixed(4)}`, pct: Math.max(0, Math.min(100, 50 - cap.elastic.hy_velocity * 150)), color: cap.elastic.state.includes('DEGRADING') ? 'var(--red)' : (cap.elastic.state.includes('EXPANDING') ? 'var(--green)' : 'var(--text2)') },
+    { icon: '&#128200;', label: 'Viscous (Policy)', state: cap.viscous.state, detail: `YC slope: ${cap.viscous.yc_slope}%`, pct: Math.max(0, Math.min(100, cap.viscous.yc_slope * 30)), color: ['AMPLE','MODERATE'].includes(cap.viscous.state) ? 'var(--green)' : (cap.viscous.state === 'CONSTRAINED' ? 'var(--yellow)' : 'var(--red)') },
+    { icon: '&#128737;', label: 'Rigid (Backstop)', state: cap.rigid.state, detail: 'Fed + FDIC facilities', pct: 80, color: 'var(--green)' },
+    { icon: '&#128065;', label: 'Information', state: cap.information.state, detail: `Engine \u2192 ${cap.information.w4_says} | NFCI \u2192 ${cap.information.nfci_says}`, pct: cap.information.state === 'ALIGNED' ? 80 : 25, color: cap.information.state === 'ALIGNED' ? 'var(--green)' : 'var(--yellow)' },
+  ];
+  el.innerHTML = rows.map(r => `
+    <div class="cap-row">
+      <div class="cap-icon">${r.icon}</div>
+      <div class="cap-label">${r.label}</div>
+      <div class="cap-state" style="color:${r.color}">${r.state}</div>
+      <div class="cap-bar-wrap"><div class="cap-bar" style="width:${r.pct}%;background:${r.color}"></div></div>
+      <div class="cap-detail">${r.detail}</div>
+    </div>`).join('');
+}
+
+// ── VELOCITIES ──
+function renderVelocities() {
+  const vel = d.velocities;
+  const el = document.getElementById('velocities');
+  const items = [
+    { label: 'Credit', sub: 'HY percentile', value: vel.hy_pct, fmt: v => v.toFixed(3) },
+    { label: 'Volatility', sub: 'VIX', value: vel.vix, fmt: v => v.toFixed(1) },
+    { label: 'Conditions', sub: 'NFCI', value: vel.nfci, fmt: v => v.toFixed(3) },
+    { label: 'Yield Curve', sub: '10Y-3M', value: vel.yc, fmt: v => v.toFixed(3) },
+  ];
+  el.innerHTML = items.map(i => {
+    const c = i.value > 0.001 ? 'var(--red)' : (i.value < -0.001 ? 'var(--green)' : 'var(--text2)');
+    const a = i.value > 0.001 ? '\u2191' : (i.value < -0.001 ? '\u2193' : '\u2192');
+    return `<div class="vel-item"><div class="vel-value" style="color:${c}">${i.value > 0 ? '+' : ''}${i.fmt(i.value)} ${a}</div><div class="vel-label">${i.label}</div><div class="vel-sub">${i.sub}</div></div>`;
+  }).join('');
+}
+
+// ── POSITION ──
+function renderPosition() {
+  const p = d.position;
+  const el = document.getElementById('position-card');
+  el.innerHTML = `
+    <div class="pos-alloc" style="color:${p.equity_pct <= 30 ? 'var(--red)' : (p.equity_pct < 80 ? 'var(--yellow)' : 'var(--green)')}">${p.equity_pct}%</div>
+    <div class="pos-label">${p.label}</div>
+    <div class="pos-bar"><div class="pos-equity" style="width:${p.equity_pct}%"></div><div class="pos-bond" style="width:${p.bond_pct}%"></div></div>
+    <div class="pos-legend"><span><div class="pos-dot" style="background:var(--blue)"></div>Equity ${p.equity_pct}%</span><span><div class="pos-dot" style="background:var(--purple)"></div>Bonds ${p.bond_pct}%</span></div>`;
+}
+
+// ── DETECTORS ──
+function renderDetectors() {
+  const det = d.detectors;
+  const dd = d.detector_detail;
+  const items = [
+    { name: 'Credit Regime', key: 'f1_credit',
+      what: 'Credit stress accelerating in fragile macro',
+      reading: `HY velocity + flat curve + VIX`,
+      value: dd.f5_kre_dd !== null ? '' : '' },
+    { name: 'Banking Stress', key: 'f5_banks',
+      what: 'Stress concentrated in banking sector',
+      reading: `Regional banks ${dd.f5_kre_dd}% from 52w high` },
+    { name: 'Safe Haven', key: 'f6a_gold',
+      what: 'Capital fleeing to safety',
+      reading: `Gold ${dd.f6a_gold_3m > 0 ? '+' : ''}${dd.f6a_gold_3m}% vs SPX ${dd.f6a_spx_3m > 0 ? '+' : ''}${dd.f6a_spx_3m}% (3m)` },
+    { name: 'Dollar Funding', key: 'f6b_dollar',
+      what: 'Global dollar liquidity tightening',
+      reading: `Dollar-SPX divergence: ${dd.f6b_divergence > 0 ? '+' : ''}${dd.f6b_divergence}%` },
+  ];
+  const el = document.getElementById('detectors');
+  el.innerHTML = items.map(i => {
+    const f = det[i.key];
+    return `<div class="card det-item ${f ? 'firing' : 'clear'}">
+      <div class="det-icon" style="color:${f ? 'var(--red)' : 'var(--green)'}">${f ? '\u25A0' : '\u25A1'}</div>
+      <div class="det-name">${i.name}</div>
+      <div class="det-state" style="color:${f ? 'var(--red)' : 'var(--green)'}">${f ? 'ACTIVE' : 'CLEAR'}</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:6px;line-height:1.4">${i.what}</div>
+      <div style="font-size:10px;color:var(--text2);margin-top:4px;font-family:'DM Mono',monospace">${i.reading}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── LEVELS ──
+function renderLevels() {
+  const l = d.levels;
+  const items = [
+    { label: 'VIX', desc: 'Implied volatility — fear gauge', value: l.vix, color: l.vix > 25 ? 'var(--red)' : (l.vix > 18 ? 'var(--yellow)' : ''), note: l.vix > 30 ? 'High fear' : (l.vix > 20 ? 'Elevated' : 'Calm') },
+    { label: 'HY OAS', desc: 'High yield credit spread', value: l.hy_oas + '%', note: l.hy_oas > 6 ? 'Stressed' : (l.hy_oas > 4 ? 'Normal' : 'Tight') },
+    { label: 'Yield Curve', desc: '10Y minus 3M treasury', value: l.yc_slope + '%', color: l.yc_slope < 0 ? 'var(--red)' : (l.yc_slope < 1 ? 'var(--yellow)' : ''), note: l.yc_slope < 0 ? 'Inverted' : (l.yc_slope < 1 ? 'Flat' : 'Steep') },
+    { label: 'S&P 500', desc: 'Index price level', value: l.spx?.toLocaleString() },
+    { label: 'SPX Drawdown', desc: 'Distance from 52-week high', value: l.spx_dd + '%', color: l.spx_dd < -10 ? 'var(--red)' : (l.spx_dd < -5 ? 'var(--yellow)' : ''), note: l.spx_dd < -20 ? 'Bear market' : (l.spx_dd < -10 ? 'Correction' : (l.spx_dd < -5 ? 'Pullback' : 'Near highs')) },
+    { label: 'NFCI', desc: 'Chicago Fed financial conditions', value: l.nfci, note: l.nfci > 0 ? 'Tight' : 'Loose' },
+    { label: 'STLFSI', desc: 'St. Louis Fed stress index', value: l.stlfsi, note: l.stlfsi > 0 ? 'Stressed' : 'Normal' },
+    { label: 'Dollar', desc: 'Trade-weighted dollar index', value: l.dollar },
+  ];
+  document.getElementById('levels').innerHTML = items.map(i => `
+    <div class="level-item">
+      <div class="level-value" ${i.color ? `style="color:${i.color}"` : ''}>${i.value ?? '\u2014'}</div>
+      <div class="level-label">${i.label}</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px">${i.desc}</div>
+      ${i.note ? `<div style="font-size:10px;color:${i.color || 'var(--text2)'};margin-top:2px;font-family:'DM Mono',monospace">${i.note}</div>` : ''}
+    </div>`).join('');
+}
+
+// ── CHARTS ──
+let healthChart = null;
+let spxChart = null;
+
+function renderChart(yearsBack) {
+  const cd = CHART_DATA;
+  if (!cd || cd.length === 0) return;
+
+  // Filter by range
+  let data = cd;
+  if (yearsBack && yearsBack < 25) {
+    const cutoff = new Date();
+    cutoff.setFullYear(cutoff.getFullYear() - yearsBack);
+    const cutStr = cutoff.toISOString().slice(0, 10);
+    data = cd.filter(h => h.date >= cutStr);
+  }
+
+  const gapPlugin = {
+    id: 'gapFill',
+    beforeDraw(chart) {
+      const {ctx, chartArea: {left, right}, scales: {y}} = chart;
+      const meta0 = chart.getDatasetMeta(0);
+      const meta1 = chart.getDatasetMeta(1);
+      if (!meta0.data.length || !meta1.data.length) return;
+
+      // Neutral band
+      const y60 = y.getPixelForValue(60);
+      const y40 = y.getPixelForValue(40);
+      ctx.fillStyle = 'rgba(255,255,255,.012)';
+      ctx.fillRect(left, y60, right - left, y40 - y60);
+
+      // Divergence fill
+      ctx.save();
+      ctx.beginPath();
+      for (let i = 0; i < meta0.data.length; i++) {
+        const p0 = meta0.data[i]; const p1 = meta1.data[i];
+        if (!p0 || !p1) continue;
+        if (p1.y < p0.y) {
+          if (i === 0 || !(meta1.data[i-1]?.y < meta0.data[i-1]?.y)) ctx.moveTo(p0.x, p0.y);
+          ctx.lineTo(p0.x, p0.y);
+        }
+      }
+      for (let i = meta0.data.length - 1; i >= 0; i--) {
+        const p0 = meta0.data[i]; const p1 = meta1.data[i];
+        if (!p0 || !p1) continue;
+        if (p1.y < p0.y) ctx.lineTo(p1.x, p1.y);
+      }
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(239,68,68,.10)';
+      ctx.fill();
+      ctx.restore();
+    }
+  };
+
+  // Gap indicator
+  const latest = data[data.length - 1];
+  const gap = latest.momentum - latest.health;
+  const gapEl = document.getElementById('gap-indicator');
+  const gapText = document.getElementById('gap-text');
+  const gapValue = document.getElementById('gap-value');
+
+  if (gap > 25) {
+    gapEl.style.background = 'var(--red-glow)';
+    gapText.innerHTML = '<span style="color:var(--red);font-weight:600">Large divergence</span> — market momentum significantly above structural health. The gap represents gains not supported by fundamentals.';
+    gapValue.style.color = 'var(--red)';
+  } else if (gap > 10) {
+    gapEl.style.background = 'var(--yellow-glow)';
+    gapText.innerHTML = '<span style="color:var(--yellow);font-weight:600">Moderate divergence</span> — market running ahead of structure. Watch for convergence.';
+    gapValue.style.color = 'var(--yellow)';
+  } else if (gap < -15) {
+    gapEl.style.background = 'var(--blue-glow)';
+    gapText.innerHTML = '<span style="color:var(--blue);font-weight:600">Structure leads market</span> — health stronger than prices reflect. Typically an opportunity.';
+    gapValue.style.color = 'var(--blue)';
+  } else {
+    gapEl.style.background = 'var(--card2)';
+    gapText.innerHTML = '<span style="color:var(--green);font-weight:600">Aligned</span> — health and momentum in agreement. System in equilibrium.';
+    gapValue.style.color = 'var(--green)';
+  }
+  gapValue.textContent = (gap > 0 ? '+' : '') + gap;
+
+  // Destroy old
+  if (healthChart) healthChart.destroy();
+
+  const ctx = document.getElementById('health-chart').getContext('2d');
+  healthChart = new Chart(ctx, {
+    type: 'line',
+    plugins: [gapPlugin],
+    data: {
+      labels: data.map(d => d.date),
+      datasets: [{
+        label: 'Structural Health',
+        data: data.map(d => d.health),
+        borderColor: '#3b82f6',
+        backgroundColor: 'rgba(59,130,246,.05)',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 0,
+        borderWidth: 2,
+      },{
+        label: 'Market Momentum',
+        data: data.map(d => d.momentum),
+        borderColor: 'rgba(255,255,255,.45)',
+        fill: false,
+        tension: 0.4,
+        pointRadius: 0,
+        borderWidth: 1.5,
+        borderDash: [6, 4],
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { intersect: false, mode: 'index' },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#0b0f19', borderColor: '#1a2540', borderWidth: 1,
+          titleFont: { family: 'DM Mono', size: 11 }, bodyFont: { family: 'DM Mono', size: 11 },
+          callbacks: {
+            afterTitle: function(items) {
+              const idx = items[0].dataIndex;
+              const d = data[idx];
+              const g = d.momentum - d.health;
+              return `Gap: ${g > 0 ? '+' : ''}${g}  |  SPX: ${d.spx.toLocaleString()}  |  12m: ${d.spx_ret_12m > 0 ? '+' : ''}${d.spx_ret_12m}%`;
+            },
+            label: function(ctx) {
+              return ctx.datasetIndex === 0 ? `■ Health: ${ctx.raw}` : `◆ Momentum: ${ctx.raw}`;
+            },
+            labelColor: function(ctx) {
+              return { borderColor: ctx.datasetIndex === 0 ? '#3b82f6' : '#999', backgroundColor: ctx.datasetIndex === 0 ? '#3b82f6' : '#999' };
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          type: 'time',
+          time: { unit: yearsBack && yearsBack <= 5 ? 'month' : 'year', displayFormats: { year: 'yyyy', month: 'MMM yy' } },
+          grid: { color: '#0a0f18' },
+          ticks: { color: '#3e536e', font: { family: 'DM Mono', size: 10 }, maxTicksLimit: yearsBack <= 5 ? 12 : 14 },
+        },
+        y: {
+          min: 0, max: 100,
+          grid: { color: 'rgba(255,255,255,.03)' },
+          ticks: { color: '#2e3f58', font: { family: 'DM Mono', size: 10 }, stepSize: 20 },
+        }
+      }
+    }
+  });
+
+  // SPX reference chart
+  if (spxChart) spxChart.destroy();
+  const ctx2 = document.getElementById('spx-chart').getContext('2d');
+  spxChart = new Chart(ctx2, {
+    type: 'line',
+    data: {
+      labels: data.map(d => d.date),
+      datasets: [{
+        data: data.map(d => d.spx),
+        borderColor: 'rgba(255,255,255,.15)',
+        backgroundColor: 'rgba(255,255,255,.02)',
+        fill: true, tension: 0.3, pointRadius: 0, borderWidth: 1,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: {
+        callbacks: { label: ctx => `S&P 500: ${ctx.raw.toLocaleString()}` }
+      }},
+      scales: {
+        x: { type: 'time', time: { unit: 'year' }, grid: { display: false }, ticks: { color: '#3e536e', font: { family: 'DM Mono', size: 9 }, maxTicksLimit: 10 } },
+        y: { type: 'logarithmic', grid: { color: '#0a0f18' }, ticks: { color: '#3e536e', font: { family: 'DM Mono', size: 9 }, callback: v => v >= 1000 ? (v/1000).toFixed(0)+'k' : v } }
+      }
+    }
+  });
+}
+
+// Chart range buttons
+document.querySelectorAll('.chart-range-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.chart-range-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderChart(parseInt(btn.dataset.years));
+  });
+});
+
+// ── REGIME ──
+function renderRegime() {
+  document.getElementById('regime-detail').innerHTML = `<div class="analog-text">
+    <strong>Current state:</strong> ${d.combined_state}<br><br>
+    <strong>Historical analog:</strong> ${d.analog}<br><br>
+    <strong>What this state has produced historically:</strong><br>
+    CORRECTION + Stress Detected has occurred 23 times since 2000. Mean 12-month forward return: +6.9% with 70% win rate. But worst case: -42%. Wide distribution — could go either way.<br><br>
+    <strong>The key distinction:</strong> If credit velocity stays positive (HY percentile keeps rising) and VIX stays elevated, the correction is more likely to deepen. If credit velocity reverses, the correction is more likely to resolve upward.
+  </div>`;
+}
+
+// ── HISTORY ──
+function renderHistory() {
+  const el = document.getElementById('history-table');
+  el.innerHTML = history.map(h => {
+    const rc = h.regime === 'UPTREND' ? 'var(--green)' : (h.regime === 'BEAR' ? 'var(--red)' : 'var(--yellow)');
+    const wc = h.w4plus ? 'var(--red)' : 'var(--green)';
+    const hc = h.health_score > 60 ? 'var(--green)' : (h.health_score > 30 ? 'var(--yellow)' : 'var(--red)');
+    return `<tr>
+      <td>${h.date}</td><td style="color:${rc}">${h.regime}</td><td style="color:${wc}">${h.w4plus ? '\u25A0' : '\u25A1'}</td>
+      <td style="color:${hc}">${h.health_score}</td><td>${h.position_pct}%</td>
+      <td>${h.vix}</td><td>${h.hy_oas}%</td><td>${h.yc_slope}%</td><td>${h.hy_velocity > 0 ? '+' : ''}${h.hy_velocity?.toFixed(4) ?? ''}</td></tr>`;
+  }).join('');
+}
+
+// ── TABS ──
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    item.classList.add('active');
+    document.getElementById('tab-' + item.dataset.tab).classList.add('active');
+  });
+});
+
+// ── STRESS TEST ──
+function computeStressHealth(vix, hy, yc, dd, vel) {
+  // Same formula as fix_health.py v3 — absolute distances + velocity
+  const vix_h = Math.max(0, Math.min(100, 100 - (vix - 12) * (100 / 28)));
+  const yc_h = Math.max(0, Math.min(100, 20 + yc * 26.7));
+
+  // HY level via approximate full-history percentile
+  // HY OAS median ~4.5%, range 2.0-20.0
+  const hy_pct = Math.min(1, Math.max(0, (hy - 2.0) / 18.0));
+  let hy_h;
+  if (hy_pct < 0.10) hy_h = 60 + hy_pct * 100;
+  else if (hy_pct < 0.50) hy_h = 70 + (0.50 - hy_pct) * 37.5;
+  else hy_h = Math.max(0, 70 - (hy_pct - 0.50) * 140);
+
+  const vel_clamped = Math.max(-0.10, Math.min(0.15, vel));
+  const vel_h = Math.max(0, Math.min(100, 60 - vel_clamped * 400));
+
+  const dd_h = Math.max(0, Math.min(90, 90 + dd * 3));
+
+  let raw = vix_h * 0.25 + yc_h * 0.20 + hy_h * 0.20 + vel_h * 0.20 + dd_h * 0.15;
+
+  // Stress detection (simplified W4+ logic)
+  const stress = vel > 0 && yc < 1.0 && vix > 18;
+  if (stress) raw *= 0.60;
+  if (dd < -20) raw = Math.min(raw, 20);
+  if (dd < -10) raw = Math.min(raw, 45);
+
+  return { health: Math.round(Math.max(0, Math.min(100, raw))), stress };
+}
+
+function updateStressTest() {
+  const vix = parseFloat(document.getElementById('st-vix').value);
+  const hy = parseFloat(document.getElementById('st-hy').value);
+  const yc = parseFloat(document.getElementById('st-yc').value);
+  const dd = parseFloat(document.getElementById('st-dd').value);
+  const vel = parseFloat(document.getElementById('st-vel').value);
+
+  document.getElementById('st-vix-val').textContent = vix.toFixed(1);
+  document.getElementById('st-hy-val').textContent = hy.toFixed(2) + '%';
+  document.getElementById('st-yc-val').textContent = (yc >= 0 ? '+' : '') + yc.toFixed(2) + '%';
+  document.getElementById('st-dd-val').textContent = dd.toFixed(1) + '%';
+  document.getElementById('st-vel-val').textContent = (vel >= 0 ? '+' : '') + vel.toFixed(2);
+
+  const {health, stress} = computeStressHealth(vix, hy, yc, dd, vel);
+
+  // Health display
+  const hEl = document.getElementById('st-health');
+  const rCard = document.getElementById('st-result-card');
+  hEl.textContent = health;
+  if (health < 20) { hEl.style.color = 'var(--red)'; rCard.style.borderLeft = '4px solid var(--red)'; }
+  else if (health < 40) { hEl.style.color = 'var(--yellow)'; rCard.style.borderLeft = '4px solid var(--yellow)'; }
+  else if (health < 60) { hEl.style.color = 'var(--text)'; rCard.style.borderLeft = '4px solid var(--muted)'; }
+  else { hEl.style.color = 'var(--green)'; rCard.style.borderLeft = '4px solid var(--green)'; }
+
+  // State
+  const stEl = document.getElementById('st-state');
+  const regime = dd < -20 ? 'BEAR' : (dd < -5 ? 'CORRECTION' : 'UPTREND');
+  const stateText = regime + ' + ' + (stress ? 'Stress Detected' : 'Clear');
+  stEl.textContent = stateText;
+  stEl.style.color = stress ? 'var(--red)' : (regime === 'BEAR' ? 'var(--red)' : 'var(--green)');
+
+  // Capacity
+  let elastic = vel > 0.02 ? 'DEGRADING FAST' : (vel > 0 ? 'DEGRADING' : (vel < -0.02 ? 'EXPANDING FAST' : (vel < 0 ? 'EXPANDING' : 'STABLE')));
+  let viscous = yc > 2.0 ? 'AMPLE' : (yc > 1.0 ? 'MODERATE' : (yc > 0 ? 'CONSTRAINED' : 'INVERTED'));
+  const eColor = elastic.includes('DEGRADING') ? 'var(--red)' : (elastic.includes('EXPANDING') ? 'var(--green)' : 'var(--text2)');
+  const vColor = ['AMPLE','MODERATE'].includes(viscous) ? 'var(--green)' : (viscous === 'CONSTRAINED' ? 'var(--yellow)' : 'var(--red)');
+  document.getElementById('st-capacity').innerHTML =
+    `<span style="color:${eColor}">Elastic: ${elastic}</span><br>` +
+    `<span style="color:${vColor}">Viscous: ${viscous}</span><br>` +
+    `<span style="color:var(--green)">Rigid: PRESENT</span>`;
+
+  // Position
+  let pos, posLabel;
+  if (regime === 'UPTREND' && !stress) { pos = 100; posLabel = 'FULL RISK'; }
+  else if (regime === 'UPTREND' && stress) { pos = 0; posLabel = 'EXIT'; }
+  else if (regime === 'CORRECTION' && !stress) { pos = 50; posLabel = 'REDUCED'; }
+  else if (regime === 'CORRECTION' && stress) { pos = 30; posLabel = 'DEFENSIVE'; }
+  else if (regime === 'BEAR') { pos = 20; posLabel = 'MINIMAL'; }
+  else { pos = 50; posLabel = 'NEUTRAL'; }
+
+  const pEl = document.getElementById('st-position');
+  pEl.innerHTML = `<span style="color:${pos <= 30 ? 'var(--red)' : (pos < 80 ? 'var(--yellow)' : 'var(--green)')}">${pos}% equity / ${100-pos}% bonds</span><br><span style="font-size:11px;color:var(--text2)">${posLabel}</span>`;
+
+  // Context
+  let context = '';
+  if (health < 15 && vix > 40) context = 'Conditions similar to GFC peak stress or COVID crash. Historically, forward 12-month returns from this level average +34% — extreme stress is typically followed by strong recovery.';
+  else if (health < 25) context = 'Deep structural stress. The system is significantly impaired. Historically this zone precedes major recoveries within 6-12 months.';
+  else if (stress && regime === 'UPTREND') context = 'The most dangerous state in our dataset. Structural stress detected while market still in uptrend. This has preceded every major decline since 2007. Mean forward 12-month return: -5.4%.';
+  else if (stress && regime === 'CORRECTION') context = 'Correction with structural stress. Historically resolves to further decline 70% of the time when credit velocity stays positive.';
+  else if (health > 75) context = 'Strong structural health. All capacity components supporting. Historically associated with sustained expansion and +10% annual returns.';
+  else if (regime === 'BEAR' && !stress) context = 'Bear market with stress clearing. This is the early recovery signal. Mean forward 12-month return: +19.9% with 91% win rate.';
+  else context = 'Moderate conditions. Monitor credit velocity for direction.';
+  document.getElementById('st-context').textContent = context;
+}
+
+// Bind sliders
+['st-vix','st-hy','st-yc','st-dd','st-vel'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updateStressTest);
+});
+
+// Bind presets
+document.querySelectorAll('.st-preset').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.getElementById('st-vix').value = btn.dataset.vix;
+    document.getElementById('st-hy').value = btn.dataset.hy;
+    document.getElementById('st-yc').value = btn.dataset.yc;
+    document.getElementById('st-dd').value = btn.dataset.dd;
+    document.getElementById('st-vel').value = btn.dataset.vel;
+    updateStressTest();
+  });
+});
+
+// Init stress test
+updateStressTest();
+
+
+// ── NFCI COMPARISON CHART ──
+function renderNFCIChart() {
+  if (!NFCI_DATA || NFCI_DATA.length === 0) return;
+  const ctx = document.getElementById('nfci-chart').getContext('2d');
+
+  const disagreePlugin = {
+    id: 'disagree',
+    beforeDraw(chart) {
+      const {ctx: c, chartArea: {left, right}, scales: {y}} = chart;
+      const meta0 = chart.getDatasetMeta(0);
+      const meta1 = chart.getDatasetMeta(1);
+      if (!meta0.data.length || !meta1.data.length) return;
+
+      // Shade where Capacity is low but NFCI is high (disagreement)
+      c.save();
+      c.beginPath();
+      for (let i = 0; i < meta0.data.length; i++) {
+        const p0 = meta0.data[i]; const p1 = meta1.data[i];
+        if (!p0 || !p1) continue;
+        if (p0.y > p1.y + 30) { // Capacity lower than NFCI by significant margin (pixel space)
+          if (i === 0 || !(meta0.data[i-1]?.y > meta1.data[i-1]?.y + 30)) c.moveTo(p0.x, p0.y);
+          c.lineTo(p0.x, p0.y);
+        }
+      }
+      for (let i = meta0.data.length - 1; i >= 0; i--) {
+        const p0 = meta0.data[i]; const p1 = meta1.data[i];
+        if (!p0 || !p1) continue;
+        if (p0.y > p1.y + 30) c.lineTo(p1.x, p1.y);
+      }
+      c.closePath();
+      c.fillStyle = 'rgba(255,170,0,.08)';
+      c.fill();
+      c.restore();
+    }
+  };
+
+  new Chart(ctx, {
+    type: 'line',
+    plugins: [disagreePlugin],
+    data: {
+      labels: NFCI_DATA.map(d => d.date),
+      datasets: [{
+        label: 'Capacity Health',
+        data: NFCI_DATA.map(d => d.capacity_health),
+        borderColor: '#3b82f6',
+        backgroundColor: 'rgba(59,130,246,.04)',
+        fill: true, tension: 0.35, pointRadius: 0, borderWidth: 2,
+      },{
+        label: 'NFCI Health',
+        data: NFCI_DATA.map(d => d.nfci_health),
+        borderColor: '#10b981',
+        fill: false, tension: 0.35, pointRadius: 0, borderWidth: 1.5, borderDash: [6, 3],
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { intersect: false, mode: 'index' },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#0b0f19', borderColor: '#1a2540', borderWidth: 1,
+          titleFont: { family: 'DM Mono', size: 11 }, bodyFont: { family: 'DM Mono', size: 11 },
+          callbacks: {
+            afterTitle(items) {
+              const idx = items[0].dataIndex;
+              const d = NFCI_DATA[idx];
+              const gap = d.capacity_health - d.nfci_health;
+              return `NFCI raw: ${d.nfci_raw}  |  Gap: ${gap > 0 ? '+' : ''}${gap}`;
+            },
+            label(ctx) {
+              return ctx.datasetIndex === 0 ? `Capacity: ${ctx.raw}` : `NFCI: ${ctx.raw}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { type: 'time', time: { unit: 'year' }, grid: { color: 'rgba(255,255,255,.03)' }, ticks: { color: '#3e536e', font: { family: 'DM Mono', size: 10 } } },
+        y: { min: 0, max: 100, grid: { color: 'rgba(255,255,255,.03)' }, ticks: { color: '#3e536e', font: { family: 'DM Mono', size: 10 }, stepSize: 25 } }
+      }
+    }
+  });
+}
+
+// ── RENDER ALL ──
+renderStatusBar();
+renderHero();
+renderCapacity();
+renderVelocities();
+renderPosition();
+renderDetectors();
+renderChart(25);
+renderLevels();
+renderRegime();
+renderNFCIChart();
+renderHistory();
+</script>
+</body>
+</html>

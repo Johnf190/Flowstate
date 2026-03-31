@@ -1,0 +1,66 @@
+{
+  "date": "2026-03-30",
+  "time": "21:59",
+  "w4plus": true,
+  "w4_component": true,
+  "f6b_component": false,
+  "regime": "CORRECTION",
+  "combined_state": "CORRECTION + W4+ ON",
+  "detectors": {
+    "f1_credit": true,
+    "f5_banks": false,
+    "f6a_gold": false,
+    "f6b_dollar": false,
+    "count": "1"
+  },
+  "capacity": {
+    "elastic": {
+      "state": "DEGRADING FAST",
+      "hy_pct": 0.5504,
+      "hy_velocity": 0.2698
+    },
+    "viscous": {
+      "state": "CONSTRAINED",
+      "yc_slope": 0.84,
+      "yc_velocity": 0.209
+    },
+    "rigid": {
+      "state": "PRESENT"
+    },
+    "information": {
+      "state": "DIVERGENT",
+      "w4_says": "STRESS",
+      "nfci_says": "CLEAR"
+    }
+  },
+  "velocities": {
+    "hy_pct": 0.2698,
+    "vix": 10.75,
+    "nfci": 0.0424,
+    "stlfsi": 0.0755,
+    "yc": 0.209
+  },
+  "levels": {
+    "vix": 30.6,
+    "hy_oas": 3.42,
+    "yc_slope": 0.84,
+    "spx": 6344.0,
+    "spx_dd": -9.1,
+    "nfci": -0.475,
+    "stlfsi": -0.368,
+    "dollar": 128.01
+  },
+  "detector_detail": {
+    "f5_kre_dd": -13.9,
+    "f6a_gold_3m": 4.6,
+    "f6a_spx_3m": -7.3,
+    "f6b_divergence": 7.3
+  },
+  "position": {
+    "equity_pct": 30,
+    "bond_pct": 70,
+    "label": "DEFENSIVE"
+  },
+  "health_score": 37,
+  "analog": "Similar to Q3 2007 / Q4 2019 pre-phases \u2014 credit velocity rising in correction"
+}
