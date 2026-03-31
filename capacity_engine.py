@@ -240,19 +240,26 @@ def compute_all(data):
     stlfsi = safe_reindex(data['stlfsi'])
     bbb = safe_reindex(data['bbb_spread'])
 
-    # Yield curve
+    # Yield curve — try TB3M from yfinance, fallback to FRED TB3MS, fallback to proxy
     tb3m_raw = data['tb3m']
     if hasattr(tb3m_raw, 'columns') and tb3m_raw.ndim > 1:
         tb3m_raw = tb3m_raw.iloc[:, 0]
     tb3m = safe_reindex(tb3m_raw)
-    if len(tb3m.dropna()) > 500:
+    # Also try FRED TB3MS if yfinance failed
+    if len(tb3m.dropna()) < 500:
+        tb3m_fred = fetch_fred_series('TB3MS')
+        if len(tb3m_fred) > 100:
+            tb3m = safe_reindex(tb3m_fred)
+            print(f"  Using FRED TB3MS for yield curve ({len(tb3m.dropna())} obs)")
+    if len(tb3m.dropna()) > 200:
         tb3m_c = tb3m.copy()
-        med = float(tb3m_c.dropna().median())
-        if med > 10:
+        med = tb3m_c.dropna().median()
+        if not pd.isna(med) and float(med) > 10:
             tb3m_c = tb3m_c / 10
         yc_slope = y10 - tb3m_c
     else:
         yc_slope = y10 - y10.rolling(63).mean()
+        print(f"  Using YC proxy (10Y deviation) — no short rate data")
 
     # ── W4+ SIGNAL ──
     hy_pct_5y = hy.rolling(1260, min_periods=504).rank(pct=True)
@@ -289,14 +296,17 @@ def compute_all(data):
     f1_fires = bool(w4.dropna().iloc[-1]) if len(w4.dropna()) > 0 else False
 
     f5_fires = False
+    kre_dd = 0.0
     if len(kre.dropna()) > 252:
-        kre_dd = (kre / kre.rolling(252).max() - 1).dropna().iloc[-1]
-        f5_fires = kre_dd < -0.15 and vix.dropna().iloc[-1] > 18
+        kre_dd = float((kre / kre.rolling(252).max() - 1).dropna().iloc[-1])
+        f5_fires = kre_dd < -0.15 and float(vix.dropna().iloc[-1]) > 18
 
     f6a_fires = False
+    gld_3m_val = 0.0
+    spx_3m_val = 0.0
     if len(gld.dropna()) > 100 and len(spx.dropna()) > 100:
-        gld_3m_val = gld.pct_change(63).dropna().iloc[-1] * 100
-        spx_3m_val = spx.pct_change(63).dropna().iloc[-1] * 100
+        gld_3m_val = float(gld.pct_change(63).dropna().iloc[-1] * 100)
+        spx_3m_val = float(spx.pct_change(63).dropna().iloc[-1] * 100)
         f6a_fires = gld_3m_val > 5 and spx_3m_val < -3
 
     f6b_fires = bool(f6b.dropna().iloc[-1]) if len(f6b.dropna()) > 0 else False
@@ -429,7 +439,7 @@ def compute_all(data):
         'f5_kre_dd': round(float(kre_dd * 100), 1) if len(kre.dropna()) > 252 else None,
         'f6a_gold_3m': round(float(gld_3m_val), 1) if len(gld.dropna()) > 100 else None,
         'f6a_spx_3m': round(float(spx_3m_val), 1) if len(spx.dropna()) > 100 else None,
-        'f6b_divergence': round(float((dollar_3m - spx_3m).dropna().iloc[-1]), 1) if len(dollar.dropna()) > 100 else None,
+        'f6b_divergence': round(float((dollar.pct_change(63) * 100 - spx.pct_change(63) * 100).dropna().iloc[-1]), 1) if len(dollar.dropna()) > 100 and len(spx.dropna()) > 100 else None,
     }
 
     # Position sizing
