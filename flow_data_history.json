@@ -2,14 +2,14 @@
   {
     "date": "2026-03-31",
     "w4plus": true,
-    "regime": "UNKNOWN",
-    "health_score": 8,
+    "regime": "CORRECTION",
+    "health_score": 37,
     "detectors": 1,
-    "position_pct": 50,
+    "position_pct": 30,
     "vix": 30.6,
     "hy_oas": 3.46,
-    "yc_slope": 0.15,
-    "hy_velocity": 0.3444
+    "yc_slope": 0.84,
+    "hy_velocity": 0.27
   },
   {
     "date": "2026-02-28",

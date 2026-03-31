@@ -530,8 +530,39 @@ def write_outputs(result):
         }
         history.insert(0, history_entry)
 
-        # Keep last 1000 entries max
-        history = history[:1000]
+        # Tiered compression:
+        # Last 90 days: keep daily
+        # 91 days to 2 years: keep weekly (one per week)
+        # Beyond 2 years: keep monthly (one per month)
+        from datetime import date as date_type
+        today = datetime.utcnow().date()
+        day_90 = today - timedelta(days=90)
+        day_730 = today - timedelta(days=730)
+
+        daily = []
+        weekly_seen = {}
+        monthly_seen = {}
+
+        for entry in history:
+            try:
+                d = datetime.strptime(entry['date'], '%Y-%m-%d').date()
+            except:
+                daily.append(entry)
+                continue
+
+            if d >= day_90:
+                daily.append(entry)
+            elif d >= day_730:
+                week_key = d.isocalendar()[0:2]  # (year, week)
+                if week_key not in weekly_seen:
+                    weekly_seen[week_key] = entry
+            else:
+                month_key = (d.year, d.month)
+                if month_key not in monthly_seen:
+                    monthly_seen[month_key] = entry
+
+        history = daily + list(weekly_seen.values()) + list(monthly_seen.values())
+        history.sort(key=lambda x: x.get('date', ''), reverse=True)
 
         # Convert numpy types for JSON
         def convert(obj):
