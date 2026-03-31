@@ -62,17 +62,21 @@ BOLD = "\033[1m"; DIM = "\033[2m"; RESET = "\033[0m"
 def fetch_fred_series(series_id, start_days_back=2500):
     """Fetch one FRED series via API."""
     if not FRED_API_KEY:
-        return pd.Series(dtype=float)
+        return pd.Series(dtype=float, index=pd.DatetimeIndex([]))
     try:
         from fredapi import Fred
         fred = Fred(api_key=FRED_API_KEY)
         end = datetime.now()
         start = end - timedelta(days=start_days_back)
         s = fred.get_series(series_id, observation_start=start, observation_end=end)
-        return s.dropna().astype(float)
+        s = s.dropna().astype(float)
+        # Ensure DatetimeIndex
+        if not isinstance(s.index, pd.DatetimeIndex):
+            s.index = pd.to_datetime(s.index)
+        return s
     except Exception as e:
         print(f"  {RED}FRED {series_id}: {e}{RESET}")
-        return pd.Series(dtype=float)
+        return pd.Series(dtype=float, index=pd.DatetimeIndex([]))
 
 def fetch_twelvedata(symbol, start_days_back=2500):
     """Fetch one TwelveData symbol. Uses cache."""
@@ -127,11 +131,15 @@ def fetch_yfinance(ticker, start='2000-01-01'):
                 close = df['Close'] if 'Close' in df.columns else df.iloc[:, 0]
                 if hasattr(close, 'columns') and close.ndim > 1:
                     close = close.iloc[:, 0]
-                return close.dropna()
-            return df.dropna()
-        return pd.Series(dtype=float)
+                s = close.dropna()
+            else:
+                s = df.dropna()
+            if not isinstance(s.index, pd.DatetimeIndex):
+                s.index = pd.to_datetime(s.index)
+            return s
+        return pd.Series(dtype=float, index=pd.DatetimeIndex([]))
     except:
-        return pd.Series(dtype=float)
+        return pd.Series(dtype=float, index=pd.DatetimeIndex([]))
 
 
 # ============================================================
@@ -210,19 +218,27 @@ def compute_all(data):
     # Build common date index
     dates = pd.date_range('2000-01-01', pd.Timestamp.now(), freq='B')
 
+    # Safe reindex — ensures DatetimeIndex before reindexing
+    def safe_reindex(series):
+        if len(series) == 0:
+            return pd.Series(np.nan, index=dates)
+        if not isinstance(series.index, pd.DatetimeIndex):
+            series.index = pd.to_datetime(series.index)
+        return series.reindex(dates, method='ffill')
+
     # Reindex everything
-    hy = data['hy_oas'].reindex(dates, method='ffill')
-    y10 = data['dgs10'].reindex(dates, method='ffill')
-    spx = data['spx'].reindex(dates, method='ffill')
-    vix = data['vix'].reindex(dates, method='ffill')
-    kre = data['kre'].reindex(dates, method='ffill')
-    xlf = data['xlf'].reindex(dates, method='ffill')
-    gld = data['gld'].reindex(dates, method='ffill')
-    tlt = data['tlt'].reindex(dates, method='ffill')
-    dollar = data['dollar'].reindex(dates, method='ffill')
-    nfci = data['nfci'].reindex(dates, method='ffill')
-    stlfsi = data['stlfsi'].reindex(dates, method='ffill')
-    bbb = data['bbb_spread'].reindex(dates, method='ffill')
+    hy = safe_reindex(data['hy_oas'])
+    y10 = safe_reindex(data['dgs10'])
+    spx = safe_reindex(data['spx'])
+    vix = safe_reindex(data['vix'])
+    kre = safe_reindex(data['kre'])
+    xlf = safe_reindex(data['xlf'])
+    gld = safe_reindex(data['gld'])
+    tlt = safe_reindex(data['tlt'])
+    dollar = safe_reindex(data['dollar'])
+    nfci = safe_reindex(data['nfci'])
+    stlfsi = safe_reindex(data['stlfsi'])
+    bbb = safe_reindex(data['bbb_spread'])
 
     # Yield curve
     tb3m_raw = data['tb3m']
