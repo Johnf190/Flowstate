@@ -244,7 +244,7 @@ def compute_all(data):
     tb3m_raw = data['tb3m']
     if hasattr(tb3m_raw, 'columns') and tb3m_raw.ndim > 1:
         tb3m_raw = tb3m_raw.iloc[:, 0]
-    tb3m = tb3m_raw.reindex(dates, method='ffill')
+    tb3m = safe_reindex(tb3m_raw)
     if len(tb3m.dropna()) > 500:
         tb3m_c = tb3m.copy()
         med = float(tb3m_c.dropna().median())
