@@ -1,6 +1,6 @@
 {
   "date": "2026-04-01",
-  "time": "09:53",
+  "time": "17:15",
   "w4plus": true,
   "w4_component": true,
   "f6b_component": false,
@@ -16,8 +16,8 @@
   "capacity": {
     "elastic": {
       "state": "DEGRADING FAST",
-      "hy_pct": 0.5623,
-      "hy_velocity": 0.3067
+      "hy_pct": 0.4833,
+      "hy_velocity": 0.2278
     },
     "viscous": {
       "state": "CONSTRAINED",
@@ -34,20 +34,20 @@
     }
   },
   "velocities": {
-    "hy_pct": 0.3067,
-    "vix": 7.04,
-    "nfci": 0.0424,
-    "stlfsi": 0.0755,
+    "hy_pct": 0.2278,
+    "vix": 1.68,
+    "nfci": 0.0798,
+    "stlfsi": 0.2604,
     "yc": 0.0595
   },
   "levels": {
-    "vix": 30.6,
-    "hy_oas": 3.46,
+    "vix": 25.2,
+    "hy_oas": 3.28,
     "yc_slope": 0.15,
     "spx": null,
     "spx_dd": null,
-    "nfci": -0.475,
-    "stlfsi": -0.368,
+    "nfci": -0.434,
+    "stlfsi": -0.183,
     "dollar": 128.01
   },
   "detector_detail": {
@@ -61,7 +61,7 @@
     "bond_pct": 50,
     "label": "NEUTRAL"
   },
-  "health_score": 8,
+  "health_score": 12,
   "analog": "No strong analog",
   "health_timeseries": []
 }
