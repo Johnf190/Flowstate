@@ -1,6 +1,6 @@
 {
-  "date": "2026-03-31",
-  "time": "23:44",
+  "date": "2026-04-01",
+  "time": "00:04",
   "w4plus": true,
   "w4_component": true,
   "f6b_component": false,
@@ -16,13 +16,13 @@
   "capacity": {
     "elastic": {
       "state": "DEGRADING FAST",
-      "hy_pct": 0.5627,
-      "hy_velocity": 0.3444
+      "hy_pct": 0.5623,
+      "hy_velocity": 0.3067
     },
     "viscous": {
       "state": "CONSTRAINED",
       "yc_slope": 0.15,
-      "yc_velocity": 0.0713
+      "yc_velocity": 0.0595
     },
     "rigid": {
       "state": "PRESENT"
@@ -34,11 +34,11 @@
     }
   },
   "velocities": {
-    "hy_pct": 0.3444,
-    "vix": 9.17,
+    "hy_pct": 0.3067,
+    "vix": 7.04,
     "nfci": 0.0424,
     "stlfsi": 0.0755,
-    "yc": 0.0713
+    "yc": 0.0595
   },
   "levels": {
     "vix": 30.6,
@@ -51,7 +51,7 @@
     "dollar": 128.01
   },
   "detector_detail": {
-    "f5_kre_dd": -13.6,
+    "f5_kre_dd": -11.5,
     "f6a_gold_3m": 0.0,
     "f6a_spx_3m": null,
     "f6b_divergence": null
