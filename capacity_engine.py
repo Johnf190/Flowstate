@@ -12,7 +12,7 @@ Replaces silence-only engine with full validated system:
   - Structural health timeseries (for dual-line chart)
   - Historical analog matching
 
-Data: FRED API + TwelveData API + yfinance
+Data: FRED API + TwelveData API
 Output: JSON (latest + history) + CSV + Supabase + email
 """
 
@@ -121,25 +121,7 @@ def fetch_twelvedata(symbol, start_days_back=2500):
         print(f"  {RED}TD {symbol}: {e}{RESET}")
         return pd.Series(dtype=float)
 
-def fetch_yfinance(ticker, start='2000-01-01'):
-    """Fetch from yfinance as fallback."""
-    try:
-        import yfinance as yf
-        df = yf.download(ticker, start=start, progress=False)
-        if len(df) > 100:
-            if hasattr(df, 'columns') and df.ndim > 1:
-                close = df['Close'] if 'Close' in df.columns else df.iloc[:, 0]
-                if hasattr(close, 'columns') and close.ndim > 1:
-                    close = close.iloc[:, 0]
-                s = close.dropna()
-            else:
-                s = df.dropna()
-            if not isinstance(s.index, pd.DatetimeIndex):
-                s.index = pd.to_datetime(s.index)
-            return s
-        return pd.Series(dtype=float, index=pd.DatetimeIndex([]))
-    except:
-        return pd.Series(dtype=float, index=pd.DatetimeIndex([]))
+    # yfinance removed — all market data via TwelveData
 
 
 # ============================================================
@@ -169,31 +151,30 @@ def load_all_data():
         n = len(s)
         print(f"    {key:>15s}: {n:>5d} obs" if n > 0 else f"    {key:>15s}: FAILED")
 
-    # TwelveData / yfinance
-    print(f"  [Market data]")
-    # SPX — critical, try multiple sources
-    data['spx'] = fetch_yfinance('^GSPC', '1997-01-01')
-    print(f"    {'SPX':>15s}: {len(data['spx']):>5d} obs")
+    # All market data via TwelveData
+    print(f"  [TwelveData]")
+    td_symbols = {
+        'spx': 'SPY',
+        'vix_td': 'VIX',
+        'kre': 'KRE',
+        'xlf': 'XLF',
+        'gld': 'GLD',
+        'tlt': 'TLT',
+    }
+    for key, sym in td_symbols.items():
+        data[key] = fetch_twelvedata(sym)
+        print(f"    {sym:>15s}: {len(data[key]):>5d} obs")
+        time.sleep(1)  # rate limit
 
-    # VIX — fallback to FRED VIXCLS if yfinance fails
-    yf_vix = fetch_yfinance('^VIX', '1997-01-01')
-    data['vix'] = yf_vix if len(yf_vix) > len(data.get('vixcls', pd.Series())) else data.get('vixcls', yf_vix)
-    print(f"    {'VIX':>15s}: {len(data['vix']):>5d} obs")
+    # VIX: use TwelveData if available, fall back to FRED VIXCLS
+    if len(data.get('vix_td', pd.Series())) > len(data.get('vixcls', pd.Series())):
+        data['vix'] = data['vix_td']
+    else:
+        data['vix'] = data.get('vixcls', data.get('vix_td', pd.Series(dtype=float, index=pd.DatetimeIndex([]))))
+    print(f"    {'VIX (best)':>15s}: {len(data['vix']):>5d} obs")
 
-    # TB3M — for yield curve
-    yf_tb3m = fetch_yfinance('^IRX', '1997-01-01')
-    data['tb3m'] = yf_tb3m if len(yf_tb3m) > 100 else pd.Series(dtype=float)
-    print(f"    {'TB3M':>15s}: {len(data['tb3m']):>5d} obs")
-
-    # KRE, XLF, GLD, TLT — from TwelveData with yfinance fallback
-    for sym in ['KRE', 'XLF', 'GLD', 'TLT']:
-        td = fetch_twelvedata(sym)
-        if len(td) < 200:
-            td = fetch_yfinance(sym, '2000-01-01')
-        data[sym.lower()] = td
-        print(f"    {sym:>15s}: {len(td):>5d} obs")
-        if sym != 'TLT':
-            time.sleep(1)  # rate limit
+    # TB3M not needed — using FRED DGS3MO for yield curve
+    data['tb3m'] = pd.Series(dtype=float, index=pd.DatetimeIndex([]))
 
     # Dollar — from local file (DTWEXB)
     dtwexb_path = DATA_DIR / 'DTWEXB-1.csv'
