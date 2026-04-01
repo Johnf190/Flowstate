@@ -154,7 +154,7 @@ def load_all_data():
     # All market data via TwelveData
     print(f"  [TwelveData]")
     td_symbols = {
-        'spx': 'SPY',
+        'spx_raw': 'SPY',
         'vix_td': 'VIX',
         'kre': 'KRE',
         'xlf': 'XLF',
@@ -165,6 +165,10 @@ def load_all_data():
         data[key] = fetch_twelvedata(sym)
         print(f"    {sym:>15s}: {len(data[key]):>5d} obs")
         time.sleep(1)  # rate limit
+
+    # SPX: SPY price × 10 approximates S&P 500 index
+    spy = data.get('spx_raw', pd.Series(dtype=float, index=pd.DatetimeIndex([])))
+    data['spx'] = spy * 10 if len(spy) > 0 else spy
 
     # VIX: use TwelveData if available, fall back to FRED VIXCLS
     if len(data.get('vix_td', pd.Series())) > len(data.get('vixcls', pd.Series())):
