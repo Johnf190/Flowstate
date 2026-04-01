@@ -155,8 +155,8 @@ def load_all_data():
     fred_map = {
         'hy_oas': 'BAMLH0A0HYM2',
         'dgs10': 'DGS10',
+        'dgs3mo': 'DGS3MO',
         'vixcls': 'VIXCLS',
-        'tb3ms': 'TB3MS',
         'nfci': 'NFCI',
         'stlfsi': 'STLFSI4',
         'bbb_spread': 'BAMLC0A4CBBB',
@@ -240,26 +240,29 @@ def compute_all(data):
     stlfsi = safe_reindex(data['stlfsi'])
     bbb = safe_reindex(data['bbb_spread'])
 
-    # Yield curve — try TB3M from yfinance, fallback to FRED TB3MS, fallback to proxy
-    tb3m_raw = data['tb3m']
-    if hasattr(tb3m_raw, 'columns') and tb3m_raw.ndim > 1:
-        tb3m_raw = tb3m_raw.iloc[:, 0]
-    tb3m = safe_reindex(tb3m_raw)
-    # Also try FRED TB3MS if yfinance failed
-    if len(tb3m.dropna()) < 500:
-        tb3m_fred = fetch_fred_series('TB3MS')
-        if len(tb3m_fred) > 100:
-            tb3m = safe_reindex(tb3m_fred)
-            print(f"  Using FRED TB3MS for yield curve ({len(tb3m.dropna())} obs)")
-    if len(tb3m.dropna()) > 200:
-        tb3m_c = tb3m.copy()
-        med = tb3m_c.dropna().median()
-        if not pd.isna(med) and float(med) > 10:
-            tb3m_c = tb3m_c / 10
-        yc_slope = y10 - tb3m_c
+    # Yield curve — use FRED DGS3MO (daily, reliable) as primary
+    dgs3mo = safe_reindex(data.get('dgs3mo', pd.Series(dtype=float, index=pd.DatetimeIndex([]))))
+
+    if len(dgs3mo.dropna()) > 200:
+        # DGS3MO is already in percentage (e.g., 4.25 = 4.25%)
+        yc_slope = y10 - dgs3mo
+        print(f"  Yield curve: 10Y - 3M from FRED DGS3MO ({len(dgs3mo.dropna())} obs)")
     else:
-        yc_slope = y10 - y10.rolling(63).mean()
-        print(f"  Using YC proxy (10Y deviation) — no short rate data")
+        # Fallback to yfinance ^IRX
+        tb3m_raw = data.get('tb3m', pd.Series(dtype=float, index=pd.DatetimeIndex([])))
+        if hasattr(tb3m_raw, 'columns') and tb3m_raw.ndim > 1:
+            tb3m_raw = tb3m_raw.iloc[:, 0]
+        tb3m = safe_reindex(tb3m_raw)
+        if len(tb3m.dropna()) > 200:
+            tb3m_c = tb3m.copy()
+            med = tb3m_c.dropna().median()
+            if not pd.isna(med) and float(med) > 10:
+                tb3m_c = tb3m_c / 10
+            yc_slope = y10 - tb3m_c
+            print(f"  Yield curve: 10Y - ^IRX ({len(tb3m.dropna())} obs)")
+        else:
+            yc_slope = y10 - y10.rolling(63).mean()
+            print(f"  Yield curve: 10Y deviation proxy — no short rate data")
 
     # ── W4+ SIGNAL ──
     hy_pct_5y = hy.rolling(1260, min_periods=504).rank(pct=True)
