@@ -1,6 +1,6 @@
 {
-  "date": "2026-04-01",
-  "time": "23:10",
+  "date": "2026-04-02",
+  "time": "09:40",
   "w4plus": true,
   "w4_component": true,
   "f6b_component": false,
@@ -17,12 +17,12 @@
     "elastic": {
       "state": "DEGRADING FAST",
       "hy_pct": 0.4833,
-      "hy_velocity": 0.2278
+      "hy_velocity": 0.2897
     },
     "viscous": {
       "state": "CONSTRAINED",
       "yc_slope": 0.6,
-      "yc_velocity": 0.06
+      "yc_velocity": 0.07
     },
     "rigid": {
       "state": "PRESENT"
@@ -34,27 +34,27 @@
     }
   },
   "velocities": {
-    "hy_pct": 0.2278,
-    "vix": 1.68,
+    "hy_pct": 0.2897,
+    "vix": 4.1,
     "nfci": 0.0798,
     "stlfsi": 0.2604,
-    "yc": 0.06
+    "yc": 0.07
   },
   "levels": {
     "vix": 25.2,
     "hy_oas": 3.28,
     "yc_slope": 0.6,
-    "spx": 6503.0,
-    "spx_dd": -6.5,
+    "spx": 6552.0,
+    "spx_dd": -5.8,
     "nfci": -0.434,
     "stlfsi": -0.183,
     "dollar": 128.01
   },
   "detector_detail": {
-    "f5_kre_dd": -11.5,
-    "f6a_gold_3m": 8.0,
-    "f6a_spx_3m": -4.8,
-    "f6b_divergence": 4.8
+    "f5_kre_dd": -10.6,
+    "f6a_gold_3m": 7.1,
+    "f6a_spx_3m": -4.7,
+    "f6b_divergence": 4.7
   },
   "position": {
     "equity_pct": 30,
@@ -64,11 +64,6 @@
   "health_score": 18,
   "analog": "Similar to Q3 2007 / Q4 2019 pre-phases \u2014 credit velocity rising in correction",
   "health_timeseries": [
-    {
-      "date": "2025-04-15",
-      "health": 7,
-      "spx": 5376.0
-    },
     {
       "date": "2025-04-16",
       "health": 5,
@@ -1322,7 +1317,12 @@
     {
       "date": "2026-04-01",
       "health": 18,
-      "spx": 6503.0
+      "spx": 6552.0
+    },
+    {
+      "date": "2026-04-02",
+      "health": 18,
+      "spx": 6552.0
     }
   ]
 }
