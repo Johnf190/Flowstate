@@ -3,13 +3,13 @@
     "date": "2026-04-03",
     "w4plus": true,
     "regime": "CORRECTION",
-    "health_score": 19,
+    "health_score": 18,
     "detectors": 1,
     "position_pct": 30,
     "vix": 24.5,
-    "hy_oas": 3.16,
-    "yc_slope": 0.63,
-    "hy_velocity": 0.1488
+    "hy_oas": 3.17,
+    "yc_slope": 0.61,
+    "hy_velocity": 0.1615
   },
   {
     "date": "2026-04-02",

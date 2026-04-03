@@ -1,6 +1,6 @@
 {
   "date": "2026-04-03",
-  "time": "15:57",
+  "time": "22:02",
   "w4plus": true,
   "w4_component": true,
   "f6b_component": false,
@@ -16,13 +16,13 @@
   "capacity": {
     "elastic": {
       "state": "DEGRADING FAST",
-      "hy_pct": 0.3556,
-      "hy_velocity": 0.1488
+      "hy_pct": 0.3683,
+      "hy_velocity": 0.1615
     },
     "viscous": {
       "state": "CONSTRAINED",
-      "yc_slope": 0.63,
-      "yc_velocity": 0.08
+      "yc_slope": 0.61,
+      "yc_velocity": 0.06
     },
     "rigid": {
       "state": "PRESENT"
@@ -34,19 +34,19 @@
     }
   },
   "velocities": {
-    "hy_pct": 0.1488,
+    "hy_pct": 0.1615,
     "vix": 0.79,
-    "nfci": 0.0,
+    "nfci": 0.0798,
     "stlfsi": 0.2604,
-    "yc": 0.08
+    "yc": 0.06
   },
   "levels": {
     "vix": 24.5,
-    "hy_oas": 3.16,
-    "yc_slope": 0.63,
+    "hy_oas": 3.17,
+    "yc_slope": 0.61,
     "spx": 6558.0,
     "spx_dd": -5.7,
-    "nfci": null,
+    "nfci": -0.434,
     "stlfsi": -0.183,
     "dollar": 128.01
   },
@@ -61,7 +61,7 @@
     "bond_pct": 70,
     "label": "DEFENSIVE"
   },
-  "health_score": 19,
+  "health_score": 18,
   "analog": "Similar to Q3 2007 / Q4 2019 pre-phases \u2014 credit velocity rising in correction",
   "health_timeseries": [
     {
@@ -1316,12 +1316,12 @@
     },
     {
       "date": "2026-04-02",
-      "health": 19,
+      "health": 18,
       "spx": 6558.0
     },
     {
       "date": "2026-04-03",
-      "health": 19,
+      "health": 18,
       "spx": 6558.0
     }
   ]
