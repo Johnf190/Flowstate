@@ -1,6 +1,6 @@
 {
   "date": "2026-04-03",
-  "time": "08:36",
+  "time": "15:57",
   "w4plus": true,
   "w4_component": true,
   "f6b_component": false,
@@ -36,7 +36,7 @@
   "velocities": {
     "hy_pct": 0.1488,
     "vix": 0.79,
-    "nfci": 0.0798,
+    "nfci": 0.0,
     "stlfsi": 0.2604,
     "yc": 0.08
   },
@@ -46,7 +46,7 @@
     "yc_slope": 0.63,
     "spx": 6558.0,
     "spx_dd": -5.7,
-    "nfci": -0.434,
+    "nfci": null,
     "stlfsi": -0.183,
     "dollar": 128.01
   },
