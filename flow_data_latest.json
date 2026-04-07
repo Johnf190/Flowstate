@@ -1,74 +1,69 @@
 {
-  "date": "2026-04-06",
-  "time": "22:05",
-  "w4plus": true,
-  "w4_component": true,
+  "date": "2026-04-07",
+  "time": "00:05",
+  "w4plus": false,
+  "w4_component": false,
   "f6b_component": false,
   "regime": "CORRECTION",
-  "combined_state": "CORRECTION + Stress Detected",
+  "combined_state": "CORRECTION + Clear",
   "detectors": {
-    "f1_credit": true,
+    "f1_credit": false,
     "f5_banks": false,
     "f6a_gold": false,
     "f6b_dollar": false,
-    "count": 1
+    "count": 0
   },
   "capacity": {
     "elastic": {
-      "state": "DEGRADING",
-      "hy_pct": 0.3194,
-      "hy_velocity": 0.0024
+      "state": "EXPANDING FAST",
+      "hy_pct": 0.3198,
+      "hy_velocity": -0.0702
     },
     "viscous": {
       "state": "CONSTRAINED",
       "yc_slope": 0.64,
-      "yc_velocity": 0.11
+      "yc_velocity": 0.07
     },
     "rigid": {
       "state": "PRESENT"
     },
     "information": {
-      "state": "DIVERGENT",
-      "w4_says": "STRESS",
+      "state": "ALIGNED",
+      "w4_says": "CLEAR",
       "nfci_says": "CLEAR"
     }
   },
   "velocities": {
-    "hy_pct": 0.0024,
-    "vix": -5.62,
+    "hy_pct": -0.0702,
+    "vix": -1.63,
     "nfci": 0.0608,
     "stlfsi": 0.2467,
-    "yc": 0.11
+    "yc": 0.07
   },
   "levels": {
     "vix": 23.9,
     "hy_oas": 3.13,
     "yc_slope": 0.64,
-    "spx": 6558.0,
-    "spx_dd": -5.7,
+    "spx": 6589.0,
+    "spx_dd": -5.3,
     "nfci": -0.434,
     "stlfsi": -0.183,
     "dollar": 128.01
   },
   "detector_detail": {
-    "f5_kre_dd": -10.4,
-    "f6a_gold_3m": 4.9,
-    "f6a_spx_3m": -4.9,
-    "f6b_divergence": 4.9
+    "f5_kre_dd": -9.5,
+    "f6a_gold_3m": 3.9,
+    "f6a_spx_3m": -4.4,
+    "f6b_divergence": 4.4
   },
   "position": {
-    "equity_pct": 30,
-    "bond_pct": 70,
-    "label": "DEFENSIVE"
+    "equity_pct": 50,
+    "bond_pct": 50,
+    "label": "REDUCED"
   },
-  "health_score": 39,
-  "analog": "Similar to Q3 2007 / Q4 2019 pre-phases \u2014 credit velocity rising in correction",
+  "health_score": 53,
+  "analog": "No strong analog",
   "health_timeseries": [
-    {
-      "date": "2025-04-18",
-      "health": 7,
-      "spx": 5264.0
-    },
     {
       "date": "2025-04-21",
       "health": 5,
@@ -1322,7 +1317,12 @@
     {
       "date": "2026-04-06",
       "health": 39,
-      "spx": 6558.0
+      "spx": 6589.0
+    },
+    {
+      "date": "2026-04-07",
+      "health": 53,
+      "spx": 6589.0
     }
   ]
 }
