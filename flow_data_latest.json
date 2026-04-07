@@ -1,6 +1,6 @@
 {
   "date": "2026-04-07",
-  "time": "17:36",
+  "time": "23:06",
   "w4plus": false,
   "w4_component": false,
   "f6b_component": false,
@@ -21,8 +21,8 @@
     },
     "viscous": {
       "state": "CONSTRAINED",
-      "yc_slope": 0.64,
-      "yc_velocity": 0.07
+      "yc_slope": 0.62,
+      "yc_velocity": 0.05
     },
     "rigid": {
       "state": "PRESENT"
@@ -38,12 +38,12 @@
     "vix": -1.33,
     "nfci": 0.0608,
     "stlfsi": 0.2467,
-    "yc": 0.07
+    "yc": 0.05
   },
   "levels": {
     "vix": 24.2,
     "hy_oas": 3.05,
-    "yc_slope": 0.64,
+    "yc_slope": 0.62,
     "spx": 6589.0,
     "spx_dd": -5.3,
     "nfci": -0.434,
