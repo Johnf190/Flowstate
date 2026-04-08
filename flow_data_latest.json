@@ -1,23 +1,23 @@
 {
   "date": "2026-04-08",
-  "time": "09:51",
-  "w4plus": false,
-  "w4_component": false,
+  "time": "17:46",
+  "w4plus": true,
+  "w4_component": true,
   "f6b_component": false,
   "regime": "CORRECTION",
-  "combined_state": "CORRECTION + Clear",
+  "combined_state": "CORRECTION + Stress Detected",
   "detectors": {
-    "f1_credit": false,
+    "f1_credit": true,
     "f5_banks": false,
     "f6a_gold": false,
     "f6b_dollar": false,
-    "count": 0
+    "count": 1
   },
   "capacity": {
     "elastic": {
-      "state": "EXPANDING",
-      "hy_pct": 0.2373,
-      "hy_velocity": -0.0063
+      "state": "DEGRADING FAST",
+      "hy_pct": 0.3079,
+      "hy_velocity": 0.0643
     },
     "viscous": {
       "state": "CONSTRAINED",
@@ -28,26 +28,26 @@
       "state": "PRESENT"
     },
     "information": {
-      "state": "ALIGNED",
-      "w4_says": "CLEAR",
+      "state": "DIVERGENT",
+      "w4_says": "STRESS",
       "nfci_says": "CLEAR"
     }
   },
   "velocities": {
-    "hy_pct": -0.0063,
-    "vix": -0.76,
-    "nfci": 0.0608,
-    "stlfsi": 0.2467,
+    "hy_pct": 0.0643,
+    "vix": 0.85,
+    "nfci": 0.054,
+    "stlfsi": 0.188,
     "yc": 0.06
   },
   "levels": {
-    "vix": 24.2,
-    "hy_oas": 3.05,
+    "vix": 25.8,
+    "hy_oas": 3.12,
     "yc_slope": 0.62,
     "spx": 6592.0,
     "spx_dd": -5.2,
-    "nfci": -0.434,
-    "stlfsi": -0.183,
+    "nfci": -0.433,
+    "stlfsi": -0.241,
     "dollar": 128.01
   },
   "detector_detail": {
@@ -57,12 +57,12 @@
     "f6b_divergence": 5.0
   },
   "position": {
-    "equity_pct": 50,
-    "bond_pct": 50,
-    "label": "REDUCED"
+    "equity_pct": 30,
+    "bond_pct": 70,
+    "label": "DEFENSIVE"
   },
-  "health_score": 40,
-  "analog": "No strong analog",
+  "health_score": 25,
+  "analog": "Similar to Q3 2007 / Q4 2019 pre-phases \u2014 credit velocity rising in correction",
   "health_timeseries": [
     {
       "date": "2025-04-22",
@@ -1316,12 +1316,12 @@
     },
     {
       "date": "2026-04-07",
-      "health": 59,
+      "health": 54,
       "spx": 6592.0
     },
     {
       "date": "2026-04-08",
-      "health": 40,
+      "health": 25,
       "spx": 6592.0
     }
   ]
