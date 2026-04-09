@@ -1,15 +1,15 @@
 [
   {
     "date": "2026-04-09",
-    "w4plus": true,
+    "w4plus": false,
     "regime": "UPTREND",
-    "health_score": 30,
-    "detectors": 1,
-    "position_pct": 0,
-    "vix": 25.8,
-    "hy_oas": 3.12,
+    "health_score": 60,
+    "detectors": 0,
+    "position_pct": 100,
+    "vix": 21.0,
+    "hy_oas": 2.94,
     "yc_slope": 0.62,
-    "hy_velocity": 0.0377
+    "hy_velocity": -0.0948
   },
   {
     "date": "2026-04-08",

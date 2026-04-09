@@ -1,23 +1,23 @@
 {
   "date": "2026-04-09",
-  "time": "10:00",
-  "w4plus": true,
-  "w4_component": true,
+  "time": "17:44",
+  "w4plus": false,
+  "w4_component": false,
   "f6b_component": false,
   "regime": "UPTREND",
-  "combined_state": "UPTREND + Stress Detected",
+  "combined_state": "UPTREND + Clear",
   "detectors": {
-    "f1_credit": true,
+    "f1_credit": false,
     "f5_banks": false,
     "f6a_gold": false,
     "f6b_dollar": false,
-    "count": 1
+    "count": 0
   },
   "capacity": {
     "elastic": {
-      "state": "DEGRADING FAST",
-      "hy_pct": 0.3083,
-      "hy_velocity": 0.0377
+      "state": "EXPANDING FAST",
+      "hy_pct": 0.1758,
+      "hy_velocity": -0.0948
     },
     "viscous": {
       "state": "CONSTRAINED",
@@ -28,21 +28,21 @@
       "state": "PRESENT"
     },
     "information": {
-      "state": "DIVERGENT",
-      "w4_says": "STRESS",
+      "state": "ALIGNED",
+      "w4_says": "CLEAR",
       "nfci_says": "CLEAR"
     }
   },
   "velocities": {
-    "hy_pct": 0.0377,
-    "vix": 1.55,
+    "hy_pct": -0.0948,
+    "vix": -3.19,
     "nfci": 0.054,
     "stlfsi": 0.188,
     "yc": 0.1
   },
   "levels": {
-    "vix": 25.8,
-    "hy_oas": 3.12,
+    "vix": 21.0,
+    "hy_oas": 2.94,
     "yc_slope": 0.62,
     "spx": 6760.0,
     "spx_dd": -2.8,
@@ -57,12 +57,12 @@
     "f6b_divergence": 2.8
   },
   "position": {
-    "equity_pct": 0,
-    "bond_pct": 100,
-    "label": "EXIT \u2014 UPTREND+W4 ON"
+    "equity_pct": 100,
+    "bond_pct": 0,
+    "label": "FULL RISK"
   },
-  "health_score": 30,
-  "analog": "Similar to late 2006 / early 2020 \u2014 uptrend masking structural fragility",
+  "health_score": 60,
+  "analog": "No strong analog",
   "health_timeseries": [
     {
       "date": "2025-04-23",
@@ -1316,12 +1316,12 @@
     },
     {
       "date": "2026-04-08",
-      "health": 25,
+      "health": 55,
       "spx": 6760.0
     },
     {
       "date": "2026-04-09",
-      "health": 30,
+      "health": 60,
       "spx": 6760.0
     }
   ]
