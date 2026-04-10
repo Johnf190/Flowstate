@@ -1,6 +1,6 @@
 {
-  "date": "2026-04-09",
-  "time": "23:25",
+  "date": "2026-04-10",
+  "time": "09:56",
   "w4plus": false,
   "w4_component": false,
   "f6b_component": false,
@@ -16,13 +16,13 @@
   "capacity": {
     "elastic": {
       "state": "EXPANDING FAST",
-      "hy_pct": 0.1758,
-      "hy_velocity": -0.0948
+      "hy_pct": 0.1762,
+      "hy_velocity": -0.1901
     },
     "viscous": {
       "state": "CONSTRAINED",
       "yc_slope": 0.6,
-      "yc_velocity": 0.08
+      "yc_velocity": 0.09
     },
     "rigid": {
       "state": "PRESENT"
@@ -34,41 +34,36 @@
     }
   },
   "velocities": {
-    "hy_pct": -0.0948,
-    "vix": -3.19,
+    "hy_pct": -0.1901,
+    "vix": -6.25,
     "nfci": 0.054,
     "stlfsi": 0.188,
-    "yc": 0.08
+    "yc": 0.09
   },
   "levels": {
     "vix": 21.0,
     "hy_oas": 2.94,
     "yc_slope": 0.6,
-    "spx": 6760.0,
-    "spx_dd": -2.8,
+    "spx": 6799.0,
+    "spx_dd": -2.2,
     "nfci": -0.433,
     "stlfsi": -0.241,
     "dollar": 128.01
   },
   "detector_detail": {
-    "f5_kre_dd": -6.7,
-    "f6a_gold_3m": 2.9,
-    "f6a_spx_3m": -2.8,
-    "f6b_divergence": 2.8
+    "f5_kre_dd": -5.1,
+    "f6a_gold_3m": 3.9,
+    "f6a_spx_3m": -2.0,
+    "f6b_divergence": 2.0
   },
   "position": {
     "equity_pct": 100,
     "bond_pct": 0,
     "label": "FULL RISK"
   },
-  "health_score": 60,
+  "health_score": 61,
   "analog": "No strong analog",
   "health_timeseries": [
-    {
-      "date": "2025-04-23",
-      "health": 9,
-      "spx": 5354.0
-    },
     {
       "date": "2025-04-24",
       "health": 10,
@@ -1322,7 +1317,12 @@
     {
       "date": "2026-04-09",
       "health": 60,
-      "spx": 6760.0
+      "spx": 6799.0
+    },
+    {
+      "date": "2026-04-10",
+      "health": 61,
+      "spx": 6799.0
     }
   ]
 }
