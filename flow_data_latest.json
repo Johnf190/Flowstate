@@ -1,6 +1,6 @@
 {
-  "date": "2026-04-15",
-  "time": "23:29",
+  "date": "2026-04-16",
+  "time": "10:44",
   "w4plus": false,
   "w4_component": false,
   "f6b_component": false,
@@ -16,8 +16,8 @@
   "capacity": {
     "elastic": {
       "state": "EXPANDING FAST",
-      "hy_pct": 0.1091,
-      "hy_velocity": -0.3214
+      "hy_pct": 0.1095,
+      "hy_velocity": -0.2972
     },
     "viscous": {
       "state": "CONSTRAINED",
@@ -34,8 +34,8 @@
     }
   },
   "velocities": {
-    "hy_pct": -0.3214,
-    "vix": -4.01,
+    "hy_pct": -0.2972,
+    "vix": -6.73,
     "nfci": 0.007,
     "stlfsi": -0.3487,
     "yc": -0.02
@@ -44,17 +44,17 @@
     "vix": 18.4,
     "hy_oas": 2.84,
     "yc_slope": 0.55,
-    "spx": 6945.0,
-    "spx_dd": -0.1,
+    "spx": 6999.0,
+    "spx_dd": 0.0,
     "nfci": -0.465,
     "stlfsi": -0.647,
     "dollar": 128.01
   },
   "detector_detail": {
-    "f5_kre_dd": -5.9,
-    "f6a_gold_3m": 5.6,
-    "f6a_spx_3m": 0.4,
-    "f6b_divergence": -0.4
+    "f5_kre_dd": -6.1,
+    "f6a_gold_3m": 4.6,
+    "f6a_spx_3m": 1.2,
+    "f6b_divergence": -1.2
   },
   "position": {
     "equity_pct": 100,
@@ -64,11 +64,6 @@
   "health_score": 62,
   "analog": "No strong analog",
   "health_timeseries": [
-    {
-      "date": "2025-04-29",
-      "health": 20,
-      "spx": 5543.0
-    },
     {
       "date": "2025-04-30",
       "health": 11,
@@ -1322,7 +1317,12 @@
     {
       "date": "2026-04-15",
       "health": 62,
-      "spx": 6945.0
+      "spx": 6999.0
+    },
+    {
+      "date": "2026-04-16",
+      "health": 62,
+      "spx": 6999.0
     }
   ]
 }
