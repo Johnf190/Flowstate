@@ -1,6 +1,6 @@
 {
   "date": "2026-04-16",
-  "time": "10:44",
+  "time": "18:14",
   "w4plus": false,
   "w4_component": false,
   "f6b_component": false,
@@ -16,8 +16,8 @@
   "capacity": {
     "elastic": {
       "state": "EXPANDING FAST",
-      "hy_pct": 0.1095,
-      "hy_velocity": -0.2972
+      "hy_pct": 0.1179,
+      "hy_velocity": -0.2889
     },
     "viscous": {
       "state": "CONSTRAINED",
@@ -34,20 +34,20 @@
     }
   },
   "velocities": {
-    "hy_pct": -0.2972,
-    "vix": -6.73,
+    "hy_pct": -0.2889,
+    "vix": -6.92,
     "nfci": 0.007,
-    "stlfsi": -0.3487,
+    "stlfsi": 0.0,
     "yc": -0.02
   },
   "levels": {
-    "vix": 18.4,
-    "hy_oas": 2.84,
+    "vix": 18.2,
+    "hy_oas": 2.85,
     "yc_slope": 0.55,
-    "spx": 6999.0,
+    "spx": 6998.0,
     "spx_dd": 0.0,
     "nfci": -0.465,
-    "stlfsi": -0.647,
+    "stlfsi": null,
     "dollar": 128.01
   },
   "detector_detail": {
@@ -1317,12 +1317,12 @@
     {
       "date": "2026-04-15",
       "health": 62,
-      "spx": 6999.0
+      "spx": 6998.0
     },
     {
       "date": "2026-04-16",
       "health": 62,
-      "spx": 6999.0
+      "spx": 6998.0
     }
   ]
 }
