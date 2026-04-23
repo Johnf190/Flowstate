@@ -1,6 +1,6 @@
 {
   "date": "2026-04-23",
-  "time": "07:45",
+  "time": "15:49",
   "w4plus": false,
   "w4_component": false,
   "f6b_component": false,
@@ -16,8 +16,8 @@
   "capacity": {
     "elastic": {
       "state": "EXPANDING FAST",
-      "hy_pct": 0.192,
-      "hy_velocity": -0.3048
+      "hy_pct": 0.1773,
+      "hy_velocity": -0.3194
     },
     "viscous": {
       "state": "CONSTRAINED",
@@ -34,15 +34,15 @@
     }
   },
   "velocities": {
-    "hy_pct": -0.3048,
-    "vix": -5.83,
+    "hy_pct": -0.3194,
+    "vix": -6.41,
     "nfci": -0.036,
     "stlfsi": -0.3923,
     "yc": 0.06
   },
   "levels": {
-    "vix": 19.5,
-    "hy_oas": 2.85,
+    "vix": 18.9,
+    "hy_oas": 2.84,
     "yc_slope": 0.61,
     "spx": 7112.0,
     "spx_dd": 0.0,
@@ -61,7 +61,7 @@
     "bond_pct": 0,
     "label": "FULL RISK"
   },
-  "health_score": 62,
+  "health_score": 63,
   "analog": "No strong analog",
   "health_timeseries": [
     {
@@ -1316,12 +1316,12 @@
     },
     {
       "date": "2026-04-22",
-      "health": 62,
+      "health": 63,
       "spx": 7112.0
     },
     {
       "date": "2026-04-23",
-      "health": 62,
+      "health": 63,
       "spx": 7112.0
     }
   ]
