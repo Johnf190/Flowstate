@@ -1,6 +1,6 @@
 {
   "date": "2026-04-24",
-  "time": "15:05",
+  "time": "21:43",
   "w4plus": false,
   "w4_component": false,
   "f6b_component": false,
@@ -21,8 +21,8 @@
     },
     "viscous": {
       "state": "CONSTRAINED",
-      "yc_slope": 0.61,
-      "yc_velocity": 0.04
+      "yc_slope": 0.65,
+      "yc_velocity": 0.08
     },
     "rigid": {
       "state": "PRESENT"
@@ -38,12 +38,12 @@
     "vix": -8.13,
     "nfci": -0.036,
     "stlfsi": -0.3923,
-    "yc": 0.04
+    "yc": 0.08
   },
   "levels": {
     "vix": 19.3,
     "hy_oas": 2.86,
-    "yc_slope": 0.61,
+    "yc_slope": 0.65,
     "spx": 7085.0,
     "spx_dd": -0.4,
     "nfci": -0.497,
@@ -61,7 +61,7 @@
     "bond_pct": 0,
     "label": "FULL RISK"
   },
-  "health_score": 62,
+  "health_score": 63,
   "analog": "No strong analog",
   "health_timeseries": [
     {
@@ -1316,12 +1316,12 @@
     },
     {
       "date": "2026-04-23",
-      "health": 62,
+      "health": 63,
       "spx": 7085.0
     },
     {
       "date": "2026-04-24",
-      "health": 62,
+      "health": 63,
       "spx": 7085.0
     }
   ]
