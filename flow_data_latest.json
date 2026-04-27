@@ -1,6 +1,6 @@
 {
   "date": "2026-04-27",
-  "time": "08:15",
+  "time": "15:44",
   "w4plus": false,
   "w4_component": false,
   "f6b_component": false,
@@ -16,8 +16,8 @@
   "capacity": {
     "elastic": {
       "state": "EXPANDING FAST",
-      "hy_pct": 0.2076,
-      "hy_velocity": -0.4802
+      "hy_pct": 0.2084,
+      "hy_velocity": -0.4821
     },
     "viscous": {
       "state": "CONSTRAINED",
@@ -34,14 +34,14 @@
     }
   },
   "velocities": {
-    "hy_pct": -0.4802,
-    "vix": -11.74,
+    "hy_pct": -0.4821,
+    "vix": -12.34,
     "nfci": -0.038,
     "stlfsi": -0.5777,
     "yc": 0.07
   },
   "levels": {
-    "vix": 19.3,
+    "vix": 18.7,
     "hy_oas": 2.86,
     "yc_slope": 0.65,
     "spx": 7139.0,
@@ -271,12 +271,12 @@
     },
     {
       "date": "2025-07-07",
-      "health": 55,
+      "health": 56,
       "spx": 6207.0
     },
     {
       "date": "2025-07-08",
-      "health": 56,
+      "health": 57,
       "spx": 6203.0
     },
     {
@@ -346,7 +346,7 @@
     },
     {
       "date": "2025-07-28",
-      "health": 53,
+      "health": 54,
       "spx": 6369.0
     },
     {
@@ -431,7 +431,7 @@
     },
     {
       "date": "2025-08-20",
-      "health": 30,
+      "health": 29,
       "spx": 6381.0
     },
     {
@@ -496,7 +496,7 @@
     },
     {
       "date": "2025-09-08",
-      "health": 50,
+      "health": 51,
       "spx": 6488.0
     },
     {
@@ -511,7 +511,7 @@
     },
     {
       "date": "2025-09-11",
-      "health": 53,
+      "health": 54,
       "spx": 6576.0
     },
     {
@@ -531,7 +531,7 @@
     },
     {
       "date": "2025-09-17",
-      "health": 52,
+      "health": 53,
       "spx": 6592.0
     },
     {
@@ -666,7 +666,7 @@
     },
     {
       "date": "2025-10-24",
-      "health": 20,
+      "health": 19,
       "spx": 6772.0
     },
     {
@@ -801,7 +801,7 @@
     },
     {
       "date": "2025-12-02",
-      "health": 56,
+      "health": 57,
       "spx": 6815.0
     },
     {
@@ -1256,7 +1256,7 @@
     },
     {
       "date": "2026-04-08",
-      "health": 59,
+      "health": 60,
       "spx": 6760.0
     },
     {
