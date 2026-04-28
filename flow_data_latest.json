@@ -1,6 +1,6 @@
 {
   "date": "2026-04-28",
-  "time": "08:19",
+  "time": "16:06",
   "w4plus": false,
   "w4_component": false,
   "f6b_component": false,
@@ -35,13 +35,13 @@
   },
   "velocities": {
     "hy_pct": -0.4926,
-    "vix": -11.9,
+    "vix": -12.59,
     "nfci": -0.038,
     "stlfsi": -0.5777,
     "yc": 0.05
   },
   "levels": {
-    "vix": 18.7,
+    "vix": 18.0,
     "hy_oas": 2.86,
     "yc_slope": 0.62,
     "spx": 7152.0,
