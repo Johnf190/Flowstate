@@ -1,6 +1,6 @@
 {
   "date": "2026-04-30",
-  "time": "08:14",
+  "time": "15:46",
   "w4plus": false,
   "w4_component": false,
   "f6b_component": false,
@@ -16,8 +16,8 @@
   "capacity": {
     "elastic": {
       "state": "EXPANDING FAST",
-      "hy_pct": 0.1952,
-      "hy_velocity": -0.2898
+      "hy_pct": 0.1556,
+      "hy_velocity": -0.3293
     },
     "viscous": {
       "state": "CONSTRAINED",
@@ -34,15 +34,15 @@
     }
   },
   "velocities": {
-    "hy_pct": -0.2898,
-    "vix": -6.71,
+    "hy_pct": -0.3293,
+    "vix": -5.73,
     "nfci": -0.059,
     "stlfsi": -0.4978,
     "yc": 0.08
   },
   "levels": {
-    "vix": 17.8,
-    "hy_oas": 2.85,
+    "vix": 18.8,
+    "hy_oas": 2.82,
     "yc_slope": 0.68,
     "spx": 7116.0,
     "spx_dd": -0.5,
