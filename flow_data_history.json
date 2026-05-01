@@ -1,5 +1,17 @@
 [
   {
+    "date": "2026-05-01",
+    "w4plus": false,
+    "regime": "UPTREND",
+    "health_score": 64,
+    "detectors": 0,
+    "position_pct": 100,
+    "vix": 18.8,
+    "hy_oas": 2.82,
+    "yc_slope": 0.74,
+    "hy_velocity": -0.342
+  },
+  {
     "date": "2026-04-30",
     "w4plus": false,
     "regime": "UPTREND",
